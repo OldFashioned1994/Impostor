@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>El Impostor</title>
+<meta name="theme-color" content="#2B241C">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="El Impostor">
+<link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAIAAADdvvtQAAACd0lEQVR42u3dvVHDQBSFUdh5nZEQuAQIXBkBlEBAwrgRF+AiCEg9QwD4T/uuzsmZ0T5/rGRhi/vDfncHpxpGgIAQEAJCQCAgBISAEBAICAEhIAQEAkJAzKT++wNvm62pZXt6f7ED4RSGgBAQCIh53oWdedHObM58W20HwikMASEgBAQCQkAICAGBgBAQAkJAICAEhIAQEAgIASEgBISAQEAICAEhIBAQAkJACAgExFVU3pIeHp9nPrzPj1cB6ebc44zJaKhnqQNud8yxAfV9JQIaGupx/OsNKOMs0HoVw9ytxUU0AkJA9vwVrsgOhIAQEAJCQCAgBISAEBAICAEhIAQEAkJACAgBgYAQEAJCQAgIBISAEBACAgEhIGbX9SGb20p7vuzL15cdCKcwEBACQkAICASEgBAQkTrdzz1+EG7enejjBTb6Z1DVKJr1OF715DGVaMQUEpBuOp7jqmk3Tf92nVdStUuHnzNcMKOSjozOMdQTebkdG5B6wsY71KOhHgGpJ3LUQz0aanYRTRIBISDiA2r0+YQMNxv4yFsStxz1SF2YejKvgTQUNt6xhkWq53pqwaW6uxjwO1mLL1tGrbfzmmcESup4GVATDkVJjS4fa/IxicnXesSU/Ea1Wo81I6nW9zUqb/QzV5V3DyzwG+a/vkjXK2yF90jrbn3cCr8gnwdCQAgIASEgEBACQkAICASEgBAQAgIBISAEhIBAQAgIASEgBAQCQkAICAGBgBAQAkJAICAEhIAQEAgIASEgBISA4GQXeE7022ZrjnYgEBACQkAICP7m/rDfmQJ2IASEgBAQCAgBISAEBAJCQAgIAYGAEBDT+Aalco/8IjvjewAAAABJRU5ErkJggg==">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAIAAADdvvtQAAACd0lEQVR42u3dvVHDQBSFUdh5nZEQuAQIXBkBlEBAwrgRF+AiCEg9QwD4T/uuzsmZ0T5/rGRhi/vDfncHpxpGgIAQEAJCQCAgBISAEBAICAEhIAQEAkJAzKT++wNvm62pZXt6f7ED4RSGgBAQCIh53oWdedHObM58W20HwikMASEgBAQCQkAICAGBgBAQAkJAICAEhIAQEAgIASEgBISAQEAICAEhIBAQAkJACAgExFVU3pIeHp9nPrzPj1cB6ebc44zJaKhnqQNud8yxAfV9JQIaGupx/OsNKOMs0HoVw9ytxUU0AkJA9vwVrsgOhIAQEAJCQCAgBISAEBAICAEhIAQEAkJACAgBgYAQEAJCQAgIBISAEBACAgEhIGbX9SGb20p7vuzL15cdCKcwEBACQkAICASEgBAQkTrdzz1+EG7enejjBTb6Z1DVKJr1OF715DGVaMQUEpBuOp7jqmk3Tf92nVdStUuHnzNcMKOSjozOMdQTebkdG5B6wsY71KOhHgGpJ3LUQz0aanYRTRIBISDiA2r0+YQMNxv4yFsStxz1SF2YejKvgTQUNt6xhkWq53pqwaW6uxjwO1mLL1tGrbfzmmcESup4GVATDkVJjS4fa/IxicnXesSU/Ea1Wo81I6nW9zUqb/QzV5V3DyzwG+a/vkjXK2yF90jrbn3cCr8gnwdCQAgIASEgEBACQkAICASEgBAQAgIBISAEhIBAQAgIASEgBAQCQkAICAGBgBAQAkJAICAEhIAQEAgIASEgBISA4GQXeE7022ZrjnYgEBACQkAICP7m/rDfmQJ2IASEgBAQCAgBISAEBAJCQAgIAYGAEBDT+Aalco/8IjvjewAAAABJRU5ErkJggg==">
+<link id="manifest" rel="manifest">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=IBM+Plex+Sans:wght@400;600&display=swap');
+:root{
+  --papel:#E8DCBF; --papel2:#DCCDA6; --tinta:#2B241C; --suave:#6B5F4D;
+  --rojo:#A82E26; --sello:#8C2820; --verde:#3F5D3A; --celeste:#5B8FA8;
+  --fd:'Special Elite','Courier New',monospace; --fb:'IBM Plex Sans',system-ui,sans-serif;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%}
+body{
+  background:repeating-linear-gradient(0deg,var(--papel),var(--papel) 34px,var(--papel2) 34px,var(--papel2) 35px);
+  color:var(--tinta); font-family:var(--fb);
+  user-select:none; -webkit-user-select:none; -webkit-touch-callout:none;
+  padding:max(24px, env(safe-area-inset-top)) 16px 48px;
+  display:flex; justify-content:center;
+}
+#app{width:100%;max-width:420px}
+.head{text-align:center;margin-bottom:20px}
+.exp{font-family:var(--fd);font-size:13px;letter-spacing:4px;color:var(--suave)}
+h1{font-family:var(--fd);font-size:40px;margin:2px 0 6px;letter-spacing:2px}
+.sello{display:inline-block;font-family:var(--fd);color:var(--sello);border:3px solid var(--sello);
+  border-radius:6px;padding:4px 14px;letter-spacing:3px;text-transform:uppercase;opacity:.92;
+  font-size:26px;transform:rotate(-5deg)}
+.sello.chico{font-size:22px}
+.sello.azul{color:var(--celeste);border-color:var(--celeste);transform:rotate(5deg)}
+.btn{font-family:var(--fd);font-size:17px;padding:14px 20px;width:100%;border:2px solid var(--tinta);
+  border-radius:4px;cursor:pointer;letter-spacing:1px;box-shadow:3px 3px 0 var(--tinta);
+  background:var(--tinta);color:var(--papel);transition:transform .06s}
+.btn:active{transform:translate(2px,2px)}
+.btn:disabled{opacity:.4;box-shadow:none}
+.btn.rojo{background:var(--rojo)}
+.btn.sec{background:transparent;color:var(--tinta)}
+.btn.mini{width:64px;padding:12px 0}
+label{font-family:var(--fd);font-size:14px;letter-spacing:2px}
+input{flex:1;padding:12px 14px;font-size:16px;font-family:var(--fb);background:rgba(255,255,255,.45);
+  border:2px solid var(--tinta);border-radius:4px;color:var(--tinta);outline:none}
+input::placeholder{color:var(--suave);opacity:.7}
+.fila{display:flex;gap:8px;margin:6px 0 10px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;min-height:36px}
+.chip{font-family:var(--fd);font-size:15px;padding:5px 12px;border:1.5px dashed var(--tinta);
+  border-radius:3px;cursor:pointer;background:rgba(255,255,255,.35)}
+.nota{font-size:13px;color:var(--suave)}
+.opts{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 18px}
+.opt{padding:8px 14px;font-family:var(--fd);font-size:14px;border:2px solid var(--tinta);
+  border-radius:4px;cursor:pointer;background:transparent;color:var(--tinta)}
+.opt.on{background:var(--tinta);color:var(--papel)}
+.opt.num{flex:1;font-size:18px;padding:10px 0}
+.opt.num.on{background:var(--rojo)}
+.opt:disabled{opacity:.3}
+.check{display:flex;align-items:center;gap:10px;margin-bottom:22px;cursor:pointer;font-size:14px}
+.box{width:22px;height:22px;border:2px solid var(--tinta);border-radius:4px;color:var(--papel);
+  display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.box.on{background:var(--verde)}
+.centro{text-align:center}
+.doc{font-family:var(--fd);font-size:14px;letter-spacing:2px;color:var(--suave)}
+h2{font-family:var(--fd);font-size:30px;margin:4px 0 16px}
+.sobre{margin:0 auto 8px;max-width:320px;min-height:220px;border:3px solid var(--tinta);border-radius:6px;
+  background:var(--papel2);box-shadow:5px 5px 0 var(--tinta);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:20px;touch-action:manipulation;cursor:pointer;
+  transition:background .15s}
+.sobre.abierto{background:#FFF8E4}
+.palabra{font-family:var(--fd);font-size:30px;margin:10px 0;line-height:1.15}
+.timer{font-family:var(--fd);font-size:72px;letter-spacing:4px;margin:8px 0 16px}
+.timer.urgente{color:var(--rojo)}
+.col{display:flex;flex-direction:column;gap:10px}
+.intro{font-size:14px;color:var(--suave);text-align:center;margin:0 0 18px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+// manifest inline para "instalar" como app
+const manifest = {
+  name: "El Impostor", short_name: "Impostor", display: "standalone",
+  background_color: "#E8DCBF", theme_color: "#2B241C", start_url: ".",
+  icons: [
+    { src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAIAAADdvvtQAAACd0lEQVR42u3dvVHDQBSFUdh5nZEQuAQIXBkBlEBAwrgRF+AiCEg9QwD4T/uuzsmZ0T5/rGRhi/vDfncHpxpGgIAQEAJCQCAgBISAEBAICAEhIAQEAkJAzKT++wNvm62pZXt6f7ED4RSGgBAQCIh53oWdedHObM58W20HwikMASEgBAQCQkAICAGBgBAQAkJAICAEhIAQEAgIASEgBISAQEAICAEhIBAQAkJACAgExFVU3pIeHp9nPrzPj1cB6ebc44zJaKhnqQNud8yxAfV9JQIaGupx/OsNKOMs0HoVw9ytxUU0AkJA9vwVrsgOhIAQEAJCQCAgBISAEBAICAEhIAQEAkJACAgBgYAQEAJCQAgIBISAEBACAgEhIGbX9SGb20p7vuzL15cdCKcwEBACQkAICASEgBAQkTrdzz1+EG7enejjBTb6Z1DVKJr1OF715DGVaMQUEpBuOp7jqmk3Tf92nVdStUuHnzNcMKOSjozOMdQTebkdG5B6wsY71KOhHgGpJ3LUQz0aanYRTRIBISDiA2r0+YQMNxv4yFsStxz1SF2YejKvgTQUNt6xhkWq53pqwaW6uxjwO1mLL1tGrbfzmmcESup4GVATDkVJjS4fa/IxicnXesSU/Ea1Wo81I6nW9zUqb/QzV5V3DyzwG+a/vkjXK2yF90jrbn3cCr8gnwdCQAgIASEgEBACQkAICASEgBAQAgIBISAEhIBAQAgIASEgBAQCQkAICAGBgBAQAkJAICAEhIAQEAgIASEgBISA4GQXeE7022ZrjnYgEBACQkAICP7m/rDfmQJ2IASEgBAQCAgBISAEBAJCQAgIAYGAEBDT+Aalco/8IjvjewAAAABJRU5ErkJggg==", sizes: "192x192", type: "image/png" },
+    { src: "data:image/png;base64,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", sizes: "512x512", type: "image/png" }
+  ]
+};
+document.getElementById("manifest").href =
+  "data:application/manifest+json," + encodeURIComponent(JSON.stringify(manifest));
+
+const CATEGORIAS = {
+  "Comida y birra": ["el choripán","el fernet con coca","la milanesa napolitana","el mate amargo","la tortafrita","el sanguche de bondiola","el asado del domingo","el vacío","el chimichurri","el locro del 25","la empanada de carne","el dulce de leche","los ñoquis del 29","la picada con vermut","el matambre a la pizza","los pastelitos de membrillo","la fainá","el alfajor triple","el salamín picado grueso","las medialunas con café","el helado de dulce de leche granizado","la pizza de parado","el sanguche de milanesa tucumano","la ensalada criolla","el budín de pan"],
+  "Lugares": ["la Bombonera","el Monumental","el Obelisco","Mar del Plata","Bariloche","las Cataratas del Iguazú","el Tigre","la peatonal","el kiosco de la esquina","el supermercado chino","la parrilla del barrio","la calle Corrientes","Plaza de Mayo","Villa Gesell","la ruta 2","el conurbano","Puerto Madero","la estación Constitución","La Salada","el cerro Uritorco","La Quiaca","Ushuaia","el delta","la costanera","Carlos Paz"],
+  "Costumbres": ["tomar fresco en la vereda","la sobremesa eterna","el truco","la siesta","el dólar blue","cargar la SUBE","el grupo de WhatsApp de la familia","la previa","el tercer tiempo","el feriado puente","hacer fila en el banco","el paro de colectivos","atar todo con alambre","el asado de obra","regatear en la feria","la quiniela","el club del barrio","cebar mate al que maneja","el 'ahí voy' que dura una hora","decir 'última y nos vamos'","el brindis de Año Nuevo","la pirotecnia de las 12","ir al chino en pantuflas","el ventilador de techo en enero","guardar las bolsas del súper"],
+  "Ídolos": ["Messi","Maradona","el Dibu Martínez","Riquelme","Gallardo","el Kun Agüero","Franco Colapinto","Manu Ginóbili","Gabriela Sabatini","Charly García","Fito Páez","el Indio Solari","Duki","Bizarrap","Lali","Tini","Nicki Nicole","María Becerra","Mirtha Legrand","Susana Giménez","Moria Casán","Marcelo Tinelli","Ricardo Darín","Guillermo Francella","Pampita"],
+  "Lunfardo": ["quilombo","chamuyo","fiaca","bondi","guita","mufa","gauchada","trucho","ñoqui","chanta","cheto","joda","posta","zarpado","atorrante","gil","birra","pibe","laburo","bardo","careta","ortiba","manija","bajón","mango"],
+  "Oficina argenta": ["el aguinaldo","el monotributo","la reunión que pudo ser un mail","el after office","el mate en la oficina","la impresora rota","recursos humanos","el home office","el franco","el presentismo","la quincena","el viático","el pase a planta","el gremio","el café de máquina","el amigo invisible","el asado de fin de año","el bono","el CV","la licencia","el jefe","la guerra por el aire acondicionado","el Excel","la caja chica","el feriado trabajado"],
+  "Fútbol y cancha": ["el superclásico","el descenso","el VAR","el penal atajado","la palomita","el caño","la rabona","la chilena","el alargue","los penales","el aguante","la popular","el potrero","el nueve de área","el arquero","el relator","el banderazo","la camiseta alternativa","el utilero","la final de Qatar","el clásico de barrio","el offside","el tiro libre","la barrera","el córner"]
+};
+const NOMBRES_CAT = Object.keys(CATEGORIAS);
+const CONSEJOS = [
+  "Cara de nada, como cuando preguntan quién dejó el mate lavado.",
+  "Asentí con confianza y chamuyá con clase.",
+  "Repetí lo que dicen los demás pero con otra palabra. Viejo truco de oral de secundaria.",
+  "Vos tranqui, que hasta acá el VAR no llega.",
+  "Mentí sereno, como quien dice 'salgo en cinco minutos'."
+];
+const FRASES = [
+  "Una pista por cabeza, en ronda. El que dice la palabra queda más quemado que termo de tachero.",
+  "Pistas cortas y sutiles. Nada de tirarle el centro al impostor.",
+  "Una pista cada uno. Mirá los ojos: el que titubea, sospechoso.",
+  "En ronda, una pista por persona. Acusar sin pruebas también es deporte nacional."
+];
+const CASTIGOS = [
+  "El descubierto banca la próxima ronda de birras.",
+  "Penitencia: el que perdió lava el termo y ceba la próxima.",
+  "El que perdió cuenta su peor papelón laboral. Sin editar.",
+  "Castigo: el perdedor manda un audio cantando al grupo de la familia.",
+  "El que perdió paga el fernet. Sin chistar."
+];
+const azar = a => a[Math.floor(Math.random()*a.length)];
+const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");
+
+let S = {
+  fase:"setup", jugadores:[], cant:1, categoria:"Mezcla", pista:false,
+  palabra:"", catPal:"", imps:new Set(), turno:0, mostrando:false, visto:false,
+  arranca:"", consejo:"", frase:"", castigo:"", ronda:0, seg:180, corriendo:false
+};
+let timerId = null;
+const app = document.getElementById("app");
+
+function empezar(){
+  const cat = S.categoria==="Mezcla" ? azar(NOMBRES_CAT) : S.categoria;
+  S.catPal = cat; S.palabra = azar(CATEGORIAS[cat]);
+  S.imps = new Set();
+  while(S.imps.size < S.cant) S.imps.add(Math.floor(Math.random()*S.jugadores.length));
+  S.turno=0; S.visto=false; S.mostrando=false;
+  S.arranca=azar(S.jugadores); S.consejo=azar(CONSEJOS); S.frase=azar(FRASES); S.castigo=azar(CASTIGOS);
+  S.ronda++; S.seg=180; pararTimer(); S.fase="reveal"; render();
+}
+function pararTimer(){ S.corriendo=false; if(timerId){clearInterval(timerId); timerId=null;} }
+function toggleTimer(){
+  if(S.corriendo){ pararTimer(); }
+  else { S.corriendo=true; timerId=setInterval(()=>{ S.seg=Math.max(0,S.seg-1);
+    const t=document.getElementById("timer");
+    if(t){ t.textContent=fmt(); t.classList.toggle("urgente", S.seg<=20); }
+    if(S.seg===0) pararTimer();
+  },1000); }
+  render();
+}
+function fmt(){ return Math.floor(S.seg/60)+":"+String(S.seg%60).padStart(2,"0"); }
+
+function render(){
+  const selloTxt = {setup:"alto secreto", reveal:"ojos solamente", discusion:"en curso", resultado:"caso cerrado"}[S.fase];
+  let h = `<div class="head">
+    <div class="exp">EXPEDIENTE Nº ${1810+S.ronda} · REP. ARGENTINA</div>
+    <h1>EL IMPOSTOR</h1>
+    <span class="sello chico ${S.fase==="resultado"?"azul":""}">${selloTxt}</span>
+  </div>`;
+
+  if(S.fase==="setup"){
+    h += `<p class="intro">Todos reciben la misma palabra, menos el impostor, que tiene que zafar chamuyando. Pistas en ronda, sospechas, y al final se vota a mano alzada.</p>
+    <label>SOSPECHOSOS (${S.jugadores.length})</label>
+    <div class="fila"><input id="inp" placeholder="Nombre…" enterkeyhint="done"><button class="btn mini" id="add">+</button></div>
+    <div class="chips">${ S.jugadores.length ? S.jugadores.map((j,i)=>`<span class="chip" data-i="${i}">${esc(j)} ✕</span>`).join("") : `<span class="nota">Mínimo 3. Tocá un nombre para borrarlo.</span>` }</div>
+    <label>IMPOSTORES</label>
+    <div class="opts">${[1,2,3].map(n=>`<button class="opt num ${S.cant===n?"on":""}" data-n="${n}" ${n>Math.max(1,S.jugadores.length-2)?"disabled":""}>${n}</button>`).join("")}</div>
+    <label>CATEGORÍA</label>
+    <div class="opts">${["Mezcla",...NOMBRES_CAT].map(c=>`<button class="opt ${S.categoria===c?"on":""}" data-c="${esc(c)}">${esc(c)}</button>`).join("")}</div>
+    <div class="check" id="chk"><div class="box ${S.pista?"on":""}">${S.pista?"✓":""}</div>El impostor recibe la categoría de pista (modo para amigos nuevos)</div>
+    <button class="btn rojo" id="go" ${S.jugadores.length<3?"disabled":""}>▸ ABRIR EXPEDIENTE</button>`;
+    app.innerHTML = h;
+    const inp = document.getElementById("inp");
+    const add = ()=>{ const n=inp.value.trim(); if(n && !S.jugadores.includes(n)){ S.jugadores.push(n); render(); document.getElementById("inp").focus(); } };
+    document.getElementById("add").onclick = add;
+    inp.onkeydown = e=>{ if(e.key==="Enter") add(); };
+    document.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{ S.jugadores.splice(+c.dataset.i,1); if(S.cant>Math.max(1,S.jugadores.length-2)) S.cant=1; render(); });
+    document.querySelectorAll(".opt.num").forEach(b=>b.onclick=()=>{ S.cant=+b.dataset.n; render(); });
+    document.querySelectorAll(".opt:not(.num)").forEach(b=>b.onclick=()=>{ S.categoria=b.dataset.c; render(); });
+    document.getElementById("chk").onclick=()=>{ S.pista=!S.pista; render(); };
+    document.getElementById("go").onclick=empezar;
+  }
+
+  if(S.fase==="reveal"){
+    h += `<div class="centro">
+      <p class="doc">DOCUMENTO ${S.turno+1} / ${S.jugadores.length}</p>
+      <h2>Pasale el celu a ${esc(S.jugadores[S.turno])}</h2>
+      <div class="sobre" id="sobre"></div>
+      <div style="margin-top:22px"><button class="btn" id="sig" ${S.visto?"":"disabled"}>${S.turno+1<S.jugadores.length?"LISTO · PASAR AL SIGUIENTE ▸":"TODOS LISTOS ▸"}</button></div>
+    </div>`;
+    app.innerHTML = h;
+    const sobre = document.getElementById("sobre");
+    const pintar = ()=>{
+      if(!S.mostrando){
+        sobre.classList.remove("abierto");
+        sobre.innerHTML = `<span class="sello">secreto</span>
+          <p style="font-family:var(--fd);font-size:16px;margin-top:18px">MANTENÉ APRETADO<br>PARA CHUSMEAR</p>
+          <p class="nota" style="font-size:12px;margin-top:8px">(al soltar se oculta solo, no seas ortiba)</p>`;
+      } else if(S.imps.has(S.turno)){
+        sobre.classList.add("abierto");
+        sobre.innerHTML = `<span class="sello" style="font-size:30px">impostor</span>
+          <p style="font-size:15px;margin-top:16px;line-height:1.45">No conocés la palabra.<br>${esc(S.consejo)}</p>
+          ${S.pista?`<p style="font-family:var(--fd);font-size:14px;margin-top:10px;color:var(--suave)">pista: categoría «${esc(S.catPal)}»</p>`:""}`;
+      } else {
+        sobre.classList.add("abierto");
+        sobre.innerHTML = `<p style="font-family:var(--fd);font-size:13px;letter-spacing:3px;color:var(--suave)">LA PALABRA ES</p>
+          <p class="palabra">${esc(S.palabra)}</p>
+          <p class="nota" style="font-size:12px">categoría: ${esc(S.catPal)}</p>`;
+      }
+    };
+    pintar();
+    const mostrar = e=>{ e.preventDefault(); if(!S.mostrando){ S.mostrando=true; S.visto=true; pintar(); document.getElementById("sig").disabled=false; } };
+    const ocultar = ()=>{ if(S.mostrando){ S.mostrando=false; pintar(); } };
+    sobre.addEventListener("pointerdown", mostrar);
+    sobre.addEventListener("pointerup", ocultar);
+    sobre.addEventListener("pointerleave", ocultar);
+    sobre.addEventListener("touchend", ocultar);
+    sobre.addEventListener("contextmenu", e=>e.preventDefault());
+    document.addEventListener("pointerup", ocultar);
+    document.getElementById("sig").onclick = ()=>{
+      if(S.turno+1 < S.jugadores.length){ S.turno++; S.visto=false; S.mostrando=false; render(); }
+      else { S.fase="discusion"; render(); }
+    };
+  }
+
+  if(S.fase==="discusion"){
+    h += `<div class="centro">
+      <h2 style="font-size:26px;margin:8px 0 4px">Arranca hablando: ${esc(S.arranca)}</h2>
+      <p class="intro" style="margin:0 0 20px">${esc(S.frase)}</p>
+      <div class="timer ${S.seg<=20?"urgente":""}" id="timer">${fmt()}</div>
+      <div class="fila" style="margin-bottom:14px">
+        <button class="btn sec" id="play">${S.corriendo?"‖ PAUSA":"▸ INICIAR"}</button>
+        <button class="btn sec" id="reset">↺ 3:00</button>
+      </div>
+      <button class="btn rojo" id="rev">YA VOTAMOS · REVELAR</button>
+    </div>`;
+    app.innerHTML = h;
+    document.getElementById("play").onclick = toggleTimer;
+    document.getElementById("reset").onclick = ()=>{ pararTimer(); S.seg=180; render(); };
+    document.getElementById("rev").onclick = ()=>{ pararTimer(); S.fase="resultado"; render(); };
+  }
+
+  if(S.fase==="resultado"){
+    const nombres = S.jugadores.filter((_,i)=>S.imps.has(i)).map(esc).join(" y ");
+    h += `<div class="centro">
+      <p class="doc" style="letter-spacing:3px;margin-bottom:10px">${S.imps.size>1?"LOS IMPOSTORES ERAN":"EL IMPOSTOR ERA"}</p>
+      <h2 style="font-size:38px;margin:0 0 14px;color:var(--rojo)">${nombres}</h2>
+      <p style="font-size:16px;margin-bottom:8px">La palabra era <b style="font-family:var(--fd)">«${esc(S.palabra)}»</b> <span class="nota">(${esc(S.catPal)})</span></p>
+      <p class="nota" style="font-style:italic;margin:0 0 24px">${esc(S.castigo)}</p>
+      <div class="col">
+        <button class="btn rojo" id="otra">↻ OTRA RONDA (mismos jugadores)</button>
+        <button class="btn sec" id="conf">⚙ CAMBIAR JUGADORES / AJUSTES</button>
+      </div>
+    </div>`;
+    app.innerHTML = h;
+    document.getElementById("otra").onclick = empezar;
+    document.getElementById("conf").onclick = ()=>{ S.fase="setup"; render(); };
+  }
+}
+render();
+</script>
+</body>
+</html>
