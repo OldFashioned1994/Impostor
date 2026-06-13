@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Dibujá, Che — Pictionary de pizarra</title>
+<meta name="theme-color" content="#3B7FB0">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Dibujá, Che">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%234AA3C7'/%3E%3Ctext x='50' y='73' font-size='60' text-anchor='middle'%3E%E2%9C%8F%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link id="manifest" rel="manifest">
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700..900&family=Nunito:wght@400;600;700;800;900&display=swap');
+
+:root{
+  --c1:#5BC8EA; --c2:#4AA3C7; --c3:#3B7FB0; --c4:#2E6A98;
+  --sol:#FFD24A; --sol2:#FFE08A;
+  --coral:#FF6B6B; --coralD:#E5524B;
+  --verde:#2FD27A; --verdeD:#1FA85E;
+  --violeta:#8B6FE8; --rosa:#FF7FB6;
+  --tinta:#16242E; --suave:#5C7280;
+  --ft:'Bricolage Grotesque',system-ui,sans-serif;
+  --fb:'Nunito',system-ui,sans-serif;
+}
+*{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  font-family:var(--fb); color:var(--tinta); overflow:hidden;
+  background:linear-gradient(160deg,var(--c1) 0%, var(--c2) 38%, var(--c3) 72%, var(--c4) 100%);
+  user-select:none; -webkit-user-select:none; -webkit-touch-callout:none; position:relative;
+}
+/* blobs decorativos modernos */
+body::before,body::after{content:'';position:fixed;border-radius:50%;filter:blur(60px);opacity:.45;z-index:0;pointer-events:none}
+body::before{width:340px;height:340px;background:var(--violeta);top:-120px;right:-90px}
+body::after{width:300px;height:300px;background:var(--sol);bottom:-110px;left:-90px;opacity:.35}
+#root{height:100%;position:relative;z-index:1}
+
+.screen{height:100%;width:100%;max-width:520px;margin:0 auto;display:flex;flex-direction:column;
+  padding:max(18px,env(safe-area-inset-top)) 18px max(18px,env(safe-area-inset-bottom));
+  overflow-y:auto;-webkit-overflow-scrolling:touch}
+.grow{flex:1}
+.center{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.stack{display:flex;flex-direction:column;gap:12px}
+.row{display:flex;gap:10px;align-items:center}
+.wrap{flex-wrap:wrap}
+
+h1.logo{font-family:var(--ft);font-weight:900;color:#fff;line-height:.9;
+  font-size:clamp(46px,16vw,76px);letter-spacing:-1.5px;text-shadow:0 6px 0 rgba(22,36,46,.18)}
+.logo .sol{color:var(--sol)}
+.tag{font-family:var(--ft);font-weight:800;color:#fff;font-size:15px;letter-spacing:.4px;opacity:.95}
+h2{font-family:var(--ft);font-weight:800;font-size:25px;color:var(--tinta);letter-spacing:-.4px}
+h2.light{color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.15)}
+.sub{color:var(--suave);font-weight:700;font-size:14px}
+.sub.light{color:rgba(255,255,255,.9)}
+
+.card{background:rgba(255,255,255,.94);border-radius:24px;padding:18px;
+  box-shadow:0 14px 34px rgba(16,36,50,.22);backdrop-filter:blur(10px)}
+.glass{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.25);
+  border-radius:22px;padding:16px;backdrop-filter:blur(8px)}
+
+.btn{font-family:var(--ft);font-weight:800;font-size:19px;letter-spacing:.2px;border:none;
+  border-radius:18px;padding:17px 20px;width:100%;cursor:pointer;color:#fff;
+  background:linear-gradient(180deg,#243642,#16242E);box-shadow:0 7px 0 rgba(0,0,0,.28);
+  transition:transform .06s,box-shadow .06s;touch-action:manipulation}
+.btn:active{transform:translateY(5px);box-shadow:0 2px 0 rgba(0,0,0,.28)}
+.btn:disabled{opacity:.45;box-shadow:none}
+.btn.sol{background:linear-gradient(180deg,var(--sol2),var(--sol));color:var(--tinta);box-shadow:0 7px 0 #D9A82F}
+.btn.sol:active{box-shadow:0 2px 0 #D9A82F}
+.btn.verde{background:linear-gradient(180deg,var(--verde),var(--verdeD));box-shadow:0 7px 0 #178A4C}
+.btn.verde:active{box-shadow:0 2px 0 #178A4C}
+.btn.rojo{background:linear-gradient(180deg,var(--coral),var(--coralD));box-shadow:0 7px 0 #B23A34}
+.btn.rojo:active{box-shadow:0 2px 0 #B23A34}
+.btn.ghost{background:rgba(255,255,255,.14);color:#fff;box-shadow:none;border:2px solid rgba(255,255,255,.5)}
+.btn.ghost.dark{color:var(--tinta);border-color:rgba(22,36,46,.2);background:rgba(255,255,255,.5)}
+.btn.sm{font-size:15px;padding:12px 14px}
+.btn.auto{width:auto}
+
+input.txt{flex:1;font-family:var(--fb);font-weight:700;font-size:16px;color:var(--tinta);background:#fff;
+  border:2px solid #E3E8EB;border-radius:14px;padding:13px 14px;outline:none}
+input.txt:focus{border-color:var(--c2)}
+
+.chip{font-family:var(--ft);font-weight:800;font-size:14px;border:2px solid #E3E8EB;background:#fff;
+  color:var(--suave);border-radius:999px;padding:10px 16px;cursor:pointer;transition:all .12s}
+.chip.on{background:var(--c2);color:#fff;border-color:var(--c2);transform:scale(1.03)}
+
+.optname{font-family:var(--ft);font-weight:800;font-size:16px}
+.optdesc{font-size:13px;color:var(--suave);font-weight:700}
+
+.catbtn{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#fff;
+  border:2px solid #E3E8EB;border-radius:16px;padding:14px;cursor:pointer;transition:all .12s}
+.catbtn.on{border-color:var(--c2);background:#EAF6FB}
+.catbox{width:26px;height:26px;border-radius:8px;border:2px solid #C9D2D7;display:grid;place-items:center;
+  font-size:16px;flex-shrink:0;background:#fff;color:#fff}
+.catbtn.on .catbox{background:var(--verde);border-color:var(--verde)}
+.catemoji{font-size:24px}
+.catname{font-family:var(--ft);font-weight:800;font-size:16px}
+.catcount{font-size:12px;color:var(--suave);font-weight:800}
+
+.switch{width:56px;height:32px;border-radius:999px;background:#D5DCE0;position:relative;cursor:pointer;transition:.15s;flex-shrink:0}
+.switch.on{background:var(--verde)}
+.switch .knob{position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.2);transition:.15s}
+.switch.on .knob{left:27px}
+
+/* equipos */
+.teamcard{border-radius:20px;padding:14px;color:#fff;box-shadow:0 10px 24px rgba(16,36,50,.2)}
+.teamhead{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.teamdot{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;font-size:20px;background:rgba(255,255,255,.25)}
+.teamname-in{flex:1;background:rgba(255,255,255,.22);border:2px solid rgba(255,255,255,.4);border-radius:12px;
+  padding:10px 12px;color:#fff;font-family:var(--ft);font-weight:800;font-size:17px;outline:none}
+.teamname-in::placeholder{color:rgba(255,255,255,.75)}
+.player{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.18);border-radius:10px;padding:7px 10px;font-weight:800;font-size:14px}
+.player .x{margin-left:auto;opacity:.85;cursor:pointer;font-size:18px;padding:0 4px}
+.addp{display:flex;gap:8px;margin-top:8px}
+.addp input{flex:1;background:rgba(255,255,255,.24);border:2px solid rgba(255,255,255,.35);border-radius:10px;padding:9px 10px;color:#fff;font-weight:800;outline:none;font-family:var(--fb)}
+.addp input::placeholder{color:rgba(255,255,255,.75)}
+.addp button{background:#fff;border:none;border-radius:10px;width:44px;font-size:24px;font-weight:800;cursor:pointer}
+
+/* tablero / scoreboard strip */
+.boardstrip{display:flex;gap:8px;overflow-x:auto;padding:2px}
+.boardchip{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.25);
+  border-radius:14px;padding:9px 12px;color:#fff;flex-shrink:0;backdrop-filter:blur(6px)}
+.boardchip .bdot{width:12px;height:12px;border-radius:50%}
+.boardchip .bnm{font-family:var(--ft);font-weight:800;font-size:14px;white-space:nowrap}
+.boardchip .bpts{font-family:var(--ft);font-weight:900;font-size:18px;margin-left:2px}
+.boardchip.lead{background:var(--sol);color:var(--tinta);border-color:var(--sol)}
+
+.scorerow{display:flex;align-items:center;gap:12px;padding:15px;border-radius:18px;background:#fff;
+  box-shadow:0 6px 0 rgba(16,36,50,.08);margin-bottom:10px}
+.scorerow .rank{font-family:var(--ft);font-weight:900;font-size:22px;width:34px;text-align:center}
+.scorerow .nm{flex:1;font-family:var(--ft);font-weight:800;font-size:18px}
+.scorerow .pts{font-family:var(--ft);font-weight:900;font-size:28px}
+.scorerow .dot{width:14px;height:14px;border-radius:50%}
+
+/* carta de palabra (flip) */
+.flip{perspective:1200px;width:100%}
+.flip-in{position:relative;width:100%;min-height:190px;transition:transform .55s cubic-bezier(.4,.2,.2,1);transform-style:preserve-3d}
+.flip.on .flip-in{transform:rotateY(180deg)}
+.flip-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  border-radius:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:22px;text-align:center}
+.flip-front{background:linear-gradient(150deg,#fff,#EAF6FB);box-shadow:0 14px 34px rgba(16,36,50,.22);border:3px dashed var(--c2)}
+.flip-front .q{font-family:var(--ft);font-weight:900;font-size:64px;color:var(--c2)}
+.flip-back{background:linear-gradient(150deg,#fff,#FFF6DD);box-shadow:0 14px 34px rgba(16,36,50,.22);
+  border:3px solid var(--sol);transform:rotateY(180deg)}
+.flip-back .w{font-family:var(--ft);font-weight:900;font-size:clamp(28px,8.5vw,44px);text-transform:uppercase;line-height:1.04;color:var(--tinta)}
+.flip-back .cat{margin-top:8px;font-weight:800;font-size:13px;color:var(--suave)}
+
+/* cronómetro circular */
+.ringwrap{position:relative;width:min(74vw,280px);height:min(74vw,280px)}
+.ringwrap svg{transform:rotate(-90deg)}
+.ringtxt{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ringtxt .num{font-family:var(--ft);font-weight:900;font-size:clamp(54px,18vw,78px);line-height:1;color:#fff;text-shadow:0 3px 10px rgba(0,0,0,.18)}
+.ringtxt .lbl{font-family:var(--ft);font-weight:800;font-size:13px;color:rgba(255,255,255,.85);letter-spacing:2px}
+.ringwrap.warn{animation:beat .5s infinite alternate}
+@keyframes beat{to{transform:scale(1.05)}}
+
+.peek{width:100%;border:none;border-radius:16px;padding:14px;font-family:var(--ft);font-weight:800;font-size:16px;cursor:pointer;
+  background:rgba(255,255,255,.18);color:#fff;border:2px solid rgba(255,255,255,.4)}
+.peekword{font-family:var(--ft);font-weight:900;font-size:clamp(26px,8vw,40px);text-transform:uppercase;color:var(--sol)}
+
+.pill{display:inline-block;background:rgba(255,255,255,.22);color:#fff;font-family:var(--ft);font-weight:800;font-size:13px;padding:6px 14px;border-radius:999px;backdrop-filter:blur(6px)}
+.hint{font-size:13px;color:rgba(255,255,255,.85);font-weight:700;text-align:center}
+.trophy{font-size:96px;animation:bounce 1s infinite alternate ease-in-out}
+@keyframes bounce{to{transform:translateY(-16px) rotate(5deg)}}
+.statline{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px dashed rgba(255,255,255,.3);color:#fff;font-weight:800}
+.statline:last-child{border:none}
+.statline .e{font-size:24px}
+.statline b{margin-left:auto;font-family:var(--ft);font-weight:900}
+
+.fade{animation:fade .28s ease}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1}}
+.pop{animation:pop .3s ease}
+@keyframes pop{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.12)}to{transform:scale(1);opacity:1}}
+.toast{position:fixed;left:50%;top:16%;transform:translateX(-50%);background:var(--tinta);color:#fff;
+  font-family:var(--ft);font-weight:800;padding:14px 22px;border-radius:14px;z-index:80;box-shadow:0 8px 24px rgba(0,0,0,.3);animation:fade .2s}
+
+/* flash de resultado */
+.flash{position:fixed;inset:0;z-index:70;pointer-events:none;opacity:0;animation:flash .6s ease}
+.flash.ok{background:radial-gradient(circle,rgba(47,210,122,.55),transparent 70%)}
+.flash.bad{background:radial-gradient(circle,rgba(229,82,75,.5),transparent 70%)}
+@keyframes flash{0%{opacity:0}30%{opacity:1}to{opacity:0}}
+
+/* confeti */
+.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:60}
+.confetti span{position:absolute;top:-40px;font-size:22px;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(112vh) rotate(540deg);opacity:.95}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" data-presets="react">
+const {useState, useRef, useEffect, useCallback} = React;
+
+/* =====================================================================
+   BANCO DE PALABRAS — bien argento, noventoso/dosmilero.
+   f = fáciles, d = difíciles. "picante" se activa con el modo after.
+   ===================================================================== */
+const CATS = [
+  { id:'comida', nombre:'Comida y juntadas', emoji:'🍖',
+    f:['asado','mate','choripán','milanesa','empanada','pizza','alfajor','factura','helado','locro',
+       'fernet con coca','vino en caja','picada','provoleta','dulce de leche','medialunas','morcilla',
+       'chorizo','panchos','hamburguesa','papas fritas','ensalada','pan','queso','huevo frito',
+       'tostado','submarino','torta','flan','milanesa napolitana'],
+    d:['vitel toné','matambre arrollado','chinchulines','bondiola','tira de asado','chimichurri',
+       'pan dulce','garrapiñada','tortas fritas','pastelitos','fugazzeta','vitel','criollos',
+       'ñoquis del 29','ravioles del domingo','bizcochitos','mate cocido','turrón','sánguche de miga'] },
+
+  { id:'cultura', nombre:'Cultura pop ARG', emoji:'📺',
+    f:['Susana Giménez','Tinelli','Gran Hermano','Casados con Hijos','Mirtha Legrand','Patito Feo',
+       'Chiquititas','Floricienta','Cebollitas','Showmatch','Telefe','Sandro','Moria Casán',
+       'Ricardo Fort','Francella','El Marginal','Okupas','Cris Morena','Rebelde Way','Verano del 98'],
+    d:['Diego Capusotto','Los Simuladores','Tumberos','Poné a Francella','CQC','Videomatch',
+       'Antonio Gasalla','Alberto Olmedo','Jorge Porcel','Tato Bores','Pelito','Pinky','Nini Marshall',
+       'Resto del Mundo','Magazine For Fai','Peter Capusotto','Mex Urtizberea','La niñera','Pol-ka','Caiga Quien Caiga'] },
+
+  { id:'musica', nombre:'Música', emoji:'🎸',
+    f:['Soda Stereo','Los Redondos','cuarteto','cumbia villera','La Mona Jiménez','Charly García',
+       'Fito Páez','La Renga','Los Piojos','Babasónicos','Rodrigo','Gilda','Damas Gratis',
+       'recital','pogo','una previa','Tan Biónica','Miranda!','Los Palmeras','Andrés Calamaro'],
+    d:['Gustavo Cerati','Luis Alberto Spinetta','Divididos','Sumo','Virus','Bersuit','El Indio Solari',
+       'Los Fabulosos Cadillacs','Auténticos Decadentes','Catupecu Machu','Intoxicados','Callejeros',
+       'Attaque 77','Las Pelotas','Vilma Palma','Memphis La Blusera','Pity Álvarez','ricoteros','2 Minutos'] },
+
+  { id:'objetos', nombre:'Objetos y nostalgia', emoji:'📼',
+    f:['walkman','Tamagotchi','el bondi','la SUBE','casete','discman','control remoto','ojotas',
+       'mochila','riñonera','gomera','kiosco','remís','colectivo','subte','tren','plasticola',
+       'témperas','cartuchera','VHS'],
+    d:['cospel','ficha de teléfono','dial up','diskette','Family Game','teléfono a disco','cabina telefónica',
+       'guía telefónica','el monedero','australes','patacón','lecop','baldosa floja','maxikiosco',
+       'goma Milán','El Gráfico','Billiken','Anteojito','Topper','zapatillas Flecha'] },
+
+  { id:'modismos', nombre:'Modismos y mímica', emoji:'🗣️',
+    f:['estar al horno','mandar fruta','hacer fiaca','mala leche','qué quilombo','estar en pedo',
+       'tirar los perros','hacerse el boludo','qué bajón','estar manija','no dar bola','estar piola',
+       'pegar la vuelta','hacerse humo','tirar onda','estar embolado','comerse un garrón','estar de joda',
+       'salir de previa','estar re copado'],
+    d:['estar para el orto','meter la mula','hacerse el vivo','tirar la chancleta','estar en la lona',
+       'hacer gancho','estar al palo','tener mambo','irse al pasto','estar hasta las manos',
+       'mandar al frente','comerse los mocos','pegar un tubazo','hacer la plancha','mandarse una cagada',
+       'estar de cama','tener fiaca','estar en bolas','hacer la del avión','irse a la mierda'] },
+
+  { id:'futbol', nombre:'Fútbol y deporte', emoji:'⚽',
+    f:['Messi','Maradona','la mano de Dios','golazo','penal','arquero','gambeta','hinchada','el clásico',
+       'Boca','River','la pelota de trapo','el picado','chilena','caño','tiro libre','córner','offside',
+       'tarjeta roja','el referí'],
+    d:['el VAR','la Scaloneta','Dibu Martínez','la tercera estrella','Qatar 2022','la bombonera',
+       'el monumental','superclásico','la 12','barrabrava','el potrero','el travesaño','sombrerito',
+       'la celeste y blanca','atajada','pelota de trapo','la redonda','gol a los ingleses','picadito','el aguante'] },
+
+  { id:'lugares', nombre:'Lugares y costumbres', emoji:'🇦🇷',
+    f:['la playa de Mar del Plata','el Obelisco','Bariloche','las Cataratas','la cancha','el barrio',
+       'la quinta','el parque','la pileta','el camping','la previa','el after','el cumpleaños de 15',
+       'el casamiento','el peaje','la ruta','la estación de servicio','el cyber','la verdulería','el chino'],
+    d:['Caminito','la 9 de Julio','el Tigre','las sierras de Córdoba','el Aconcagua','la Quebrada',
+       'el corte de luz','el paro','la cola del banco','el feriado puente','el día del amigo','la siesta',
+       'el quincho','la parrilla del finde','el viaje de egresados','la previa del mundial','la sobremesa',
+       'el asado de oficina','la juntada de ex compañeros','el bondi 60'] },
+];
+
+const PICANTE = { id:'picante', nombre:'Picante (after/previa)', emoji:'🌶️',
+  f:['boludo','pelotudo','forro','en pedo','garca','careta','ortiva','chamuyo','levante','telo',
+     'escabio','resaca','transar','despelote','ratón','chongo','after office','la previa zarpada',
+     'mandar nudes','vomitar de borracho'],
+  d:['la concha de la lora','hacer la chancha','sacar ficha','meter los cuernos','ponerse en pedo',
+     'estar en bolas','salir de chongo','touch and go','mojar la factura','quedar como el orto',
+     'la birra hasta el amanecer','el bajón post escabio','el arrepentido del grupo','mandarse la cagada',
+     'el que arruina la previa','tomar fernet hasta caer','el chamuyo barato','ligar un garrón','la resaca del domingo','el plan que se pinchó'] };
+
+const TEAM_COLORS = ['#4AA3C7','#FF6B6B','#2FD27A','#FFA53C','#8B6FE8','#FF7FB6'];
+const TEAM_EMOJIS = ['🦊','🐯','🐸','🦁','🐙','🦄','🐧','🐲'];
+
+/* =====================================================================
+   AUDIO — tic-tac, fanfarria y bocinazo (Web Audio API, sin archivos)
+   ===================================================================== */
+const Audio = (() => {
+  let ctx = null;
+  const ac = () => { if(!ctx){ try{ ctx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return ctx; };
+  const beep = (freq,dur,type='sine',vol=0.2,when=0) => {
+    const c=ac(); if(!c) return;
+    const o=c.createOscillator(), g=c.createGain();
+    o.type=type; o.frequency.value=freq; o.connect(g); g.connect(c.destination);
+    const t=c.currentTime+when;
+    g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(vol,t+0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    o.start(t); o.stop(t+dur+0.02);
+  };
+  return {
+    unlock(){ const c=ac(); if(c&&c.state==='suspended') c.resume(); },
+    tick(){ beep(880,0.05,'square',0.08); },
+    tock(){ beep(660,0.05,'square',0.08); },
+    flip(){ beep(520,0.07,'triangle',0.18); beep(720,0.07,'triangle',0.14,0.05); },
+    acierto(){ [523,659,784,1046].forEach((f,i)=>beep(f,0.18,'triangle',0.25,i*0.09)); },
+    bocina(){ beep(180,0.5,'sawtooth',0.3); beep(140,0.55,'sawtooth',0.25,0.05); },
+    pop(){ beep(440,0.08,'sine',0.15); },
+  };
+})();
+const vibrar = (ms) => { try{ navigator.vibrate && navigator.vibrate(ms); }catch(e){} };
+
+/* Confeti simpático */
+function Confetti(){
+  const emojis=['🎉','🎊','⭐','✏️','🟡','🔵','🟢','🔴','🟣','🧡'];
+  return (
+    <div className="confetti">
+      {Array.from({length:46}).map((_,i)=>{
+        const st={left:(Math.random()*100)+'%',animationDelay:(Math.random()*0.7)+'s',animationDuration:(2+Math.random()*1.6)+'s',fontSize:(16+Math.random()*16)+'px'};
+        return <span key={i} style={st}>{emojis[i%emojis.length]}</span>;
+      })}
+    </div>
+  );
+}
+
+/* =====================================================================
+   APP — el celu es el MAZO DE CARTAS (la palabra) + el TABLERO (turnos,
+   cronómetro y puntajes). Se dibuja en una pizarra/pared con fibrón.
+   ===================================================================== */
+function App(){
+  const [pantalla, setPantalla] = useState('inicio');
+  const [toast, setToast] = useState('');
+
+  const [equipos, setEquipos] = useState([
+    {id:1, nombre:'', jugadores:[], score:0, salteos:0},
+    {id:2, nombre:'', jugadores:[], score:0, salteos:0},
+  ]);
+
+  const [catsOn, setCatsOn] = useState(() => new Set(CATS.map(c=>c.id)));
+  const [dif, setDif] = useState('todas');
+  const [picante, setPicante] = useState(false);
+  const [tiempo, setTiempo] = useState(90);
+  const [rondas, setRondas] = useState(3);
+  const [penalSaltear, setPenalSaltear] = useState(false);
+
+  const [turno, setTurno] = useState({eq:0, ronda:1});
+  const [palabra, setPalabra] = useState('');
+  const [catActual, setCatActual] = useState('');
+  const [usadas, setUsadas] = useState(() => new Set());
+  const [stats, setStats] = useState({ rapido:null });
+  const [resultado, setResultado] = useState({});
+
+  const mostrarToast = (t)=>{ setToast(t); setTimeout(()=>setToast(''),1400); };
+
+  const armarPool = useCallback(() => {
+    let lista=[];
+    const fuentes=[...CATS]; if(picante) fuentes.push(PICANTE);
+    for(const c of fuentes){
+      if(c.id!=='picante' && !catsOn.has(c.id)) continue;
+      const add=(arr)=>arr.forEach(t=>lista.push({t, cat:c.nombre}));
+      if(dif==='todas'||dif==='facil') add(c.f);
+      if(dif==='todas'||dif==='dificil') add(c.d);
+    }
+    return lista;
+  }, [catsOn, dif, picante]);
+
+  const sacarPalabra = useCallback((usadasSet) => {
+    const pool=armarPool();
+    const dispo=pool.filter(p=>!usadasSet.has(p.t));
+    const fuente=dispo.length?dispo:pool;
+    return fuente[Math.floor(Math.random()*fuente.length)] || {t:'che, dibujá algo', cat:''};
+  }, [armarPool]);
+
+  const nuevaPalabra = (set)=>{
+    const w=sacarPalabra(set||usadas);
+    setPalabra(w.t); setCatActual(w.cat);
+    setUsadas(u=>{ const n=new Set(u); n.add(w.t); return n; });
+    return w;
+  };
+
+  const updEquipo = (i,patch)=>setEquipos(es=>es.map((e,j)=>j===i?{...e,...patch}:e));
+  const addEquipo = ()=>setEquipos(es=>es.length>=6?es:[...es,{id:Date.now(),nombre:'',jugadores:[],score:0,salteos:0}]);
+  const delEquipo = (i)=>setEquipos(es=>es.length<=2?es:es.filter((_,j)=>j!==i));
+  const addJugador = (i,nombre)=>{ const n=nombre.trim(); if(!n) return; updEquipo(i,{jugadores:[...equipos[i].jugadores,n]}); };
+  const delJugador = (i,j)=>updEquipo(i,{jugadores:equipos[i].jugadores.filter((_,k)=>k!==j)});
+
+  const drawerDe = (e)=> (e.jugadores&&e.jugadores.length)? e.jugadores[(e.drawerIdx||0)%e.jugadores.length] : null;
+
+  const empezar = ()=>{
+    Audio.unlock();
+    const norm=equipos.map((e,i)=>({...e, nombre:e.nombre.trim()||`Equipo ${i+1}`, score:0, salteos:0, drawerIdx:0}));
+    setEquipos(norm); setStats({rapido:null}); setUsadas(new Set()); setTurno({eq:0,ronda:1});
+    setPantalla('reparto');
+  };
+
+  const poolCount = armarPool().length;
+
+  const finTurno = (adivino, segUsados, agoto)=>{
+    if(adivino){
+      setEquipos(es=>es.map((e,i)=>i===turno.eq?{...e,score:e.score+1}:e));
+      Audio.acierto(); vibrar([60,40,120]);
+      setStats(s=>(!s.rapido||segUsados<s.rapido.seg)?{...s,rapido:{eq:turno.eq,seg:segUsados}}:s);
+    } else { Audio.bocina(); vibrar([300,80,300]); }
+    setResultado({adivino, segUsados, agoto});
+    setPantalla('ronda');
+  };
+
+  const avanzar = ()=>{
+    const nextEq=turno.eq+1;
+    if(nextEq<equipos.length){ setTurno(t=>({...t,eq:nextEq})); setPantalla('reparto'); }
+    else if(turno.ronda<rondas){
+      setEquipos(es=>es.map(e=>({...e,drawerIdx:(e.drawerIdx+1)%Math.max(1,(e.jugadores.length||1))})));
+      setTurno({eq:0,ronda:turno.ronda+1}); setPantalla('reparto');
+    } else setPantalla('tablero');
+  };
+
+  return (
+    <>
+      {toast && <div className="toast">{toast}</div>}
+
+      {pantalla==='inicio' && <Inicio onJugar={()=>{Audio.unlock();setPantalla('equipos');}} />}
+
+      {pantalla==='equipos' &&
+        <Equipos equipos={equipos} updEquipo={updEquipo} addEquipo={addEquipo} delEquipo={delEquipo}
+          addJugador={addJugador} delJugador={delJugador}
+          onVolver={()=>setPantalla('inicio')} onSeguir={()=>setPantalla('config')} />}
+
+      {pantalla==='config' &&
+        <Config catsOn={catsOn} setCatsOn={setCatsOn} dif={dif} setDif={setDif}
+          picante={picante} setPicante={setPicante} tiempo={tiempo} setTiempo={setTiempo}
+          rondas={rondas} setRondas={setRondas} penalSaltear={penalSaltear} setPenalSaltear={setPenalSaltear}
+          poolCount={poolCount} onVolver={()=>setPantalla('equipos')}
+          onJugar={()=>{ if(poolCount<4){mostrarToast('Elegí más categorías 🙏');return;} empezar(); }} />}
+
+      {pantalla==='reparto' &&
+        <Reparto equipos={equipos} turno={turno} totalRondas={rondas} drawer={drawerDe(equipos[turno.eq])}
+          onListo={()=>{ nuevaPalabra(); setPantalla('mirar'); }} />}
+
+      {pantalla==='mirar' &&
+        <Mirar equipo={equipos[turno.eq]} palabra={palabra} cat={catActual}
+          onOtra={()=>nuevaPalabra()} onEmpezar={()=>{Audio.unlock();setPantalla('juego');}} />}
+
+      {pantalla==='juego' &&
+        <EnJuego equipo={equipos[turno.eq]} palabra={palabra} cat={catActual} tiempo={tiempo} penalSaltear={penalSaltear}
+          onResultado={(ok,seg)=>finTurno(ok,seg,false)}
+          onTiempo={()=>finTurno(false,tiempo,true)}
+          onSaltear={()=>{
+            setEquipos(es=>es.map((e,i)=>i===turno.eq?{...e,salteos:e.salteos+1,score:e.score+(penalSaltear?-1:0)}:e));
+            Audio.pop(); nuevaPalabra();
+          }} />}
+
+      {pantalla==='ronda' &&
+        <FinRonda equipos={equipos} turno={turno} resultado={resultado} onSeguir={avanzar} />}
+
+      {pantalla==='tablero' && <Tablero equipos={equipos} onVerFin={()=>setPantalla('fin')} />}
+
+      {pantalla==='fin' &&
+        <Fin equipos={equipos} stats={stats} tiempo={tiempo} nuevaPalabra={nuevaPalabra}
+          setEquipos={setEquipos}
+          onReiniciar={()=>{
+            setEquipos(es=>es.map(e=>({...e,score:0,salteos:0,drawerIdx:0})));
+            setStats({rapido:null}); setUsadas(new Set()); setTurno({eq:0,ronda:1}); setPantalla('reparto');
+          }}
+          onInicio={()=>setPantalla('inicio')} />}
+    </>
+  );
+}
+
+/* ===================== PANTALLAS ===================== */
+function Inicio({onJugar}){
+  return (
+    <div className="screen center fade">
+      <div className="grow center" style={{gap:16}}>
+        <div style={{fontSize:78}} className="pop">✏️</div>
+        <h1 className="logo">DIBUJÁ,<br/><span className="sol">CHE</span></h1>
+        <div className="tag">PICTIONARY DE PIZARRA · BIEN ARGENTO 🇦🇷</div>
+        <div className="glass" style={{marginTop:8}}>
+          <div className="hint" style={{lineHeight:1.55}}>
+            Colgá una <b style={{color:'#fff'}}>pizarra o un papel en la pared</b> y dibujá con fibrón.<br/>
+            El celu es <b style={{color:'var(--sol)'}}>las cartas y el tablero</b>: te da la palabra, lleva
+            el tiempo y los puntos.
+          </div>
+        </div>
+      </div>
+      <div className="stack">
+        <button className="btn sol" onClick={onJugar}>¡DALE, A JUGAR!</button>
+        <div className="hint">Pasá el celu · 2 a 6 equipos · sin internet</div>
+      </div>
+    </div>
+  );
+}
+
+function Equipos({equipos, updEquipo, addEquipo, delEquipo, addJugador, delJugador, onVolver, onSeguir}){
+  const [drafts, setDrafts] = useState({});
+  const setDraft = (i,v)=>setDrafts(d=>({...d,[i]:v}));
+  const enviar = (i)=>{ addJugador(i, drafts[i]||''); setDraft(i,''); };
+  return (
+    <div className="screen fade">
+      <div className="row" style={{marginBottom:14}}>
+        <button className="btn ghost auto sm" onClick={onVolver}>←</button>
+        <h2 className="light" style={{flex:1,textAlign:'center'}}>Armá los equipos</h2>
+        <span style={{width:44}}/>
+      </div>
+      <div className="stack grow">
+        {equipos.map((eq,i)=>{
+          const col=TEAM_COLORS[i%TEAM_COLORS.length];
+          return (
+            <div className="teamcard" key={eq.id} style={{background:col}}>
+              <div className="teamhead">
+                <div className="teamdot">{TEAM_EMOJIS[i%TEAM_EMOJIS.length]}</div>
+                <input className="teamname-in" placeholder={`Equipo ${i+1}`} value={eq.nombre} maxLength={18}
+                  onChange={e=>updEquipo(i,{nombre:e.target.value})}/>
+                {equipos.length>2 &&
+                  <button onClick={()=>delEquipo(i)} style={{background:'rgba(0,0,0,.15)',border:'none',color:'#fff',width:38,height:38,borderRadius:10,fontSize:20,cursor:'pointer'}}>🗑️</button>}
+              </div>
+              <div className="stack" style={{gap:6}}>
+                {eq.jugadores.map((j,k)=>(<div className="player" key={k}>👤 {j}<span className="x" onClick={()=>delJugador(i,k)}>×</span></div>))}
+              </div>
+              <div className="addp">
+                <input placeholder="Sumar jugador…" value={drafts[i]||''} onChange={e=>setDraft(i,e.target.value)}
+                  onKeyDown={e=>{ if(e.key==='Enter') enviar(i); }} maxLength={16}/>
+                <button onClick={()=>enviar(i)}>+</button>
+              </div>
+            </div>
+          );
+        })}
+        {equipos.length<6 && <button className="btn ghost" onClick={addEquipo}>+ Sumar equipo</button>}
+      </div>
+      <div style={{paddingTop:12}}>
+        <button className="btn sol" onClick={onSeguir}>SEGUIR →</button>
+        <div className="hint" style={{marginTop:8}}>Los jugadores son opcionales: igual pueden ir pasándose el celu.</div>
+      </div>
+    </div>
+  );
+}
+
+function Config({catsOn,setCatsOn,dif,setDif,picante,setPicante,tiempo,setTiempo,rondas,setRondas,penalSaltear,setPenalSaltear,poolCount,onVolver,onJugar}){
+  const toggleCat=(id)=>setCatsOn(s=>{ const n=new Set(s); n.has(id)?n.delete(id):n.add(id); return n; });
+  const cnt=(c)=> (dif==='facil'?c.f.length: dif==='dificil'?c.d.length: c.f.length+c.d.length);
+  return (
+    <div className="screen fade">
+      <div className="row" style={{marginBottom:14}}>
+        <button className="btn ghost auto sm" onClick={onVolver}>←</button>
+        <h2 className="light" style={{flex:1,textAlign:'center'}}>Configurá la partida</h2>
+        <span style={{width:44}}/>
+      </div>
+      <div className="stack grow">
+        <div className="card">
+          <h2 style={{fontSize:18,marginBottom:4}}>Categorías</h2>
+          <div className="sub" style={{marginBottom:10}}>Elegí qué entra en la partida.</div>
+          <div className="stack" style={{gap:8}}>
+            {CATS.map(c=>(
+              <button key={c.id} className={'catbtn'+(catsOn.has(c.id)?' on':'')} onClick={()=>toggleCat(c.id)}>
+                <span className="catbox">{catsOn.has(c.id)?'✓':''}</span>
+                <span className="catemoji">{c.emoji}</span>
+                <span style={{flex:1}}><span className="catname">{c.nombre}</span><br/><span className="catcount">{cnt(c)} palabras</span></span>
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="card">
+          <h2 style={{fontSize:18,marginBottom:10}}>Dificultad</h2>
+          <div className="row wrap">
+            {[['facil','Fácil 😎'],['dificil','Difícil 🤔'],['todas','Todas 🎲']].map(([v,l])=>(
+              <button key={v} className={'chip'+(dif===v?' on':'')} onClick={()=>setDif(v)}>{l}</button>))}
+          </div>
+        </div>
+        <div className="card">
+          <div className="row" style={{justifyContent:'space-between'}}>
+            <div><div className="optname">🌶️ Modo after / previa</div><div className="optdesc">Palabras subidas de tono. Solo para grandes.</div></div>
+            <div className={'switch'+(picante?' on':'')} onClick={()=>setPicante(p=>!p)}><div className="knob"/></div>
+          </div>
+        </div>
+        <div className="card">
+          <h2 style={{fontSize:18,marginBottom:10}}>Tiempo por turno</h2>
+          <div className="row wrap">{[60,90,120].map(t=>(<button key={t} className={'chip'+(tiempo===t?' on':'')} onClick={()=>setTiempo(t)}>{t}s</button>))}</div>
+        </div>
+        <div className="card">
+          <h2 style={{fontSize:18,marginBottom:10}}>Cantidad de rondas</h2>
+          <div className="row wrap">{[2,3,5,8].map(r=>(<button key={r} className={'chip'+(rondas===r?' on':'')} onClick={()=>setRondas(r)}>{r}</button>))}</div>
+          <div className="sub" style={{marginTop:8}}>Cada equipo dibuja 1 vez por ronda.</div>
+        </div>
+        <div className="card">
+          <div className="row" style={{justifyContent:'space-between'}}>
+            <div><div className="optname">Penalidad al saltear</div><div className="optdesc">Saltear palabra resta 1 punto.</div></div>
+            <div className={'switch'+(penalSaltear?' on':'')} onClick={()=>setPenalSaltear(p=>!p)}><div className="knob"/></div>
+          </div>
+        </div>
+      </div>
+      <div style={{paddingTop:12}}><button className="btn sol" onClick={onJugar}>EMPEZAR ({poolCount} palabras) ▶</button></div>
+    </div>
+  );
+}
+
+/* Tablero compacto reutilizable (el "tablero" siempre a mano) */
+function BoardStrip({equipos}){
+  const max=Math.max(1,...equipos.map(e=>e.score));
+  return (
+    <div className="boardstrip">
+      {equipos.map((e,i)=>(
+        <div key={e.id} className={'boardchip'+(e.score===max&&max>0?' lead':'')}>
+          {!(e.score===max&&max>0) && <span className="bdot" style={{background:TEAM_COLORS[i%TEAM_COLORS.length]}}/>}
+          <span className="bnm">{e.score===max&&max>0?'👑 ':''}{e.nombre}</span>
+          <span className="bpts">{e.score}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function Reparto({equipos, turno, totalRondas, drawer, onListo}){
+  const eq=equipos[turno.eq];
+  return (
+    <div className="screen fade">
+      <div className="row" style={{justifyContent:'center',marginBottom:12}}><span className="pill">Ronda {turno.ronda} de {totalRondas}</span></div>
+      <BoardStrip equipos={equipos}/>
+      <div className="grow center" style={{gap:16}}>
+        <div style={{fontSize:64}} className="pop">📲</div>
+        <h2 className="light" style={{fontSize:22}}>Pasale el celu a…</h2>
+        <div className="card pop" style={{padding:'22px 26px'}}>
+          <div style={{fontFamily:'var(--ft)',fontWeight:900,fontSize:30}}>{eq.nombre}</div>
+          {drawer && <div className="sub" style={{marginTop:6}}>Dibuja: <b style={{color:'var(--tinta)'}}>{drawer}</b> 🖊️</div>}
+        </div>
+        <div className="hint">Mirá la palabra a solas, andá a la pizarra y dibujá.<br/>¡El resto no espía! 👀</div>
+      </div>
+      <button className="btn sol" onClick={onListo}>SOY EL QUE DIBUJA 🖊️</button>
+    </div>
+  );
+}
+
+function Mirar({equipo, palabra, cat, onOtra, onEmpezar}){
+  const [flip,setFlip]=useState(false);
+  return (
+    <div className="screen center fade">
+      <span className="pill">{equipo.nombre}</span>
+      <div className="grow center" style={{gap:18,width:'100%'}}>
+        <div className="sub light">Tocá la carta para ver tu palabra 🤫</div>
+        <div className={'flip'+(flip?' on':'')} onClick={()=>{ if(!flip){Audio.flip();} setFlip(f=>!f); }}>
+          <div className="flip-in">
+            <div className="flip-face flip-front"><div className="q">?</div><div className="sub" style={{marginTop:6}}>tocá para revelar</div></div>
+            <div className="flip-face flip-back"><div className="w">{palabra}</div>{cat&&<div className="cat">{cat}</div>}</div>
+          </div>
+        </div>
+        {flip && <button className="btn ghost auto sm" onClick={(e)=>{e.stopPropagation();onOtra();}}>🔄 Dame otra</button>}
+      </div>
+      <button className="btn verde" disabled={!flip} onClick={onEmpezar}>¡A LA PIZARRA! ⏱️</button>
+    </div>
+  );
+}
+
+function EnJuego({equipo, palabra, cat, tiempo, penalSaltear, onResultado, onTiempo, onSaltear}){
+  const [restante,setRestante]=useState(tiempo);
+  const [peek,setPeek]=useState(false);
+  const finRef=useRef(false);
+
+  useEffect(()=>{
+    finRef.current=false; setRestante(tiempo);
+    const id=setInterval(()=>{
+      setRestante(r=>{
+        const n=r-1;
+        if(n<=0){ clearInterval(id); if(!finRef.current){ finRef.current=true; onTiempo(); } return 0; }
+        if(n<=5){ Audio.tock(); vibrar(20); } else if(n<=10){ (n%2?Audio.tick():Audio.tock()); }
+        return n;
+      });
+    },1000);
+    return ()=>clearInterval(id);
+  },[tiempo]);
+
+  const usados=tiempo-restante;
+  const frac=restante/tiempo;
+  const warn=restante<=10;
+  const R=130, C=2*Math.PI*R;
+  const col = frac>0.5?'#2FD27A':(frac>0.2?'#FFD24A':'#FF6B6B');
+
+  const adivinaron=()=>{ if(finRef.current) return; finRef.current=true; onResultado(true, usados); };
+  const saltear=()=>{ if(finRef.current) return; onSaltear(); };
+
+  return (
+    <div className="screen fade">
+      <div className="row" style={{justifyContent:'space-between'}}>
+        <span className="pill">{equipo.nombre}</span>
+        <span className="pill">🖊️ Dibujá en la pizarra</span>
+      </div>
+
+      <div className="grow center" style={{gap:18}}>
+        <div className={'ringwrap'+(warn?' warn':'')}>
+          <svg width="100%" height="100%" viewBox="0 0 300 300">
+            <circle cx="150" cy="150" r={R} fill="none" stroke="rgba(255,255,255,.22)" strokeWidth="20"/>
+            <circle cx="150" cy="150" r={R} fill="none" stroke={col} strokeWidth="20" strokeLinecap="round"
+              strokeDasharray={C} strokeDashoffset={C*(1-frac)} style={{transition:'stroke-dashoffset 1s linear, stroke .4s'}}/>
+          </svg>
+          <div className="ringtxt"><div className="num">{restante}</div><div className="lbl">SEGUNDOS</div></div>
+        </div>
+
+        {/* Carta: oculta por defecto, el que dibuja la espía manteniendo apretado */}
+        <button className="peek"
+          onPointerDown={()=>setPeek(true)} onPointerUp={()=>setPeek(false)}
+          onPointerLeave={()=>setPeek(false)} onPointerCancel={()=>setPeek(false)}>
+          {peek ? <span className="peekword">{palabra}</span> : <span>👁️ Mantené apretado para ver la palabra</span>}
+        </button>
+      </div>
+
+      <div className="row">
+        <button className="btn rojo" onClick={saltear}>SALTEAR{penalSaltear?' (-1)':''} ⏭️</button>
+        <button className="btn verde" onClick={adivinaron}>¡ADIVINARON! ✅</button>
+      </div>
+    </div>
+  );
+}
+
+function FinRonda({equipos, turno, resultado, onSeguir}){
+  const eq=equipos[turno.eq];
+  const ok=resultado.adivino;
+  return (
+    <div className="screen center fade">
+      {ok && <Confetti/>}
+      <div className={'flash '+(ok?'ok':'bad')}/>
+      <BoardStrip equipos={equipos}/>
+      <div className="grow center" style={{gap:16}}>
+        <div style={{fontSize:84}} className="pop">{ok?'🎉':(resultado.agoto?'⏰':'😬')}</div>
+        <h2 className="light">{ok?'¡La sacaron!':(resultado.agoto?'Se acabó el tiempo':'Esta vez no…')}</h2>
+        {ok && <div className="sub light">en {resultado.segUsados}s · ¡sos un crack! 😎</div>}
+        <div className="card pop" style={{width:'100%'}}>
+          <div className="row" style={{justifyContent:'space-between'}}>
+            <span className="optname">{eq.nombre}</span>
+            <span style={{fontFamily:'var(--ft)',fontWeight:900,fontSize:26,color:ok?'var(--verdeD)':'var(--suave)'}}>{eq.score} {ok&&'(+1)'}</span>
+          </div>
+        </div>
+      </div>
+      <button className="btn sol" onClick={onSeguir}>SIGUIENTE TURNO →</button>
+    </div>
+  );
+}
+
+function ordenar(equipos){ return equipos.map((e,i)=>({...e,_i:i})).sort((a,b)=>b.score-a.score); }
+
+function Tablero({equipos, onVerFin}){
+  const orden=ordenar(equipos);
+  return (
+    <div className="screen fade">
+      <div className="center" style={{marginBottom:16}}><div style={{fontSize:52}} className="pop">📊</div><h2 className="light">Tablero de puntajes</h2></div>
+      <div className="grow">
+        {orden.map((e,r)=>(
+          <div className="scorerow pop" key={e.id} style={{animationDelay:(r*0.05)+'s'}}>
+            <span className="rank">{r===0?'🥇':r===1?'🥈':r===2?'🥉':`${r+1}°`}</span>
+            <span className="dot" style={{background:TEAM_COLORS[e._i%TEAM_COLORS.length]}}/>
+            <span className="nm">{e.nombre}</span>
+            <span className="pts">{e.score}</span>
+          </div>
+        ))}
+      </div>
+      <button className="btn sol" onClick={onVerFin}>VER GANADOR 🏆</button>
+    </div>
+  );
+}
+
+function Fin({equipos, stats, tiempo, onReiniciar, onInicio, nuevaPalabra, setEquipos}){
+  const orden=ordenar(equipos);
+  const top=orden[0].score;
+  const empatados=orden.filter(e=>e.score===top);
+  const hayEmpate=empatados.length>1;
+  const masSalteador=[...equipos].sort((a,b)=>b.salteos-a.salteos)[0];
+  const rapidoEq=stats.rapido!=null?equipos[stats.rapido.eq]:null;
+  const [muerteSubita,setMuerteSubita]=useState(false);
+
+  if(muerteSubita){
+    return <MuerteSubita empatados={empatados} tiempo={tiempo} nuevaPalabra={nuevaPalabra}
+      onGana={(idGanador)=>{ setEquipos(es=>es.map(e=>e.id===idGanador?{...e,score:e.score+1}:e)); setMuerteSubita(false); }} />;
+  }
+  return (
+    <div className="screen center fade">
+      {!hayEmpate && <Confetti/>}
+      <div className="grow center" style={{gap:10}}>
+        {hayEmpate ? (
+          <>
+            <div style={{fontSize:72}} className="pop">🤝</div>
+            <h2 className="light">¡Empate técnico!</h2>
+            <div className="sub light">{empatados.map(e=>e.nombre).join(' y ')} con {top} puntos</div>
+            <button className="btn sol" style={{maxWidth:300,marginTop:8}} onClick={()=>setMuerteSubita(true)}>⚡ MUERTE SÚBITA</button>
+          </>
+        ) : (
+          <>
+            <div className="trophy">🏆</div>
+            <h2 className="light" style={{fontSize:30}}>¡Ganó {orden[0].nombre}!</h2>
+            <div className="sub light">con {top} puntos · ¡aplausos! 👏</div>
+          </>
+        )}
+        <div className="glass" style={{width:'100%',marginTop:14}}>
+          <div className="statline"><span className="e">⚡</span> El más rápido <b>{rapidoEq?`${rapidoEq.nombre} (${stats.rapido.seg}s)`:'—'}</b></div>
+          <div className="statline"><span className="e">⏭️</span> El que más salteó <b>{masSalteador&&masSalteador.salteos>0?`${masSalteador.nombre} (${masSalteador.salteos})`:'nadie 😇'}</b></div>
+          <div className="statline"><span className="e">🎯</span> Puntos del campeón <b>{top}</b></div>
+        </div>
+        <div style={{width:'100%',marginTop:6}}>
+          {orden.map((e,r)=>(<div className="statline" key={e.id}><span className="e">{r===0?'🥇':r===1?'🥈':r===2?'🥉':'•'}</span>{e.nombre}<b>{e.score}</b></div>))}
+        </div>
+      </div>
+      <div className="stack">
+        <button className="btn sol" onClick={onReiniciar}>🔁 REVANCHA (mismos equipos)</button>
+        <button className="btn ghost" onClick={onInicio}>Volver al inicio</button>
+      </div>
+    </div>
+  );
+}
+
+function MuerteSubita({empatados, tiempo, nuevaPalabra, onGana}){
+  const [idx,setIdx]=useState(0);
+  const [fase,setFase]=useState('reparto');
+  const [pal,setPal]=useState({t:'',cat:''});
+  const eq=empatados[idx];
+  const siguiente=()=>setIdx(i=>(i+1)%empatados.length);
+
+  if(fase==='reparto'){
+    return (
+      <div className="screen center fade">
+        <span className="pill">⚡ Muerte súbita</span>
+        <div className="grow center" style={{gap:16}}>
+          <div style={{fontSize:64}} className="pop">🔥</div>
+          <h2 className="light">El que acierta, gana</h2>
+          <div className="card pop"><div style={{fontFamily:'var(--ft)',fontWeight:900,fontSize:28}}>{eq.nombre}</div></div>
+          <div className="hint">Pasale el celu al que dibuja</div>
+        </div>
+        <button className="btn sol" onClick={()=>{ const w=nuevaPalabra(); setPal(w); setFase('mirar'); }}>SOY EL QUE DIBUJA 🖊️</button>
+      </div>
+    );
+  }
+  if(fase==='mirar'){
+    return (
+      <div className="screen center fade">
+        <span className="pill">{eq.nombre}</span>
+        <div className="grow center" style={{gap:16,width:'100%'}}>
+          <div className="sub light">Dibujá esto en la pizarra:</div>
+          <div className="card" style={{width:'100%'}}>
+            <div style={{fontFamily:'var(--ft)',fontWeight:900,fontSize:'clamp(28px,8vw,42px)',textTransform:'uppercase'}}>{pal.t}</div>
+            {pal.cat && <div className="sub" style={{marginTop:6}}>{pal.cat}</div>}
+          </div>
+        </div>
+        <button className="btn verde" onClick={()=>{Audio.unlock();setFase('juego');}}>¡A LA PIZARRA! ⏱️</button>
+      </div>
+    );
+  }
+  return (
+    <EnJuego equipo={eq} palabra={pal.t} cat={pal.cat} tiempo={tiempo} penalSaltear={false}
+      onResultado={(ok)=>{ if(ok){ onGana(eq.id); } else { siguiente(); setFase('reparto'); } }}
+      onTiempo={()=>{ Audio.bocina(); vibrar(300); siguiente(); setFase('reparto'); }}
+      onSaltear={()=>{ const w=nuevaPalabra(); setPal(w); }} />
+  );
+}
+
+/* ===================== PWA manifest en memoria ===================== */
+(() => {
+  const manifest = {
+    name:'Dibujá, Che', short_name:'Dibujá Che',
+    description:'Pictionary de pizarra para jugar entre amigos: el celu es las cartas y el tablero.',
+    start_url:'.', display:'standalone', orientation:'portrait',
+    background_color:'#3B7FB0', theme_color:'#3B7FB0',
+    icons:[{ src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%234AA3C7'/%3E%3Ctext x='50' y='73' font-size='60' text-anchor='middle'%3E%E2%9C%8F%EF%B8%8F%3C/text%3E%3C/svg%3E",
+      sizes:'any', type:'image/svg+xml', purpose:'any' }]
+  };
+  const blob=new Blob([JSON.stringify(manifest)],{type:'application/manifest+json'});
+  const el=document.getElementById('manifest'); if(el) el.href=URL.createObjectURL(blob);
+})();
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
