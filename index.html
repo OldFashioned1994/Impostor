@@ -212,57 +212,76 @@ document.getElementById("manifest").href =
   "data:application/manifest+json," + encodeURIComponent(JSON.stringify(manifest));
 
 /* =========================================================
-   2) BANCO DE PALABRAS  (100% argento, +160 palabras, 8 categorías)
-   --- Criterio: COSAS CONCRETAS que todos puedan imaginar y describir
-       con una pista de una palabra (no conceptos abstractos). ---
+   2) BANCO DE PALABRAS  (+290 palabras, 10 categorías AMPLIAS)
+   --- Criterio (inspirado en Spyfall / The Chameleon / Codenames):
+       categorías grandes y universales con COSAS CONCRETAS y fáciles,
+       para que entren muchas rondas sin repetirse. El toque argento
+       va salpicado adentro de cada categoría. ---
    --- Para AGREGAR contenido: sumá strings a cualquier array,
        o creá una categoría nueva con su array. Listo, ya entra
        al modo "Mezcla" y al selector automáticamente. ---
    ========================================================= */
 const CATEGORIAS = {
-  "Fuego y asado": [
-    "el chorizo","la provoleta","el vacío","la morcilla","la tira de asado","el chimichurri",
-    "la ensalada rusa","el fernet con coca","el vino tinto","la picada","las mollejas","el chinchulín",
-    "el matambre","el pan casero","la sal gruesa","el carbón","la parrilla","la cerveza bien fría",
-    "el pollo al disco","el choripán"
+  "Animales": [
+    "el perro","el gato","el león","el elefante","la jirafa","el mono","el caballo","la vaca",
+    "el chancho","la gallina","el pingüino","el oso","el tigre","el cocodrilo","la serpiente","el águila",
+    "el delfín","la ballena","el conejo","el ratón","la araña","la abeja","la hormiga","el pulpo",
+    "la cebra","el canguro","el lobo","el zorro","el búho","la tortuga","la oveja","el pato",
+    "el tiburón","la mariposa","la rana","el caracol"
   ],
-  "Kiosco de barrio": [
-    "el alfajor","los chizitos","la Coca de litro","el chocolatín","los criollitos","el Mantecol",
-    "el turrón","el chupetín","el chicle globo","las pastillas","el helado palito","las papas fritas",
-    "el Cindor","la Manaos","las galletitas","el caramelo masticable","el cigarrillo suelto","el diario",
-    "el chicle Bazooka","el sándwich de miga"
+  "Comida y bebida": [
+    "la pizza","la hamburguesa","el asado","la milanesa","la empanada","el helado","el chocolate",
+    "las papas fritas","la ensalada","el sushi","los fideos","el arroz","el huevo frito","el pan",
+    "el queso","el sándwich","la torta","el alfajor","el choripán","el mate","el fernet","el café",
+    "las facturas","el dulce de leche","la banana","la manzana","la naranja","la sandía","el pancho",
+    "el pochoclo","el panqueque","la sopa","el locro","el flan","la gaseosa","la cerveza","el vino","el yogur"
   ],
-  "Crecer en los 90": [
-    "las figuritas","los Tazos","el Tamagotchi","la PlayStation 1","Cartoon Network","el yo-yo",
-    "la bici BMX","el Family Game","el Discman","el cassette","Pokémon","Dragon Ball","el cyber",
-    "el Messenger","el fotolog","el Nokia 1100","el Walkman","los patines","el trompo","las bolitas"
+  "Deportes": [
+    "el fútbol","el básquet","el tenis","el vóley","la natación","el boxeo","el rugby","el golf",
+    "el ciclismo","el hockey","la Fórmula 1","el surf","el esquí","el ping pong","el pádel","el handball",
+    "el ajedrez","la maratón","la escalada","el karate","el skate","el automovilismo","la gimnasia",
+    "el polo","el patín","el bowling"
   ],
-  "En lo de la abuela": [
-    "el mantel de hule","las pantuflas","el sifón de soda","la radio AM","el rosario","las masitas",
-    "el Nescafé","la bombilla","el tapete de crochet","el ventilador de pie","la lata de galletitas con hilos",
-    "el almanaque","el changuito de feria","la frazada de Bariloche","el florero","las fotos viejas",
-    "el caramelo de la cartera","el mate cocido","el sillón forrado","la sopa de fideos"
+  "Trabajos y oficios": [
+    "el médico","el maestro","el bombero","el policía","el panadero","el albañil","el abogado","el cocinero",
+    "el peluquero","el plomero","el electricista","el mecánico","el piloto","el cartero","el futbolista",
+    "el cantante","el actor","el dentista","el enfermero","el veterinario","el taxista","el carpintero",
+    "el jardinero","el periodista","el astronauta","el payaso","el juez","el soldado","el granjero","el pintor"
   ],
-  "Playa y verano": [
-    "la sombrilla","la reposera","el protector solar","los churros de playa","el balde y la pala",
-    "la pelota de paleta","el mate en la arena","la carpa","los lobos marinos","el cucurucho",
-    "la quemadura de sol","el guardavidas","la garrapiñada","las ojotas","la heladerita","el inflable",
-    "la medusa","el choclo hervido","la pileta","el bronceador"
+  "Lugares": [
+    "la playa","la montaña","la cancha","la escuela","el hospital","el supermercado","el kiosco","el cine",
+    "el restaurante","la plaza","el aeropuerto","el banco","el gimnasio","la iglesia","la peluquería",
+    "la cárcel","la biblioteca","el zoológico","el museo","el parque","el hotel","el boliche","la parrilla",
+    "el estadio","la farmacia","la panadería","la comisaría","el circo","el castillo","la isla"
   ],
-  "Cancha y potrero": [
-    "la pelota","los botines","la camiseta","el arco","la red","el bombo","la hinchada","el potrero",
-    "el arquero","el pasto","el referí","la tribuna","el banderín","el silbato","el alambrado",
-    "el picadito","la pechera","el córner","el penal","el caño"
+  "Cosas de casa": [
+    "la heladera","el televisor","la cama","la silla","la mesa","el sillón","el microondas","el lavarropas",
+    "el ventilador","el cuchillo","la almohada","el espejo","la lámpara","el control remoto","la escoba",
+    "la plancha","la pava","el tenedor","la ducha","el inodoro","el cepillo de dientes","la llave",
+    "la ventana","el despertador","la frazada","la toalla","la olla","el vaso","el paraguas","la mochila",
+    "la tijera","el peine"
   ],
-  "Tele y pantallas": [
-    "Tinelli","Mirtha Legrand","Susana Giménez","Capusotto","Los Simpson","Gran Hermano",
-    "Casados con Hijos","Guillermo Francella","Ricardo Darín","Showmatch","Pasapalabra","el noticiero",
-    "la novela turca","Bizarrap","Duki","el Bailando","Telefe","Cebollitas","Chiquititas","Floricienta"
+  "Pelis y series": [
+    "Titanic","Star Wars","Harry Potter","Los Simpson","Toy Story","El Rey León","Friends","Game of Thrones",
+    "Stranger Things","Avatar","Batman","el Hombre Araña","Frozen","Coco","Shrek","Jurassic Park","El Padrino",
+    "Rápidos y Furiosos","Matrix","Casados con Hijos","Gran Hermano","Breaking Bad","La Casa de Papel",
+    "Intensamente","Buscando a Nemo","Volver al Futuro","El Señor de los Anillos","Piratas del Caribe"
   ],
-  "Bondi y ciudad": [
-    "el colectivo","el subte","la SUBE","el semáforo","el kiosco","el cartonero","el taxi","el remís",
-    "la parada del bondi","el malabarista","el quiosquero","el embotellamiento","la bicisenda","el cordón",
-    "la esquina","el carrito de panchos","el vendedor del tren","el Obelisco","la plaza","el monoblock"
+  "Famosos": [
+    "Messi","Maradona","Cristiano Ronaldo","Tinelli","Mirtha Legrand","Susana Giménez","Bizarrap","Duki",
+    "Charly García","Michael Jackson","Shakira","Freddie Mercury","Ricardo Darín","el Dibu Martínez","Lali",
+    "Tini","Guillermo Francella","el Papa Francisco","Albert Einstein","Elon Musk","Taylor Swift","Bad Bunny",
+    "Capusotto","Diego Torres","la Mona Jiménez","Wos"
+  ],
+  "Transporte": [
+    "el auto","el colectivo","el avión","el tren","el subte","la bicicleta","la moto","el barco","el camión",
+    "el helicóptero","el taxi","la ambulancia","el cohete","la patineta","el monopatín","el globo aerostático",
+    "la lancha","el tractor","la camioneta","el submarino","la carreta","el escúter","el trineo","la grúa"
+  ],
+  "Naturaleza": [
+    "el sol","la luna","la lluvia","la nieve","el mar","el río","el árbol","la flor","la laguna","el fuego",
+    "el rayo","el arcoíris","el volcán","la estrella","la nube","el viento","la cascada","el desierto",
+    "el bosque","la tormenta","la ola","la cueva","el hielo","la montaña"
   ]
 };
 const NOMBRES_CAT = Object.keys(CATEGORIAS);
@@ -339,6 +358,7 @@ let S = {
   palabra:"", catPal:"", imps:new Set(), turno:0, mostrando:false, visto:false,
   arranca:"", consejo:"", frase:"", castigo:"",
   seg:120, corriendo:false,
+  usadas:[],              // palabras ya salidas (anti-repetición dentro de la sesión)
   votos:[],               // votos por jugador (índices)
   acusado:null,           // índice acusado (más votado) o null
   caught:false,           // impostor descubierto
@@ -354,7 +374,11 @@ const app = document.getElementById("app");
 function nuevaRonda(){
   const cat = S.categoria==="Mezcla" ? azar(NOMBRES_CAT) : S.categoria;
   S.catPal = cat;
-  S.palabra = azar(CATEGORIAS[cat]);
+  // anti-repetición: no repetir una palabra hasta agotar la categoría
+  let pool = CATEGORIAS[cat].filter(w=>!S.usadas.includes(w));
+  if(pool.length===0){ S.usadas = S.usadas.filter(w=>!CATEGORIAS[cat].includes(w)); pool = CATEGORIAS[cat]; }
+  S.palabra = azar(pool);
+  S.usadas.push(S.palabra);
   S.imps = new Set();
   while(S.imps.size < S.cant) S.imps.add(Math.floor(Math.random()*S.jugadores.length));
   S.turno=0; S.visto=false; S.mostrando=false;
