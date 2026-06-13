@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Mímica de Películas</title>
+<meta name="theme-color" content="#140a10">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Mímica">
+<link id="manifest" rel="manifest">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Sans:wght@400;600;700&display=swap');
+:root{
+  --noche:#140a10; --noche2:#1f0f17; --butaca:#9c1b2e; --butaca2:#c0203a;
+  --dorado:#e8b84b; --dorado2:#f6d27a; --crema:#f4e8cf; --suave:#b79d8a;
+  --verde:#2faf5e; --verde2:#1d7d42; --naranja:#e8762b; --naranja2:#c25a18;
+  --fd:'Bebas Neue','Arial Narrow',sans-serif; --fb:'IBM Plex Sans',system-ui,sans-serif;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%}
+body{
+  background:
+    radial-gradient(120% 80% at 50% -10%, rgba(232,184,75,.10), transparent 60%),
+    radial-gradient(140% 100% at 50% 120%, rgba(156,27,46,.30), transparent 55%),
+    var(--noche);
+  color:var(--crema); font-family:var(--fb);
+  user-select:none; -webkit-user-select:none; -webkit-touch-callout:none;
+  padding:max(18px, env(safe-area-inset-top)) 16px calc(28px + env(safe-area-inset-bottom));
+  display:flex; justify-content:center; overflow-x:hidden;
+}
+#app{width:100%;max-width:440px}
+.claqueta{height:14px;background:repeating-linear-gradient(115deg,#111 0 18px,var(--crema) 18px 36px);
+  border-radius:3px;margin-bottom:14px;opacity:.9}
+.head{text-align:center;margin-bottom:18px}
+.exp{font-family:var(--fd);font-size:15px;letter-spacing:6px;color:var(--dorado)}
+h1{font-family:var(--fd);font-size:54px;margin:2px 0 4px;letter-spacing:2px;line-height:.95;
+  color:var(--crema);text-shadow:3px 3px 0 var(--butaca)}
+h1 .b{color:var(--dorado)}
+h2{font-family:var(--fd);font-size:34px;margin:6px 0 14px;letter-spacing:1px;line-height:1}
+.sub{font-family:var(--fd);font-size:18px;letter-spacing:3px;color:var(--dorado);text-transform:uppercase}
+.intro{font-size:14.5px;color:var(--suave);text-align:center;line-height:1.5;margin:0 auto 20px;max-width:360px}
+.btn{font-family:var(--fd);font-size:23px;padding:15px 20px;width:100%;border:none;
+  border-radius:12px;cursor:pointer;letter-spacing:1.5px;color:#1a0d12;
+  background:linear-gradient(180deg,var(--dorado2),var(--dorado));
+  box-shadow:0 5px 0 #9c7a23, 0 8px 18px rgba(0,0,0,.4);transition:transform .06s, box-shadow .06s}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 #9c7a23}
+.btn:disabled{opacity:.4;box-shadow:none;transform:none}
+.btn.rojo{background:linear-gradient(180deg,var(--butaca2),var(--butaca));color:var(--crema);box-shadow:0 5px 0 #6f0f1d,0 8px 18px rgba(0,0,0,.4)}
+.btn.rojo:active{box-shadow:0 1px 0 #6f0f1d}
+.btn.sec{background:transparent;color:var(--crema);border:2px solid rgba(244,232,207,.4);box-shadow:none;font-size:19px}
+.btn.sec:active{transform:translateY(2px);background:rgba(244,232,207,.06)}
+.btn.verde{background:linear-gradient(180deg,var(--verde),var(--verde2));color:#fff;box-shadow:0 5px 0 #14592f,0 8px 18px rgba(0,0,0,.4)}
+.btn.verde:active{box-shadow:0 1px 0 #14592f}
+.btn.naranja{background:linear-gradient(180deg,var(--naranja),var(--naranja2));color:#fff;box-shadow:0 5px 0 #8c3e0f,0 8px 18px rgba(0,0,0,.4)}
+.btn.naranja:active{box-shadow:0 1px 0 #8c3e0f}
+.btn.mini{width:auto;padding:12px 16px;font-size:20px;flex:0 0 auto}
+.row{display:flex;gap:10px}
+.col{display:flex;flex-direction:column;gap:12px}
+.card{background:linear-gradient(180deg,var(--noche2),rgba(31,15,23,.5));border:2px solid rgba(232,184,75,.25);
+  border-radius:16px;padding:20px;cursor:pointer;transition:transform .08s, border-color .15s;text-align:center}
+.card:active{transform:scale(.98)}
+.card.on{border-color:var(--dorado);box-shadow:0 0 0 2px rgba(232,184,75,.3)}
+.card .emoji{font-size:40px}
+.card .t{font-family:var(--fd);font-size:26px;letter-spacing:1px;margin:6px 0 2px}
+.card .d{font-size:13px;color:var(--suave);line-height:1.4}
+label{font-family:var(--fd);font-size:16px;letter-spacing:3px;color:var(--dorado);display:block;margin:18px 0 8px}
+input{flex:1;padding:13px 14px;font-size:16px;font-family:var(--fb);background:rgba(244,232,207,.08);
+  border:2px solid rgba(244,232,207,.25);border-radius:10px;color:var(--crema);outline:none;min-width:0}
+input:focus{border-color:var(--dorado)}
+input::placeholder{color:var(--suave)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;min-height:8px}
+.chip{font-family:var(--fb);font-weight:600;font-size:14px;padding:7px 12px;border-radius:999px;cursor:pointer;
+  display:inline-flex;align-items:center;gap:6px}
+.chip .x{opacity:.7;font-weight:700}
+.team{border:2px solid rgba(244,232,207,.2);border-radius:14px;padding:14px;margin-bottom:12px;background:rgba(31,15,23,.4)}
+.team .top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.team .dot{width:16px;height:16px;border-radius:5px;flex-shrink:0}
+.team input.nom{font-family:var(--fd);font-size:22px;letter-spacing:1px;background:transparent;border:none;border-bottom:2px solid rgba(244,232,207,.2);border-radius:0;padding:4px 2px}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{flex:1;min-width:64px;padding:12px 6px;font-family:var(--fd);font-size:21px;border:2px solid rgba(244,232,207,.25);
+  border-radius:10px;cursor:pointer;background:transparent;color:var(--crema);text-align:center;letter-spacing:1px}
+.opt.on{background:var(--dorado);color:#1a0d12;border-color:var(--dorado)}
+.catrow{display:flex;align-items:center;gap:12px;padding:12px 14px;border:2px solid rgba(244,232,207,.18);
+  border-radius:12px;margin-bottom:10px;cursor:pointer;background:rgba(31,15,23,.4)}
+.catrow.on{border-color:var(--dorado)}
+.box{width:26px;height:26px;border:2px solid rgba(244,232,207,.4);border-radius:7px;display:flex;
+  align-items:center;justify-content:center;font-size:17px;flex-shrink:0;color:#1a0d12;font-weight:700}
+.box.on{background:var(--dorado);border-color:var(--dorado)}
+.catrow .info{flex:1}
+.catrow .ct{font-family:var(--fd);font-size:20px;letter-spacing:1px}
+.catrow .cd{font-size:12px;color:var(--suave)}
+.switch{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 4px;cursor:pointer}
+.switch .lbl{font-size:14.5px}
+.toggle{width:52px;height:30px;border-radius:999px;background:rgba(244,232,207,.2);position:relative;flex-shrink:0;transition:background .15s}
+.toggle.on{background:var(--verde)}
+.toggle .knob{position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:left .15s}
+.toggle.on .knob{left:25px}
+.timer{font-family:var(--fd);font-size:96px;letter-spacing:4px;line-height:1;margin:6px 0;text-align:center}
+.timer.urgente{color:var(--butaca2);animation:pulse .5s infinite alternate}
+@keyframes pulse{from{transform:scale(1)}to{transform:scale(1.06)}}
+.peli{font-family:var(--fd);font-size:46px;line-height:1.02;letter-spacing:1px;text-align:center;margin:0;word-break:break-word}
+.peli.frente{font-size:60px}
+.tag{display:inline-block;font-family:var(--fd);font-size:14px;letter-spacing:3px;color:var(--dorado);
+  border:1.5px solid var(--dorado);border-radius:999px;padding:4px 12px;text-transform:uppercase}
+.center{text-align:center}
+.muted{color:var(--suave);font-size:13.5px}
+.score-line{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-radius:12px;
+  margin-bottom:8px;font-size:17px;background:rgba(31,15,23,.5);border:2px solid rgba(244,232,207,.12)}
+.score-line .nm{font-family:var(--fd);font-size:24px;letter-spacing:1px;display:flex;align-items:center;gap:10px}
+.score-line .pts{font-family:var(--fd);font-size:30px;color:var(--dorado)}
+.score-line.lider{border-color:var(--dorado);background:rgba(232,184,75,.1)}
+.lista{margin:10px 0;max-height:36vh;overflow:auto}
+.lista .it{display:flex;justify-content:space-between;gap:8px;padding:9px 12px;border-radius:9px;font-size:15px;margin-bottom:6px}
+.lista .it.ok{background:rgba(47,175,94,.16)}
+.lista .it.no{background:rgba(232,118,43,.14)}
+.lista .it .e{font-weight:700;white-space:nowrap}
+.bignum{font-family:var(--fd);font-size:120px;line-height:1;text-align:center;color:var(--dorado)}
+.dot-inline{width:16px;height:16px;border-radius:5px;display:inline-block}
+.flash{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  z-index:60;color:#fff;text-align:center;padding:24px}
+.flash.ok{background:var(--verde)}
+.flash.no{background:var(--naranja)}
+.flash .big{font-family:var(--fd);font-size:74px;letter-spacing:2px}
+.flash .pl{font-family:var(--fd);font-size:30px;opacity:.92;margin-top:8px;line-height:1.05}
+.frente-play{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  z-index:40;padding:24px;background:var(--noche)}
+.frente-play .tt{position:absolute;top:max(20px,env(safe-area-inset-top));font-family:var(--fd);font-size:60px;color:var(--dorado)}
+.frente-play .hint{position:absolute;bottom:calc(46px + env(safe-area-inset-bottom));font-size:13px;color:var(--suave);text-align:center;width:90%;line-height:1.5}
+.fb-row{display:flex;gap:14px;width:100%;max-width:380px;margin-top:30px}
+.pista-box{background:rgba(232,184,75,.1);border:1.5px dashed var(--dorado);border-radius:12px;padding:12px 14px;
+  margin:14px 0;font-size:14.5px;line-height:1.6;text-align:left}
+.pista-box b{color:var(--dorado)}
+.foot{margin-top:18px;text-align:center}
+.link{color:var(--suave);font-size:13px;text-decoration:underline;cursor:pointer;background:none;border:none;font-family:var(--fb);padding:6px}
+.banner{font-size:13px;color:var(--suave);text-align:center;margin-top:14px;line-height:1.4}
+.stat{display:flex;justify-content:space-between;padding:10px 14px;border-radius:10px;background:rgba(31,15,23,.5);
+  margin-bottom:8px;font-size:15px;align-items:center}
+.stat .v{font-family:var(--fd);font-size:20px;color:var(--dorado)}
+.countdown{font-family:var(--fd);font-size:200px;line-height:1;text-align:center;color:var(--dorado)}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+"use strict";
+
+/* Manifest inline para "instalar" como app (PWA), sin archivos extra. */
+const manifest = {
+  name:"Mímica de Películas", short_name:"Mímica", display:"standalone",
+  background_color:"#140a10", theme_color:"#140a10", start_url:".", orientation:"portrait"
+};
+document.getElementById("manifest").href =
+  "data:application/manifest+json," + encodeURIComponent(JSON.stringify(manifest));
+
+/* =========================================================================
+   BANCO DE PELÍCULAS
+   Títulos tal cual se conocieron en Argentina (ojo con las traducciones:
+   Pulp Fiction = "Tiempos Violentos", Good Will Hunting = "Mente Indomable",
+   Home Alone = "Mi Pobre Angelito", The Naked Gun = "¿Y dónde está el policía?",
+   Groundhog Day = "Hechizo del Tiempo", The Ring = "El Aro", etc.)
+   ========================================================================= */
+const BANCO = {
+  clasicos: [
+    "Titanic","Matrix","Parque Jurásico","Volver al Futuro","El Rey León",
+    "Hombres de Negro","Día de la Independencia","Forrest Gump","Náufrago","El Sexto Sentido",
+    "Tiempos Violentos","Gladiador","Belleza Americana","Mente Indomable","Una Mente Brillante",
+    "Rescatando al Soldado Ryan","Terminator 2: El Juicio Final","El Quinto Elemento","Cazafantasmas","Buscando a Nemo",
+    "Monsters, Inc.","Bichos","Ghost: La Sombra del Amor","Mujer Bonita","Duro de Matar",
+    "El Hombre Araña","León: El Profesional","Twister","Armageddon","Impacto Profundo",
+    "La Momia","Lara Croft: Tomb Raider","El Patriota","Apollo 13","Sueños de Libertad",
+    "Pecados Capitales","El Silencio de los Inocentes","Tropas del Espacio","Día de Entrenamiento","Identidad",
+    "La Roca","Tres Reyes","Lluvia de Hamburguesas","Mejor... Imposible"
+  ],
+  sagas: [
+    "Harry Potter","El Señor de los Anillos","La Guerra de las Galaxias","Piratas del Caribe","Shrek",
+    "Toy Story","Rápidos y Furiosos","Misión Imposible","Indiana Jones","La Era de Hielo",
+    "Madagascar","Kung Fu Panda","Cómo Entrenar a tu Dragón","X-Men","Crepúsculo",
+    "Los Juegos del Hambre","Transformers","Batman: El Caballero de la Noche","Los Vengadores","Iron Man",
+    "La Identidad Bourne","Austin Powers","American Pie","Scary Movie","Karate Kid",
+    "La Pantera Rosa","Locademia de Policía","Mortal Kombat","Resident Evil","El Juego del Miedo",
+    "Bob Esponja: La Película","El Padrino","Rocky","Rambo","Terminator",
+    "Alien: El Octavo Pasajero","Depredador","Mi Villano Favorito","Cars","Los Indestructibles",
+    "Thor","Capitán América","La Noche de las Narices Frías"
+  ],
+  argentino: [
+    "Nueve Reinas","El Secreto de sus Ojos","Relatos Salvajes","Esperando la Carroza","El Hijo de la Novia",
+    "Un Cuento Chino","Pizza, Birra, Faso","Metegol","El Clan","El Aura",
+    "Luna de Avellaneda","El Mismo Amor, la Misma Lluvia","Tiempo de Valientes","Carancho","Leonera",
+    "La Historia Oficial","Camila","Hombre Mirando al Sudeste","Plata Dulce","La Patagonia Rebelde",
+    "Caballos Salvajes","No Sos Vos, Soy Yo","Bombón: El Perro","Cama Adentro","Whisky Romeo Zulu",
+    "Iluminados por el Fuego","Kamchatka","El Estudiante","Las Acacias","Medianeras",
+    "El Ciudadano Ilustre","La Odisea de los Giles","Argentina, 1985","Mi Obra Maestra","El Robo del Siglo",
+    "Granizo","El Ángel","Nieve Negra","Tesis sobre un Homicidio","Wakolda",
+    "Infancia Clandestina","El Bonaerense","Corazón de León","Me Casé con un Boludo","Días de Vinilo"
+  ],
+  culto: [
+    "¿Y dónde está el policía?","Mi Pobre Angelito","E.T., el Extraterrestre","Hechizo del Tiempo","El Aro",
+    "La Máscara","Loco por Mary","El Show de Truman","Los Locos Addams","Beetlejuice: El Súper Fantasma",
+    "Gremlins","Ace Ventura","Una Pareja de Idiotas","El Profesor Chiflado","Mentiroso, Mentiroso",
+    "El Gran Pez","Quisiera Ser Grande","¿Qué Pasó Ayer?","Realmente Amor","50 Primeras Citas",
+    "Click: Perdiendo el Control","Una Noche en el Museo","El Joven Manos de Tijera","Jumanji","El Resplandor",
+    "Pesadilla en lo Profundo de la Noche","Scream, Grita Antes de Morir","Actividad Paranormal","El Conjuro","It (Eso)",
+    "El Exorcista","Sé lo que Hicieron el Verano Pasado","La Familia de mi Novia","Son como Niños","Locos de Ira",
+    "La Boda de mi Mejor Amigo","Tienes un E-mail","Una Esposa de Mentira","Todopoderoso","Pequeña Miss Sunshine",
+    "Zoolander","Ligeramente Embarazada","¿Quieres ser John Malkovich?"
+  ],
+  picante: [
+    "El Curioso Caso de Benjamin Button","Eterno Resplandor de una Mente sin Recuerdos","El Diario de una Pasión",
+    "Las Crónicas de Narnia","La Vida es Bella","El Laberinto del Fauno","Bastardos sin Gloria","Babel",
+    "Magnolia","Réquiem para un Sueño","Trainspotting","El Club de la Pelea","Perdida","La Naranja Mecánica",
+    "Psicosis","Ciudad de Dios","Birdman","El Renacido","Whiplash: Música y Obsesión","Ella",
+    "Interestelar","El Origen","Sin Lugar para los Débiles","Petróleo Sangriento","El Aviador",
+    "Los Sospechosos de Siempre","Memento","Donnie Darko","El Pianista","La Lista de Schindler",
+    "Apocalypse Now","Taxi Driver","Buenos Muchachos","Casino","Río Místico",
+    "Los Infiltrados","Sin City: Ciudad del Pecado","V de Venganza","Supercool","Virgen a los 40",
+    "Ted","Borat","Nueve Semanas y Media","Ojos Bien Cerrados","Cincuenta Sombras de Grey","Magic Mike"
+  ]
+};
+
+const CATS = [
+  { id:"clasicos",  emoji:"🎬", nombre:"Clásicos 90s / 2000s", desc:"Titanic, Matrix, Jurassic Park, Forrest Gump…", genero:"Taquillazo noventoso" },
+  { id:"sagas",     emoji:"⚔️", nombre:"Sagas de la generación", desc:"Harry Potter, Star Wars, Toy Story, Rápidos…", genero:"Saga / franquicia" },
+  { id:"argentino", emoji:"🧉", nombre:"Cine argentino",        desc:"Nueve Reinas, Relatos Salvajes, Metegol…", genero:"Cine nacional" },
+  { id:"culto",     emoji:"🍿", nombre:"Comedias y de culto",   desc:"Mi Pobre Angelito, E.T., El Aro, terror…", genero:"Comedia / culto" },
+  { id:"picante",   emoji:"🌶️", nombre:"Difícil / Picante (after)", desc:"Títulos largos y enredados, modo previa.", genero:"Drama / picante" }
+];
+
+/* Metadata opcional para las pistas (año / actor) de las más conocidas. */
+const META = {
+  "Titanic":{a:1997,p:"Leonardo DiCaprio"},
+  "Matrix":{a:1999,p:"Keanu Reeves"},
+  "Parque Jurásico":{a:1993,p:"Sam Neill"},
+  "Volver al Futuro":{a:1985,p:"Michael J. Fox"},
+  "El Rey León":{a:1994,p:"(animada)"},
+  "Forrest Gump":{a:1994,p:"Tom Hanks"},
+  "Náufrago":{a:2000,p:"Tom Hanks"},
+  "Gladiador":{a:2000,p:"Russell Crowe"},
+  "Tiempos Violentos":{a:1994,p:"John Travolta"},
+  "Mente Indomable":{a:1997,p:"Matt Damon / Robin Williams"},
+  "El Sexto Sentido":{a:1999,p:"Bruce Willis"},
+  "Duro de Matar":{a:1988,p:"Bruce Willis"},
+  "El Hombre Araña":{a:2002,p:"Tobey Maguire"},
+  "Cazafantasmas":{a:1984,p:"Bill Murray"},
+  "Mujer Bonita":{a:1990,p:"Julia Roberts"},
+  "Nueve Reinas":{a:2000,p:"Ricardo Darín"},
+  "El Secreto de sus Ojos":{a:2009,p:"Ricardo Darín"},
+  "Relatos Salvajes":{a:2014,p:"Darín / Sbaraglia"},
+  "El Hijo de la Novia":{a:2001,p:"Ricardo Darín"},
+  "Esperando la Carroza":{a:1985,p:"Antonio Gasalla"},
+  "Metegol":{a:2013,p:"(animada)"},
+  "Argentina, 1985":{a:2022,p:"Ricardo Darín"},
+  "Un Cuento Chino":{a:2011,p:"Ricardo Darín"},
+  "Mi Pobre Angelito":{a:1990,p:"Macaulay Culkin"},
+  "E.T., el Extraterrestre":{a:1982,p:"(Spielberg)"},
+  "Hechizo del Tiempo":{a:1993,p:"Bill Murray"},
+  "La Máscara":{a:1994,p:"Jim Carrey"},
+  "Ace Ventura":{a:1994,p:"Jim Carrey"},
+  "Harry Potter":{a:2001,p:"Daniel Radcliffe"},
+  "El Señor de los Anillos":{a:2001,p:"Elijah Wood"},
+  "La Guerra de las Galaxias":{a:1977,p:"Mark Hamill"},
+  "Shrek":{a:2001,p:"(animada)"},
+  "Toy Story":{a:1995,p:"(animada)"},
+  "Piratas del Caribe":{a:2003,p:"Johnny Depp"},
+  "El Origen":{a:2010,p:"Leonardo DiCaprio"},
+  "El Club de la Pelea":{a:1999,p:"Brad Pitt"},
+  "Interestelar":{a:2014,p:"Matthew McConaughey"},
+  "El Renacido":{a:2015,p:"Leonardo DiCaprio"},
+  "La Vida es Bella":{a:1997,p:"Roberto Benigni"}
+};
+
+/* ===== utilidades ===== */
+const COLORES = ["#c0203a","#5b8fa8","#2faf5e","#e8b84b","#9b6bd1","#e8762b"];
+const shuffle = (arr) => {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+};
+const fmtTime = (s) => Math.floor(s/60) + ":" + String(s%60).padStart(2,"0");
+const esc = (s) => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const catDe = (id) => CATS.find(c => c.id === id);
+
+/* ===== audio (WebAudio, sin assets) ===== */
+const Audio = (() => {
+  let ctx = null;
+  const get = () => {
+    if (!ctx) { try { ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){ return null; } }
+    if (ctx && ctx.state === "suspended") { try { ctx.resume(); } catch(e){} }
+    return ctx;
+  };
+  const tone = (freq, dur, type, vol, when) => {
+    const c = get(); if (!c) return;
+    const t0 = c.currentTime + (when||0);
+    const o = c.createOscillator(), g = c.createGain();
+    o.type = type || "sine"; o.frequency.value = freq;
+    o.connect(g); g.connect(c.destination);
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(vol||0.18, t0 + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    o.start(t0); o.stop(t0 + dur + 0.02);
+  };
+  return {
+    unlock: get,
+    tic:    () => tone(1100, 0.05, "square", 0.06, 0),
+    acierto:() => { tone(660,0.12,"triangle",0.2,0); tone(880,0.12,"triangle",0.2,0.1); tone(1175,0.22,"triangle",0.2,0.2); },
+    pasar:  () => tone(300,0.18,"sawtooth",0.14,0),
+    fin:    () => { tone(200,0.5,"sawtooth",0.22,0); tone(150,0.6,"sawtooth",0.22,0.12); },
+    win:    () => [523,659,784,1046].forEach((f,i)=>tone(f,0.3,"triangle",0.2,i*0.14))
+  };
+})();
+const vibrar = (p) => { try { if (navigator.vibrate) navigator.vibrate(p); } catch(e){} };
+
+/* =========================================================================
+   ESTADO
+   ========================================================================= */
+const S = {
+  scr: "inicio",            // inicio|modo|equipos|ajustes|turno|contando|jugando|resumen|tablero|ganador
+  modo: "clasica",          // clasica|frente
+  equipos: [
+    { nombre:"Los Pochocleros", color:COLORES[0], pts:0, jugs:[] },
+    { nombre:"Banda del Sillón", color:COLORES[1], pts:0, jugs:[] }
+  ],
+  cats: { clasicos:true, sagas:true, argentino:true, culto:true, picante:false },
+  duracion: 90,
+  rondasTot: 3,
+  penalidad: false,
+  pistasOn: true,
+
+  mazo: [], idx: 0,
+  equipoActual: 0,
+  ronda: 1,
+  seg: 90,
+  corriendo: false,
+  peli: null,
+  turno: { aciertos:0, salteos:0, lista:[] },
+  pistaUsada: 0,
+  cuenta: 3,
+  muerte: null,             // {empatados:[i], cola:[i], puntos:{}}
+  tiltOk: false, tiltActivo: false,
+  stats: {}                 // por equipo: {aciertos, salteos, pistas}
+};
+
+let timerId = null;
+const tilt = { base:null, armado:true, escuchando:false, handler:null, gotEvent:false };
+const app = document.getElementById("app");
+
+/* ===== mazo ===== */
+function construirMazo(){
+  let pool = [];
+  CATS.forEach(c => { if (S.cats[c.id]) BANCO[c.id].forEach(t => pool.push({ titulo:t, cat:c.id })); });
+  if (pool.length === 0) BANCO.clasicos.forEach(t => pool.push({ titulo:t, cat:"clasicos" }));
+  S.mazo = shuffle(pool); S.idx = 0;
+}
+function proxima(){
+  if (!S.mazo.length) return;
+  if (S.idx >= S.mazo.length) { S.mazo = shuffle(S.mazo); S.idx = 0; }
+  S.peli = S.mazo[S.idx]; S.idx += 1;
+}
+
+/* ===== cronómetro ===== */
+function pararTimer(){ S.corriendo = false; if (timerId){ clearInterval(timerId); timerId = null; } }
+function arrancarTimer(){
+  pararTimer(); S.corriendo = true;
+  timerId = setInterval(() => {
+    S.seg -= 1;
+    if (S.seg < 0) S.seg = 0;
+    const t = document.getElementById("timer");
+    if (t){ t.textContent = fmtTime(S.seg); t.classList.toggle("urgente", S.seg <= 10); }
+    const tf = document.getElementById("timerFrente");
+    if (tf) tf.textContent = fmtTime(S.seg);
+    if (S.seg <= 10 && S.seg > 0) Audio.tic();
+    if (S.seg <= 0) { pararTimer(); finTurno(); }
+  }, 1000);
+}
+
+/* ===== giroscopio (modo frente) ===== */
+function empezarTilt(){
+  tilt.base = null; tilt.armado = true; tilt.gotEvent = false;
+  const UMBRAL = 42, REARME = 22;
+  tilt.handler = function(e){
+    if (e.beta == null) return;
+    tilt.gotEvent = true;
+    if (!S.tiltActivo){ S.tiltActivo = true; const h = document.getElementById("frenteFb"); if (h) h.style.display = "none"; const hint = document.getElementById("frenteHint"); if (hint) hint.style.display = "block"; }
+    if (tilt.base === null){ tilt.base = e.beta; return; }
+    const d = e.beta - tilt.base;
+    if (tilt.armado){
+      if (d < -UMBRAL){ tilt.armado = false; if (S.corriendo) registrar(true); }
+      else if (d > UMBRAL){ tilt.armado = false; if (S.corriendo) registrar(false); }
+    } else if (Math.abs(d) < REARME){ tilt.armado = true; }
+  };
+  window.addEventListener("deviceorientation", tilt.handler, true);
+  tilt.escuchando = true;
+}
+function pararTilt(){
+  if (tilt.escuchando && tilt.handler) window.removeEventListener("deviceorientation", tilt.handler, true);
+  tilt.escuchando = false;
+}
+function pedirPermisoSensor(){
+  return new Promise((resolve) => {
+    try {
+      if (typeof DeviceOrientationEvent !== "undefined" &&
+          typeof DeviceOrientationEvent.requestPermission === "function") {
+        DeviceOrientationEvent.requestPermission().then(r => resolve(r === "granted")).catch(() => resolve(false));
+        return;
+      }
+    } catch(e){ return resolve(false); }
+    resolve(typeof DeviceOrientationEvent !== "undefined"); // Android / sin gate de permiso
+  });
+}
+
+/* =========================================================================
+   FLUJO DE JUEGO
+   ========================================================================= */
+function iniciarPartida(){
+  Audio.unlock();
+  construirMazo();
+  S.stats = {};
+  S.equipos.forEach(e => e.pts = 0);
+  S.ronda = 1; S.muerte = null;
+  irAlTurno(0);
+}
+function irAlTurno(idx){
+  S.equipoActual = idx;
+  S.turno = { aciertos:0, salteos:0, lista:[] };
+  S.pistaUsada = 0;
+  S.seg = S.muerte ? 30 : S.duracion;
+  pararTimer();
+  S.scr = "turno"; render();
+}
+function comenzarCuenta(){
+  Audio.unlock();
+  const arrancar = () => {
+    proxima();
+    S.cuenta = 3; S.scr = "contando"; render();
+    tickCuenta();
+  };
+  if (S.modo === "frente"){
+    pedirPermisoSensor().then(ok => { S.tiltOk = ok; S.tiltActivo = false; arrancar(); });
+  } else { arrancar(); }
+}
+function tickCuenta(){
+  Audio.tic();
+  setTimeout(() => {
+    S.cuenta -= 1;
+    if (S.cuenta <= 0){
+      if (S.modo === "frente") empezarTilt();
+      S.scr = "jugando"; render(); arrancarTimer();
+    } else { render(); tickCuenta(); }
+  }, 800);
+}
+
+function mostrarFlash(tipo, titulo){
+  const old = document.getElementById("flash"); if (old) old.remove();
+  const div = document.createElement("div");
+  div.id = "flash";
+  div.className = "flash " + (tipo === "ok" ? "ok" : "no");
+  const big = tipo === "ok"
+    ? (S.modo === "frente" ? "¡ACERTARON!" : "¡BIEN AHÍ!")
+    : (S.modo === "frente" ? "PASAMOS" : "SIGUIENTE");
+  div.innerHTML = '<div class="big">'+big+'</div><div class="pl">'+esc(titulo)+'</div>';
+  document.body.appendChild(div);
+  setTimeout(() => { if (div.parentNode) div.remove(); }, 720);
+}
+
+function registrar(acierto){
+  if (!S.peli || !S.corriendo) return;
+  const eq = S.equipoActual;
+  const s = S.stats[eq] || { aciertos:0, salteos:0, pistas:0 };
+  const titulo = S.peli.titulo;
+  if (acierto){
+    const vale = S.pistaUsada > 0 ? 0 : 1;
+    Audio.acierto(); vibrar(60);
+    S.equipos[eq].pts += vale;
+    S.turno.aciertos += 1;
+    S.turno.lista.push({ titulo, ok:true, vale });
+    s.aciertos += 1;
+    mostrarFlash("ok", titulo);
+  } else {
+    Audio.pasar(); vibrar(25);
+    if (S.penalidad) S.equipos[eq].pts = Math.max(0, S.equipos[eq].pts - 1);
+    S.turno.salteos += 1;
+    S.turno.lista.push({ titulo, ok:false });
+    s.salteos += 1;
+    mostrarFlash("no", titulo);
+  }
+  S.stats[eq] = s;
+  S.pistaUsada = 0;
+  proxima();
+  pintarJugando();
+}
+function usarPista(){
+  if (!S.pistasOn || !S.peli) return;
+  S.pistaUsada += 1;
+  const eq = S.equipoActual;
+  const s = S.stats[eq] || { aciertos:0, salteos:0, pistas:0 };
+  s.pistas += 1; S.stats[eq] = s;
+  pintarJugando();
+}
+function finTurno(){
+  pararTimer(); pararTilt();
+  Audio.fin(); vibrar([120,60,120]);
+  const f = document.getElementById("flash"); if (f) f.remove();
+  S.scr = "resumen"; render();
+}
+function cerrarTurno(){
+  if (S.muerte){ avanzarMuerte(); return; }
+  const ultimo = S.equipoActual === S.equipos.length - 1;
+  if (!ultimo){ irAlTurno(S.equipoActual + 1); return; }
+  if (S.ronda >= S.rondasTot){
+    const emp = liderazgo();
+    if (emp.length > 1) iniciarMuerte(emp);
+    else { S.scr = "ganador"; render(); Audio.win(); vibrar([100,50,100,50,200]); }
+  } else { S.scr = "tablero"; render(); }
+}
+function siguienteRonda(){ S.ronda += 1; irAlTurno(0); }
+function liderazgo(){
+  const max = Math.max.apply(null, S.equipos.map(e => e.pts));
+  const out = [];
+  S.equipos.forEach((e,i) => { if (e.pts === max) out.push(i); });
+  return out;
+}
+
+/* ===== muerte súbita ===== */
+function iniciarMuerte(empatados){
+  S.muerte = { empatados:empatados.slice(), cola:empatados.slice(), puntos:{} };
+  irAlTurno(empatados[0]);
+}
+function avanzarMuerte(){
+  const m = S.muerte;
+  m.puntos[S.equipoActual] = S.turno.aciertos;
+  m.cola = m.cola.slice(1);
+  if (m.cola.length > 0){ irAlTurno(m.cola[0]); return; }
+  // todos jugaron el desempate
+  const max = Math.max.apply(null, m.empatados.map(i => m.puntos[i] || 0));
+  const ganan = m.empatados.filter(i => (m.puntos[i] || 0) === max);
+  if (ganan.length === 1){
+    S.equipos[ganan[0]].pts += 0.5; // medio punto desempata el marcador
+    S.muerte = null;
+    S.scr = "ganador"; render(); Audio.win(); vibrar([100,50,100,50,200]);
+  } else {
+    iniciarMuerte(ganan); // sigue el empate: otra vuelta entre los que empataron
+  }
+}
+
+/* ===== equipos ===== */
+function addEquipo(){
+  if (S.equipos.length >= 6) return;
+  S.equipos.push({ nombre:"Equipo "+(S.equipos.length+1), color:COLORES[S.equipos.length % COLORES.length], pts:0, jugs:[] });
+  render();
+}
+function delEquipo(i){ if (S.equipos.length <= 2) return; S.equipos.splice(i,1); render(); }
+
+/* =========================================================================
+   RENDER
+   ========================================================================= */
+function headHTML(sub){
+  return '<div class="head"><div class="claqueta"></div>'+
+    '<div class="exp">FUNCIÓN ARGENTA</div>'+
+    '<h1>DÍGALO CON <span class="b">MÍMICA</span></h1>'+
+    (sub ? '<div class="sub">'+esc(sub)+'</div>' : '')+
+    '</div>';
+}
+
+function render(){
+  const f = S.scr;
+
+  if (f === "inicio"){
+    app.innerHTML = headHTML("Pelis para treintañeros")+
+      '<p class="intro">Actuás una película sin hablar ni hacer ruido y tu equipo adivina contra reloj. Dale, en menos de 30 segundos están jugando.</p>'+
+      '<div class="col">'+
+        '<button class="btn rojo" id="go">▸ EMPEZAR A JUGAR</button>'+
+        '<button class="btn sec" id="aj">⚙ Ajustes y categorías</button>'+
+      '</div>'+
+      '<p class="banner">🍿 Sin registro, sin tutorial. El estado vive en el celu.</p>';
+    document.getElementById("go").onclick = () => { Audio.unlock(); S.scr = "modo"; render(); };
+    document.getElementById("aj").onclick = () => { S.scr = "ajustes"; render(); };
+    return;
+  }
+
+  if (f === "modo"){
+    app.innerHTML = headHTML("¿Cómo jugamos?")+
+      '<div class="col">'+
+        '<div class="card '+(S.modo==="clasica"?"on":"")+'" data-m="clasica">'+
+          '<div class="emoji">📱</div><div class="t">Pasá el celu</div>'+
+          '<div class="d">El que actúa ve la peli en pantalla y la hace sin hablar. El equipo adivina y aprieta «¡Adivinaron!».</div></div>'+
+        '<div class="card '+(S.modo==="frente"?"on":"")+'" data-m="frente">'+
+          '<div class="emoji">🙇</div><div class="t">En la frente <span style="font-size:13px;color:var(--suave)">(estilo Heads Up)</span></div>'+
+          '<div class="d">Te apoyás el celu en la frente y el grupo te hace la mímica. Inclinás <b>abajo</b> = acierto, <b>arriba</b> = pasar. Si no hay sensores, hay botones.</div></div>'+
+      '</div>'+
+      '<div class="col" style="margin-top:22px">'+
+        '<button class="btn rojo" id="next">SEGUIR ▸</button>'+
+        '<button class="btn sec" id="back">← Volver</button></div>';
+    document.querySelectorAll(".card").forEach(c => c.onclick = () => { S.modo = c.dataset.m; render(); });
+    document.getElementById("next").onclick = () => { S.scr = "equipos"; render(); };
+    document.getElementById("back").onclick = () => { S.scr = "inicio"; render(); };
+    return;
+  }
+
+  if (f === "equipos"){
+    let h = headHTML("Armá los equipos");
+    S.equipos.forEach((e,i) => {
+      h += '<div class="team">'+
+        '<div class="top"><div class="dot" style="background:'+e.color+'"></div>'+
+        '<input class="nom" data-nom="'+i+'" value="'+esc(e.nombre)+'" maxlength="22" placeholder="Nombre del equipo">'+
+        (S.equipos.length>2 ? '<button class="link" data-del="'+i+'">borrar</button>' : '')+'</div>'+
+        '<div class="row"><input data-padd="'+i+'" placeholder="Sumar jugador (opcional)…" enterkeyhint="done">'+
+        '<button class="btn mini" data-paddb="'+i+'">＋</button></div>'+
+        '<div class="chips">'+ e.jugs.map((j,k)=>'<span class="chip" data-pj="'+i+'-'+k+'" style="background:'+e.color+'33;border:1.5px solid '+e.color+'">'+esc(j)+' <span class="x">✕</span></span>').join("") +'</div>'+
+      '</div>';
+    });
+    if (S.equipos.length < 6) h += '<button class="btn sec" id="addeq">＋ Sumar equipo</button>';
+    h += '<div class="col" style="margin-top:20px"><button class="btn rojo" id="next">SEGUIR ▸</button>'+
+      '<button class="btn sec" id="back">← Volver</button></div>'+
+      '<p class="banner">Los jugadores son opcionales, pero ayudan para las estadísticas del final.</p>';
+    app.innerHTML = h;
+
+    document.querySelectorAll("[data-nom]").forEach(inp => inp.oninput = () => { S.equipos[+inp.dataset.nom].nombre = inp.value; });
+    document.querySelectorAll("[data-del]").forEach(b => b.onclick = () => delEquipo(+b.dataset.del));
+    const addJ = (i, inp) => { const n = inp.value.trim(); if (n){ S.equipos[i].jugs.push(n); render(); const x = document.querySelector('[data-padd="'+i+'"]'); if (x) x.focus(); } };
+    document.querySelectorAll("[data-padd]").forEach(inp => inp.onkeydown = (ev) => { if (ev.key === "Enter") addJ(+inp.dataset.padd, inp); });
+    document.querySelectorAll("[data-paddb]").forEach(b => b.onclick = () => { const i = +b.dataset.paddb; addJ(i, document.querySelector('[data-padd="'+i+'"]')); });
+    document.querySelectorAll("[data-pj]").forEach(c => c.onclick = () => { const p = c.dataset.pj.split("-"); S.equipos[+p[0]].jugs.splice(+p[1],1); render(); });
+    const addeq = document.getElementById("addeq"); if (addeq) addeq.onclick = addEquipo;
+    document.getElementById("next").onclick = () => { S.scr = "ajustes"; render(); };
+    document.getElementById("back").onclick = () => { S.scr = "modo"; render(); };
+    return;
+  }
+
+  if (f === "ajustes"){
+    const alguna = Object.keys(S.cats).some(k => S.cats[k]);
+    let h = headHTML("Categorías y reglas")+'<label>¿Qué pelis entran?</label>';
+    CATS.forEach(c => {
+      h += '<div class="catrow '+(S.cats[c.id]?"on":"")+'" data-cat="'+c.id+'">'+
+        '<div class="box '+(S.cats[c.id]?"on":"")+'">'+(S.cats[c.id]?"✓":"")+'</div>'+
+        '<div class="info"><div class="ct">'+c.emoji+' '+esc(c.nombre)+'</div>'+
+        '<div class="cd">'+esc(c.desc)+' · '+BANCO[c.id].length+' títulos</div></div></div>';
+    });
+    if (!alguna) h += '<p class="muted center">Elegí al menos una categoría 🎬</p>';
+    h += '<label>Duración del turno</label><div class="opts">'+
+      [60,90,120].map(d=>'<button class="opt '+(S.duracion===d?"on":"")+'" data-dur="'+d+'">'+d+'s</button>').join("")+'</div>';
+    h += '<label>Rondas</label><div class="opts">'+
+      [1,2,3,4,5].map(r=>'<button class="opt '+(S.rondasTot===r?"on":"")+'" data-rnd="'+r+'">'+r+'</button>').join("")+'</div>';
+    h += '<label>Extras</label>'+
+      '<div class="switch" id="swP"><span class="lbl">💡 Pistas canjeables (esa peli vale 0 puntos)</span><div class="toggle '+(S.pistasOn?"on":"")+'"><div class="knob"></div></div></div>'+
+      '<div class="switch" id="swN"><span class="lbl">⛔ Saltear resta 1 punto</span><div class="toggle '+(S.penalidad?"on":"")+'"><div class="knob"></div></div></div>';
+    h += '<div class="col" style="margin-top:22px"><button class="btn rojo" id="play" '+((!alguna||S.equipos.length<2)?"disabled":"")+'>¡A JUGAR! ▸</button>'+
+      '<button class="btn sec" id="back">← Volver</button></div>';
+    app.innerHTML = h;
+
+    document.querySelectorAll("[data-cat]").forEach(r => r.onclick = () => { const id = r.dataset.cat; S.cats[id] = !S.cats[id]; render(); });
+    document.querySelectorAll("[data-dur]").forEach(b => b.onclick = () => { S.duracion = +b.dataset.dur; S.seg = S.duracion; render(); });
+    document.querySelectorAll("[data-rnd]").forEach(b => b.onclick = () => { S.rondasTot = +b.dataset.rnd; render(); });
+    document.getElementById("swP").onclick = () => { S.pistasOn = !S.pistasOn; render(); };
+    document.getElementById("swN").onclick = () => { S.penalidad = !S.penalidad; render(); };
+    const pb = document.getElementById("play"); if (pb && !pb.disabled) pb.onclick = iniciarPartida;
+    document.getElementById("back").onclick = () => { S.scr = (S.equipos.length>=2?"equipos":"inicio"); render(); };
+    return;
+  }
+
+  if (f === "turno"){
+    const eq = S.equipos[S.equipoActual];
+    app.innerHTML = headHTML(S.muerte ? "MUERTE SÚBITA" : ("Ronda "+S.ronda+" de "+S.rondasTot))+
+      '<div class="center" style="margin-top:10px">'+
+        '<span class="tag" style="border-color:'+eq.color+';color:'+eq.color+'">Le toca a</span>'+
+        '<h2 style="color:'+eq.color+';font-size:42px;margin:14px 0 6px">'+esc(eq.nombre)+'</h2>'+
+        '<p class="intro" style="margin-top:6px">'+
+          (S.modo==="clasica"
+            ? "Que un jugador agarre el celu y actúe lo que aparezca. ¡Sin hablar ni hacer ruidos!"
+            : "Apoyate el celu en la frente con la pantalla hacia el grupo. Ellos te hacen la mímica.")+'</p>'+
+        (S.muerte ? '<p class="muted">Desempate a '+S.seg+'s. El que más adivina, gana.</p>' : '')+
+      '</div>'+
+      '<div class="col" style="margin-top:24px"><button class="btn verde" id="emp">EMPEZAR ▸</button></div>'+
+      (S.modo==="frente" ? '<p class="banner">📲 Si el celu no tiene sensores o no das permiso, aparecen botones grandes en pantalla.</p>' : '');
+    document.getElementById("emp").onclick = comenzarCuenta;
+    return;
+  }
+
+  if (f === "contando"){
+    const eq = S.equipos[S.equipoActual];
+    app.innerHTML = '<div class="center" style="padding-top:22vh">'+
+      '<span class="tag" style="border-color:'+eq.color+';color:'+eq.color+'">'+esc(eq.nombre)+'</span>'+
+      '<div class="countdown">'+S.cuenta+'</div>'+
+      '<p class="muted">'+(S.modo==="frente"?"Celu en la frente…":"¡Preparate!")+'</p></div>';
+    return;
+  }
+
+  if (f === "jugando"){ pintarJugando(true); return; }
+
+  if (f === "resumen"){
+    const eq = S.equipos[S.equipoActual];
+    const sumados = S.turno.lista.filter(x=>x.ok).reduce((a,x)=>a+(x.vale!=null?x.vale:1),0);
+    let labelBtn = "SIGUIENTE EQUIPO ▸";
+    if (S.muerte) labelBtn = S.muerte.cola.length>1 ? "SIGUE EL DESEMPATE ▸" : "VER GANADOR ▸";
+    else if (S.equipoActual===S.equipos.length-1) labelBtn = S.ronda>=S.rondasTot ? "DEFINIR ▸" : "FIN DE RONDA · TABLERO ▸";
+    let h = headHTML(S.muerte ? "MUERTE SÚBITA" : "¡Se acabó el tiempo!")+
+      '<div class="center"><h2 style="color:'+eq.color+'">'+esc(eq.nombre)+'</h2>'+
+      '<div class="bignum">'+S.turno.aciertos+'</div>'+
+      '<p class="muted">acierto(s)'+(sumados!==S.turno.aciertos?(" · +"+sumados+" pts (algunas con pista)"):"")+' · '+S.turno.salteos+' salteada(s)</p></div>';
+    h += '<div class="lista">';
+    if (!S.turno.lista.length) h += '<p class="muted center">No marcaron ninguna. ¡La próxima!</p>';
+    S.turno.lista.forEach(x => {
+      h += '<div class="it '+(x.ok?"ok":"no")+'"><span>'+esc(x.titulo)+'</span>'+
+        '<span class="e">'+(x.ok ? (x.vale===0?"✓ (pista)":"✓ +1") : "saltó")+'</span></div>';
+    });
+    h += '</div><button class="btn rojo" id="cerrar">'+labelBtn+'</button>';
+    app.innerHTML = h;
+    document.getElementById("cerrar").onclick = cerrarTurno;
+    return;
+  }
+
+  if (f === "tablero"){
+    const orden = S.equipos.map((e,i)=>({e,i})).sort((a,b)=>b.e.pts-a.e.pts);
+    const max = orden[0].e.pts;
+    let h = headHTML("Terminó la ronda "+S.ronda)+'<h2 class="center">🏆 Tablero</h2>';
+    orden.forEach(o => {
+      h += '<div class="score-line '+(o.e.pts===max&&max>0?"lider":"")+'">'+
+        '<span class="nm"><span class="dot-inline" style="background:'+o.e.color+'"></span>'+esc(o.e.nombre)+'</span>'+
+        '<span class="pts">'+Math.floor(o.e.pts)+'</span></div>';
+    });
+    h += '<div class="col" style="margin-top:20px"><button class="btn rojo" id="next">RONDA '+(S.ronda+1)+' ▸</button>'+
+      '<button class="btn sec" id="aj">⚙ Cambiar ajustes</button></div>';
+    app.innerHTML = h;
+    document.getElementById("next").onclick = siguienteRonda;
+    document.getElementById("aj").onclick = () => { S.scr = "ajustes"; render(); };
+    return;
+  }
+
+  if (f === "ganador"){
+    const orden = S.equipos.map((e,i)=>({e,i})).sort((a,b)=>b.e.pts-a.e.pts);
+    const camp = orden[0];
+    let masExp = null, masSalt = null, maxA = -1, maxS = -1;
+    Object.keys(S.stats).forEach(k => {
+      const v = S.stats[k];
+      if (v.aciertos > maxA){ maxA = v.aciertos; masExp = +k; }
+      if (v.salteos > maxS){ maxS = v.salteos; masSalt = +k; }
+    });
+    let h = headHTML("¡Caso cerrado!")+
+      '<div class="center"><div style="font-size:64px">🏆</div>'+
+      '<h2 style="color:'+camp.e.color+';font-size:46px;margin:4px 0 2px">'+esc(camp.e.nombre)+'</h2>'+
+      '<p class="sub">¡GANADOR!</p></div><div style="margin:16px 0">';
+    orden.forEach(o => {
+      h += '<div class="score-line '+(o.i===camp.i?"lider":"")+'">'+
+        '<span class="nm"><span class="dot-inline" style="background:'+o.e.color+'"></span>'+esc(o.e.nombre)+'</span>'+
+        '<span class="pts">'+Math.floor(o.e.pts)+'</span></div>';
+    });
+    h += '</div>';
+    if (masExp !== null && (maxA>0 || maxS>0)){
+      h += '<label>De yapa</label>';
+      if (maxA>0) h += '<div class="stat"><span>🎭 El más expresivo</span><span class="v">'+esc(S.equipos[masExp].nombre)+'</span></div>';
+      if (maxS>0) h += '<div class="stat"><span>🙈 El que más salteó</span><span class="v">'+esc(S.equipos[masSalt].nombre)+'</span></div>';
+    }
+    h += '<div class="col" style="margin-top:20px"><button class="btn rojo" id="revan">↻ REVANCHA (mismos equipos)</button>'+
+      '<button class="btn sec" id="home">🏠 Volver al inicio</button></div>';
+    app.innerHTML = h;
+    document.getElementById("revan").onclick = iniciarPartida;
+    document.getElementById("home").onclick = () => { S.scr = "inicio"; render(); };
+    return;
+  }
+}
+
+/* ===== pantalla de juego (con actualización in-place para fluidez) ===== */
+function pintarJugando(full){
+  const eq = S.equipos[S.equipoActual];
+
+  if (S.modo === "frente"){
+    if (full){
+      const usaBotones = !S.tiltOk || !S.tiltActivo;
+      app.innerHTML =
+        '<div class="frente-play">'+
+          '<div class="tt" id="timerFrente">'+fmtTime(S.seg)+'</div>'+
+          '<p class="peli frente" id="peliF">'+(S.peli?esc(S.peli.titulo):"")+'</p>'+
+          '<div class="fb-row" id="frenteFb" style="display:'+(usaBotones?"flex":"none")+'">'+
+            '<button class="btn naranja" style="flex:1" id="bPasar">PASAR ↑</button>'+
+            '<button class="btn verde" style="flex:1" id="bAcerto">ACERTÓ ↓</button></div>'+
+          '<p class="hint" id="frenteHint" style="display:'+(usaBotones?"none":"block")+'">Incliná el celu hacia <b>abajo</b> = acertaron · hacia <b>arriba</b> = pasar.<br>Volvé al centro entre cada peli.</p>'+
+          '<button class="link" style="position:absolute;bottom:8px;color:rgba(244,232,207,.4)" id="terminar">terminar turno</button>'+
+        '</div>';
+      const bp = document.getElementById("bPasar"); if (bp) bp.onclick = () => registrar(false);
+      const ba = document.getElementById("bAcerto"); if (ba) ba.onclick = () => registrar(true);
+      document.getElementById("terminar").onclick = finTurno;
+    } else {
+      const p = document.getElementById("peliF"); if (p && S.peli) p.textContent = S.peli.titulo;
+    }
+    return;
+  }
+
+  // modo clásico
+  const meta = S.peli ? META[S.peli.titulo] : null;
+  const cat = S.peli ? catDe(S.peli.cat) : null;
+  if (full){
+    let h = '<div class="center" style="display:flex;justify-content:space-between;align-items:center">'+
+        '<span class="tag" style="border-color:'+eq.color+';color:'+eq.color+'">'+esc(eq.nombre)+'</span>'+
+        '<span class="muted" id="cont">✓ '+S.turno.aciertos+' · ⤳ '+S.turno.salteos+'</span></div>'+
+      '<div class="timer'+(S.seg<=10?" urgente":"")+'" id="timer">'+fmtTime(S.seg)+'</div>'+
+      '<div class="card" style="cursor:default;min-height:170px;display:flex;flex-direction:column;justify-content:center" id="cardPeli">'+
+        contenidoCardClasico(meta, cat)+'</div>';
+    if (S.pistasOn) h += '<div class="center" style="margin:10px 0"><button class="link" id="pista">💡 Pedir pista (esta peli pasa a valer 0)</button></div>';
+    h += '<div class="row" style="margin-top:6px">'+
+        '<button class="btn naranja" style="flex:1" id="bPasar">SALTEAR</button>'+
+        '<button class="btn verde" style="flex:2" id="bAcerto">¡ADIVINARON!</button></div>'+
+      '<div class="foot"><button class="link" id="terminar">terminar turno antes de tiempo</button></div>';
+    app.innerHTML = h;
+    document.getElementById("bPasar").onclick = () => registrar(false);
+    document.getElementById("bAcerto").onclick = () => registrar(true);
+    document.getElementById("terminar").onclick = finTurno;
+    const pst = document.getElementById("pista"); if (pst) pst.onclick = usarPista;
+  } else {
+    const card = document.getElementById("cardPeli"); if (card) card.innerHTML = contenidoCardClasico(meta, cat);
+    const cont = document.getElementById("cont"); if (cont) cont.textContent = "✓ "+S.turno.aciertos+" · ⤳ "+S.turno.salteos;
+  }
+}
+function contenidoCardClasico(meta, cat){
+  let h = "";
+  if (cat) h += '<span class="tag" style="margin-bottom:10px">'+cat.emoji+' '+esc(cat.nombre)+'</span>';
+  if (S.peli) h += '<p class="peli">'+esc(S.peli.titulo)+'</p>';
+  if (S.pistaUsada > 0 && S.peli){
+    const t = S.peli.titulo;
+    h += '<div class="pista-box">';
+    h += '<div>🎞️ <b>Género:</b> '+esc((meta&&meta.g)||(cat?cat.genero:"película"))+'</div>';
+    if (S.pistaUsada >= 2) h += '<div>🔤 <b>Empieza con:</b> «'+esc(t[0].toUpperCase())+'» · '+t.split(" ").length+' palabra(s)</div>';
+    if (S.pistaUsada >= 3){
+      if (meta && meta.a) h += '<div>📅 <b>Año:</b> '+meta.a+'</div>';
+      if (meta && meta.p) h += '<div>⭐ <b>Protagónico:</b> '+esc(meta.p)+'</div>';
+      if (!meta) h += '<div class="muted">No hay más datos de esta peli. ¡A puro gesto!</div>';
+    }
+    h += '</div>';
+  }
+  return h;
+}
+
+render();
+</script>
+</body>
+</html>
