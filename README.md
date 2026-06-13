@@ -19,6 +19,13 @@ sin registro: abrís el archivo y jugás. Listos para instalar como PWA.
   Incluye armado de equipos, cronómetro configurable (60/90/120s) con sonidos
   y vibración, banco de 220+ películas con títulos argentinos, pistas
   canjeables, tablero entre rondas, muerte súbita y estadísticas finales.
+- **`pictionary.html` — Dibujá, Che.** Pictionary mobile bien argento (asado,
+  fernet, modismos, fútbol y más). App mobile-first (React + Canvas)
+  autocontenida que corre sin internet. Modo "pasá el celu": armado de equipos,
+  selección de categorías/dificultad/tiempo/rondas (con modo after 🌶️ opcional),
+  canvas con lápiz, goma, deshacer, limpiar y paleta de colores, cronómetro con
+  tic-tac/fanfarria/bocinazo y vibración, tablero de puntajes, ganador con
+  estadísticas y muerte súbita para desempate.
 
 ## Cómo correr
 
