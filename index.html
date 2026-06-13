@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>El Impostor · Edición Argenta</title>
 <meta name="theme-color" content="#0E0B1A">
 <meta name="mobile-web-app-capable" content="yes">
@@ -192,6 +192,10 @@ input:focus{border-color:var(--celeste)}
 .fade{animation:fade .25s ease}
 @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+:where(.btn,.opt,.vbtn,.chip,.toggle,.link,input,.sobre):focus-visible{outline:3px solid var(--sol);outline-offset:2px}
+button.chip{font:inherit;color:inherit;text-align:inherit}
+.timer.urgente{font-size:80px;text-shadow:0 0 18px rgba(255,77,109,.45)}
 </style>
 </head>
 <body>
@@ -249,7 +253,7 @@ const CATEGORIAS = {
     "el jardinero","el periodista","el astronauta","el payaso","el juez","el soldado","el granjero","el pintor"
   ],
   "Lugares": [
-    "la playa","la montaña","la cancha","la escuela","el hospital","el supermercado","el kiosco","el cine",
+    "la playa","la cancha","la escuela","el hospital","el supermercado","el kiosco","el cine",
     "el restaurante","la plaza","el aeropuerto","el banco","el gimnasio","la iglesia","la peluquería",
     "la cárcel","la biblioteca","el zoológico","el museo","el parque","el hotel","el boliche","la parrilla",
     "el estadio","la farmacia","la panadería","la comisaría","el circo","el castillo","la isla"
@@ -316,15 +320,20 @@ const CASTIGOS = [
    3) UTILIDADES
    ========================================================= */
 const azar = a => a[Math.floor(Math.random()*a.length)];
-const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
 const fmtT = seg => Math.floor(seg/60)+":"+String(seg%60).padStart(2,"0");
 
 /* Guardado opcional (offline) para no perder jugadores/puntajes al cerrar */
-const STORE_KEY = "impostor_argenta_v1";
+const STORE_KEY = "impostor_argenta_v2";
+let faseGuardada = null; // fase de una ronda en curso recuperable (para "Retomar")
 function guardar(){
   try{ localStorage.setItem(STORE_KEY, JSON.stringify({
     jugadores:S.jugadores, scores:S.scores, cant:S.cant, categoria:S.categoria,
-    pista:S.pista, usaTimer:S.usaTimer, dur:S.dur
+    pista:S.pista, usaTimer:S.usaTimer, dur:S.dur,
+    fase:S.fase, ronda:S.ronda, palabra:S.palabra, catPal:S.catPal, imps:[...S.imps],
+    turno:S.turno, arranca:S.arranca, consejo:S.consejo, frase:S.frase, castigo:S.castigo,
+    votos:S.votos, acusado:S.acusado, caught:S.caught, robo:S.robo, delta:S.delta,
+    usadas:S.usadas, seg:S.seg
   })); }catch(e){}
 }
 function cargar(){
@@ -337,8 +346,28 @@ function cargar(){
       S.categoria = (d.categoria==="Mezcla"||NOMBRES_CAT.includes(d.categoria))?d.categoria:"Mezcla";
       S.pista = !!d.pista; S.usaTimer = !!d.usaTimer;
       S.dur = [90,120,180].includes(d.dur)?d.dur:120;
+      S.ronda = Number.isInteger(d.ronda)&&d.ronda>=0 ? d.ronda : 0;
+      S.usadas = Array.isArray(d.usadas)?d.usadas:[];
+      // ronda en curso: se ofrece "Retomar" en el inicio (no se reanuda sola para no exponer roles)
+      faseGuardada = (d.fase && d.fase!=="inicio" && d.fase!=="tabla") ? d.fase : null;
+      if(faseGuardada){
+        S.palabra = d.palabra||""; S.catPal = d.catPal||"";
+        S.imps = new Set(Array.isArray(d.imps)?d.imps:[]);
+        S.turno = Number.isInteger(d.turno)?d.turno:0;
+        S.arranca = d.arranca||""; S.consejo = d.consejo||""; S.frase = d.frase||""; S.castigo = d.castigo||"";
+        S.votos = Array.isArray(d.votos)?d.votos:[];
+        S.acusado = d.acusado!=null?d.acusado:null; S.caught = !!d.caught; S.robo = !!d.robo;
+        S.delta = d.delta && typeof d.delta==="object" ? d.delta : {};
+        S.seg = Number.isInteger(d.seg)?d.seg:S.dur;
+      }
     }
-  }catch(e){}
+  }catch(e){ faseGuardada=null; }
+}
+function retomarRonda(){
+  if(!faseGuardada) return;
+  S.fase = faseGuardada; faseGuardada = null;
+  S.mostrando = false; S.visto = false; S.corriendo = false; pararTimer();
+  render();
 }
 
 /* =========================================================
@@ -432,12 +461,15 @@ function aplicarPuntaje(){
 function pararTimer(){ S.corriendo=false; if(timerId){clearInterval(timerId); timerId=null;} }
 function toggleTimer(){
   if(S.corriendo){ pararTimer(); render(); return; }
+  if(S.seg<=0) S.seg=S.dur; // reiniciar desde 0 recarga la duración en vez de quedar pegado
   S.corriendo=true;
   timerId=setInterval(()=>{
     S.seg=Math.max(0,S.seg-1);
     const t=document.getElementById("timer");
-    if(t){ t.textContent=fmtT(S.seg); t.classList.toggle("urgente",S.seg<=15); }
-    if(S.seg===0) pararTimer();
+    if(t){ t.textContent=(S.seg<=15?"⏰ ":"")+fmtT(S.seg); t.classList.toggle("urgente",S.seg<=15); }
+    const a=document.getElementById("timer-aria");
+    if(a){ if(S.seg===15) a.textContent="Quedan 15 segundos"; else if(S.seg===0) a.textContent="Se acabó el tiempo"; }
+    if(S.seg===0){ pararTimer(); render(); }
   },1000);
   render();
 }
@@ -468,11 +500,13 @@ function pantallaInicio(){
   app.innerHTML = brand() + `
     <div class="card fade">
       <p class="sub">Todos reciben la misma palabra secreta... menos el <b style="color:var(--rojo)">impostor</b>, que tiene que zafar chamuyando. Tiran pistas en ronda, sospechan, votan y se arma el bondi.</p>
+      ${ faseGuardada ? `<button class="btn verde" id="retomar">↻ RETOMAR RONDA</button>` : "" }
       <button class="btn" id="jugar">▸ JUGAR</button>
       <button class="btn ghost" id="como">¿Cómo se juega?</button>
       ${ tieneScores() ? `<button class="btn ghost" id="verTabla">🏆 Ver tabla de posiciones</button>` : "" }
     </div>
     <div id="comoBox"></div>`;
+  const rb=document.getElementById("retomar"); if(rb) rb.onclick = retomarRonda;
   document.getElementById("jugar").onclick = ()=>{ S.fase="setup"; render(); };
   document.getElementById("como").onclick = ()=>{
     const box=document.getElementById("comoBox");
@@ -482,6 +516,7 @@ function pantallaInicio(){
       <p><b>3.</b> Por turnos, cada jugador dice <b>una sola palabra</b> de pista relacionada al secreto. El impostor improvisa.</p>
       <p><b>4.</b> Después de una o dos vueltas, votan quién es el impostor.</p>
       <p><b>5.</b> Si lo descubren, gana la tripulación. Si zafa (o adivina la palabra), gana el impostor.</p>
+      <p><b>Puntos:</b> si descubren al impostor, la tripulación suma <b>+1</b> cada uno; si el impostor zafa, <b>+2</b>; y si encima canta la palabra correcta, <b>+3</b>.</p>
       <p style="margin-bottom:0;color:var(--sol)">Tip: jueguen varias rondas, los puntos se acumulan en la tabla.</p>
     </div>`;
   };
@@ -504,7 +539,7 @@ function pantallaSetup(){
       </div>
       <div class="chips">
         ${ S.jugadores.length
-            ? S.jugadores.map((j,i)=>`<span class="chip" data-i="${i}">${esc(j)} <b>✕</b></span>`).join("")
+            ? S.jugadores.map((j,i)=>`<button type="button" class="chip" data-i="${i}" aria-label="Quitar a ${esc(j)}">${esc(j)} <b aria-hidden="true">✕</b></button>`).join("")
             : `<span class="empty">Tocá un nombre cargado para borrarlo.</span>` }
       </div>
     </div>
@@ -520,14 +555,14 @@ function pantallaSetup(){
         ${["Mezcla",...NOMBRES_CAT].map(c=>`<button class="opt ${S.categoria===c?"on":""}" data-c="${esc(c)}">${esc(c)}</button>`).join("")}
       </div>
 
-      <div class="toggle ${S.pista?"on":""}" id="tg-pista">
+      <div class="toggle ${S.pista?"on":""}" id="tg-pista" role="switch" tabindex="0" aria-checked="${S.pista}" aria-label="Impostor con pista">
         <div class="t-txt"><b>Impostor con pista</b><span>Le decimos la categoría (más fácil para grupos nuevos). Apagado = a ciegas.</span></div>
-        <div class="switch"></div>
+        <div class="switch" aria-hidden="true"></div>
       </div>
 
-      <div class="toggle ${S.usaTimer?"on":""}" id="tg-timer">
+      <div class="toggle ${S.usaTimer?"on":""}" id="tg-timer" role="switch" tabindex="0" aria-checked="${S.usaTimer}" aria-label="Temporizador por ronda">
         <div class="t-txt"><b>Temporizador por ronda</b><span>Cuenta regresiva para la charla de pistas.</span></div>
-        <div class="switch"></div>
+        <div class="switch" aria-hidden="true"></div>
       </div>
       ${ S.usaTimer ? `<div class="seg" id="durSeg">
         ${[90,120,180].map(d=>`<button class="opt ${S.dur===d?"on":""}" data-d="${d}">${fmtT(d)}</button>`).join("")}
@@ -542,7 +577,7 @@ function pantallaSetup(){
   const add=()=>{ const n=inp.value.trim(); if(n && !S.jugadores.includes(n) && S.jugadores.length<12){ S.jugadores.push(n); guardar(); render(); document.getElementById("inp").focus(); } };
   document.getElementById("add").onclick=add;
   inp.onkeydown=e=>{ if(e.key==="Enter") add(); };
-  document.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{ S.jugadores.splice(+c.dataset.i,1); guardar(); render(); });
+  document.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{ const i=+c.dataset.i; delete S.scores[S.jugadores[i]]; S.jugadores.splice(i,1); guardar(); render(); });
   document.querySelectorAll(".opt[data-n]").forEach(b=>b.onclick=()=>{ if(!b.disabled){ S.cant=+b.dataset.n; render(); } });
   document.querySelectorAll(".opt[data-c]").forEach(b=>b.onclick=()=>{ S.categoria=b.dataset.c; guardar(); render(); });
   document.getElementById("tg-pista").onclick=()=>{ S.pista=!S.pista; guardar(); render(); };
@@ -558,10 +593,11 @@ function pantallaReveal(){
     <div class="card centro fade">
       <p class="passer">Tarjeta ${S.turno+1} de ${S.jugadores.length}</p>
       <h2 style="margin-top:6px">Pasale el celu a<br>${esc(S.jugadores[S.turno])}</h2>
-      <div class="sobre" id="sobre"></div>
+      <div class="sobre" id="sobre" role="button" tabindex="0" aria-label="Mantené apretado o presioná Enter para ver tu rol en secreto"></div>
       <button class="btn" id="sig" ${S.visto?"":"disabled"}>
         ${ S.turno+1<S.jugadores.length ? "Listo, pasar al siguiente ▸" : "¡Todos listos! ▸" }
       </button>
+      ${ S.turno>0 ? `<button class="btn ghost" id="atras">‹ Volver a la tarjeta anterior</button>` : "" }
     </div>`;
 
   const sobre=document.getElementById("sobre");
@@ -586,18 +622,21 @@ function pantallaReveal(){
   };
   pintar();
 
-  const mostrar=e=>{ e.preventDefault(); if(!S.mostrando){ S.mostrando=true; S.visto=true; pintar(); const b=document.getElementById("sig"); if(b) b.disabled=false; } };
+  const mostrar=e=>{ if(e&&e.preventDefault)e.preventDefault(); if(!S.mostrando){ S.mostrando=true; S.visto=true; pintar(); const b=document.getElementById("sig"); if(b) b.disabled=false; } };
   const ocultar=()=>{ if(S.mostrando){ S.mostrando=false; pintar(); } };
-  sobre.addEventListener("pointerdown",mostrar);
+  sobre.addEventListener("pointerdown",e=>{ try{ sobre.setPointerCapture(e.pointerId); }catch(_){} mostrar(e); });
   sobre.addEventListener("pointerup",ocultar);
   sobre.addEventListener("pointercancel",ocultar);
-  sobre.addEventListener("pointerleave",ocultar);
+  sobre.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); S.mostrando?ocultar():mostrar(e); } });
+  sobre.addEventListener("blur",ocultar);
   sobre.addEventListener("contextmenu",e=>e.preventDefault());
 
   document.getElementById("sig").onclick=()=>{
-    if(S.turno+1<S.jugadores.length){ S.turno++; S.visto=false; S.mostrando=false; render(); }
-    else { S.fase="pistas"; render(); }
+    if(S.turno+1<S.jugadores.length){ S.turno++; S.visto=false; S.mostrando=false; guardar(); render(); }
+    else { S.fase="pistas"; guardar(); render(); }
   };
+  const atras=document.getElementById("atras");
+  if(atras) atras.onclick=()=>{ if(S.turno>0){ S.turno--; S.visto=false; S.mostrando=false; guardar(); render(); } };
 }
 
 /* ---------- RONDA DE PISTAS ---------- */
@@ -617,7 +656,8 @@ function pantallaPistas(){
     </div>
 
     ${ S.usaTimer ? `<div class="card centro fade">
-      <div class="timer ${S.seg<=15?"urgente":""}" id="timer">${fmtT(S.seg)}</div>
+      <div class="timer ${S.seg<=15?"urgente":""}" id="timer" role="timer" aria-label="Tiempo restante de la ronda">${S.seg<=15?"⏰ ":""}${fmtT(S.seg)}</div>
+      <div id="timer-aria" class="sr-only" aria-live="assertive"></div>
       <div class="row-btns">
         <button class="btn ghost" id="play">${S.corriendo?"‖ Pausa":"▸ Iniciar"}</button>
         <button class="btn ghost" id="reset">↺ ${fmtT(S.dur)}</button>
@@ -652,12 +692,14 @@ function pantallaVotacion(){
         </div>`).join("")}
     </div>
     <button class="btn fuego" id="cerrar" ${totalVotos>0?"":"disabled"}>CERRAR VOTACIÓN Y REVELAR ▸</button>
+    <button class="btn ghost" id="volverPistas">‹ Volver a las pistas</button>
     <button class="btn ghost" id="saltar">Saltar votación (revelar sin acusar)</button>
   `;
 
-  document.querySelectorAll(".vbtn[data-p]").forEach(b=>b.onclick=()=>{ S.votos[+b.dataset.p]++; render(); });
-  document.querySelectorAll(".vbtn[data-m]").forEach(b=>b.onclick=()=>{ const i=+b.dataset.m; S.votos[i]=Math.max(0,S.votos[i]-1); render(); });
+  document.querySelectorAll(".vbtn[data-p]").forEach(b=>b.onclick=()=>{ const i=+b.dataset.p; S.votos[i]=Math.min(S.jugadores.length,S.votos[i]+1); guardar(); render(); });
+  document.querySelectorAll(".vbtn[data-m]").forEach(b=>b.onclick=()=>{ const i=+b.dataset.m; S.votos[i]=Math.max(0,S.votos[i]-1); guardar(); render(); });
   document.getElementById("cerrar").onclick=cerrarVotacion;
+  document.getElementById("volverPistas").onclick=()=>{ S.fase="pistas"; guardar(); render(); };
   document.getElementById("saltar").onclick=()=>{ S.votos=S.jugadores.map(()=>0); cerrarVotacion(); };
 }
 
@@ -665,7 +707,8 @@ function pantallaVotacion(){
 function pantallaResultado(){
   const nombresImp = S.jugadores.filter((_,i)=>S.imps.has(i)).map(esc).join(" y ");
   const ganoCrew = S.caught && !S.robo;
-  const acusadoTxt = S.acusado!=null ? esc(S.jugadores[S.acusado]) : "nadie (no hubo acusación clara)";
+  const maxV = Math.max(0,...S.votos);
+  const acusadoTxt = S.acusado!=null ? esc(S.jugadores[S.acusado]) : (maxV>0 ? "nadie: hubo empate en la votación, así que el impostor zafa" : "nadie (no se cargaron votos)");
 
   // resumen de puntos de la ronda
   const lineasDelta = Object.keys(S.delta).length
@@ -681,9 +724,9 @@ function pantallaResultado(){
       <div class="nombres-imp">${nombresImp}</div>
       <p class="dato">La palabra era <b style="color:var(--celeste)">«${esc(S.palabra)}»</b><br><span class="cat-tag">(${esc(S.catPal)})</span></p>
 
-      ${ S.caught ? `<div class="toggle ${S.robo?"on":""}" id="tg-robo" style="text-align:left">
+      ${ S.caught ? `<div class="toggle ${S.robo?"on":""}" id="tg-robo" style="text-align:left" role="switch" tabindex="0" aria-checked="${S.robo}" aria-label="El impostor cantó la palabra">
         <div class="t-txt"><b>El impostor cantó la palabra</b><span>¿La adivinó al final? Si la dice, igual roba la ronda.</span></div>
-        <div class="switch"></div>
+        <div class="switch" aria-hidden="true"></div>
       </div>` : "" }
 
       <p class="castigo">${esc(S.castigo)}</p>
@@ -733,6 +776,16 @@ function pantallaTabla(){
 /* =========================================================
    7) ARRANQUE
    ========================================================= */
+/* Teclado: Enter/Espacio activan los switches (role=switch) construidos como div */
+document.addEventListener("keydown", e=>{
+  if(e.key!=="Enter" && e.key!==" ") return;
+  const t=e.target;
+  if(t && t.getAttribute && t.getAttribute("role")==="switch"){ e.preventDefault(); t.click(); }
+});
+/* Guardado anti-perdida al pasar a segundo plano */
+document.addEventListener("visibilitychange", ()=>{ if(document.hidden) guardar(); });
+window.addEventListener("pagehide", guardar);
+
 cargar();
 render();
 </script>
