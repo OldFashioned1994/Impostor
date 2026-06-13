@@ -212,48 +212,57 @@ document.getElementById("manifest").href =
   "data:application/manifest+json," + encodeURIComponent(JSON.stringify(manifest));
 
 /* =========================================================
-   2) BANCO DE PALABRAS  (100% argento, +120 palabras)
+   2) BANCO DE PALABRAS  (100% argento, +160 palabras, 8 categorías)
+   --- Criterio: COSAS CONCRETAS que todos puedan imaginar y describir
+       con una pista de una palabra (no conceptos abstractos). ---
    --- Para AGREGAR contenido: sumá strings a cualquier array,
        o creá una categoría nueva con su array. Listo, ya entra
        al modo "Mezcla" y al selector automáticamente. ---
    ========================================================= */
 const CATEGORIAS = {
-  "Comida y joda": [
-    "el asado del domingo","el fernet con coca","el choripán","el mate amargo","la milanesa napolitana",
-    "los criollos","la tortafrita","el sanguche de bondiola","el vacío","el chimichurri","el locro del 25",
-    "la empanada de carne","el dulce de leche","los ñoquis del 29","la picada con vermut","el matambre a la pizza",
-    "los pastelitos de membrillo","la fainá","el alfajor triple","el salamín","las medialunas con café",
-    "la pizza de parado","el helado de dulce de leche","el sifón de soda","el vino en damajuana"
+  "Fuego y asado": [
+    "el chorizo","la provoleta","el vacío","la morcilla","la tira de asado","el chimichurri",
+    "la ensalada rusa","el fernet con coca","el vino tinto","la picada","las mollejas","el chinchulín",
+    "el matambre","el pan casero","la sal gruesa","el carbón","la parrilla","la cerveza bien fría",
+    "el pollo al disco","el choripán"
   ],
-  "Fútbol y deporte": [
-    "el superclásico","el VAR","el picadito","el Mundial 2022","el Dibu Martínez","Messi","la chilena",
-    "el caño","la rabona","la palomita","el descenso","el penal atajado","la popular","el potrero",
-    "el alargue","el banderazo","la final de Qatar","el relator","el aguante","la camiseta titular",
-    "el offside","el tiro libre","la barrera","el clásico de barrio","el básquet de Ginóbili"
+  "Kiosco de barrio": [
+    "el alfajor","los chizitos","la Coca de litro","el chocolatín","los criollitos","el Mantecol",
+    "el turrón","el chupetín","el chicle globo","las pastillas","el helado palito","las papas fritas",
+    "el Cindor","la Manaos","las galletitas","el caramelo masticable","el cigarrillo suelto","el diario",
+    "el chicle Bazooka","el sándwich de miga"
   ],
-  "Cultura pop y TV": [
-    "Tinelli","Capusotto","Okupas","la cumbia","el trap argentino","Bizarrap","Mirtha Legrand",
-    "Susana Giménez","Gran Hermano","ShowMatch","Casados con Hijos","Los Simpson en la tele","Duki",
-    "Lali","Tini","Nicki Nicole","María Becerra","el Indio Solari","Charly García","Fito Páez",
-    "Ricardo Darín","Guillermo Francella","Moria Casán","el Cuarteto de Córdoba","la novela de las 21"
+  "Crecer en los 90": [
+    "las figuritas","los Tazos","el Tamagotchi","la PlayStation 1","Cartoon Network","el yo-yo",
+    "la bici BMX","el Family Game","el Discman","el cassette","Pokémon","Dragon Ball","el cyber",
+    "el Messenger","el fotolog","el Nokia 1100","el Walkman","los patines","el trompo","las bolitas"
   ],
-  "Lugares": [
-    "el kiosco de 24 horas","el bondi","el subte","la Costanera","Bariloche","la cancha","el Obelisco",
-    "la Bombonera","el Monumental","Mar del Plata","las Cataratas del Iguazú","el Tigre","la peatonal",
-    "el chino de la esquina","la parrilla del barrio","la calle Corrientes","Plaza de Mayo","Villa Gesell",
-    "el conurbano","Puerto Madero","Constitución","Carlos Paz","el delta","Ushuaia","la terminal de micros"
+  "En lo de la abuela": [
+    "el mantel de hule","las pantuflas","el sifón de soda","la radio AM","el rosario","las masitas",
+    "el Nescafé","la bombilla","el tapete de crochet","el ventilador de pie","la lata de galletitas con hilos",
+    "el almanaque","el changuito de feria","la frazada de Bariloche","el florero","las fotos viejas",
+    "el caramelo de la cartera","el mate cocido","el sillón forrado","la sopa de fideos"
   ],
-  "Vida cotidiana de los 30": [
-    "el alquiler","el monotributo","el grupo de WhatsApp","la resaca","la previa de las 11 de la noche",
-    "el after office","el dólar blue","cargar la SUBE","el aguinaldo","el home office","la cuota del gimnasio",
-    "la reunión que pudo ser un mail","el delivery un martes","la obra social","el plazo fijo","el coworking",
-    "la tarjeta en cuotas","el psicólogo de los miércoles","el lavarropas roto","la mudanza","el seguro del auto",
-    "la juntada que se cae a último momento","la siesta del finde","el feriado puente","el resumen de la tarjeta"
+  "Playa y verano": [
+    "la sombrilla","la reposera","el protector solar","los churros de playa","el balde y la pala",
+    "la pelota de paleta","el mate en la arena","la carpa","los lobos marinos","el cucurucho",
+    "la quemadura de sol","el guardavidas","la garrapiñada","las ojotas","la heladerita","el inflable",
+    "la medusa","el choclo hervido","la pileta","el bronceador"
   ],
-  "Modismos y lunfardo": [
-    "quilombo","chamuyo","fiaca","guita","mufa","gauchada","trucho","ñoqui","chanta","cheto","posta",
-    "zarpado","atorrante","gil","birra","pibe","laburo","bardo","careta","manija","bajón","mango",
-    "boludo","che","de una"
+  "Cancha y potrero": [
+    "la pelota","los botines","la camiseta","el arco","la red","el bombo","la hinchada","el potrero",
+    "el arquero","el pasto","el referí","la tribuna","el banderín","el silbato","el alambrado",
+    "el picadito","la pechera","el córner","el penal","el caño"
+  ],
+  "Tele y pantallas": [
+    "Tinelli","Mirtha Legrand","Susana Giménez","Capusotto","Los Simpson","Gran Hermano",
+    "Casados con Hijos","Guillermo Francella","Ricardo Darín","Showmatch","Pasapalabra","el noticiero",
+    "la novela turca","Bizarrap","Duki","el Bailando","Telefe","Cebollitas","Chiquititas","Floricienta"
+  ],
+  "Bondi y ciudad": [
+    "el colectivo","el subte","la SUBE","el semáforo","el kiosco","el cartonero","el taxi","el remís",
+    "la parada del bondi","el malabarista","el quiosquero","el embotellamiento","la bicisenda","el cordón",
+    "la esquina","el carrito de panchos","el vendedor del tren","el Obelisco","la plaza","el monoblock"
   ]
 };
 const NOMBRES_CAT = Object.keys(CATEGORIAS);
