@@ -505,53 +505,55 @@ function(a,b,c){if(!Vd(b))throw Error(m(200));return Wd(null,a,b,!1,c)};Q.unmoun
    ===================================================================== */
 const CATS = [{
   id: 'comida',
-  nombre: 'Comida y juntadas',
+  nombre: 'Comida y bebida',
   emoji: '🍖',
-  f: ['asado', 'mate', 'choripán', 'milanesa', 'empanada', 'pizza', 'alfajor', 'factura', 'helado', 'locro', 'fernet con coca', 'vino en caja', 'picada', 'provoleta', 'dulce de leche', 'medialunas', 'morcilla', 'chorizo', 'panchos', 'hamburguesa', 'papas fritas', 'ensalada', 'pan', 'queso', 'huevo frito', 'tostado', 'submarino', 'torta', 'flan', 'milanesa napolitana'],
-  d: ['vitel toné', 'matambre arrollado', 'chinchulines', 'bondiola', 'tira de asado', 'chimichurri', 'pan dulce', 'garrapiñada', 'tortas fritas', 'pastelitos', 'fugazzeta', 'vitel', 'criollos', 'ñoquis del 29', 'ravioles del domingo', 'bizcochitos', 'mate cocido', 'turrón', 'sánguche de miga']
+  f: ['asado', 'choripán', 'mate', 'empanada', 'milanesa', 'pizza', 'alfajor', 'factura', 'medialuna', 'helado', 'hamburguesa', 'pancho', 'papas fritas', 'huevo frito', 'pan', 'queso', 'banana', 'manzana', 'sandía', 'torta', 'flan', 'fideos', 'gaseosa', 'cerveza', 'copa de vino', 'botella de fernet', 'termo', 'pava', 'heladera', 'torta de cumpleaños'],
+  d: ['parrilla', 'chorizo', 'morcilla', 'provoleta', 'tarro de dulce de leche', 'tostadora', 'sifón', 'olla', 'sartén', 'cuchillo y tenedor', 'asador con delantal', 'bombilla', 'mate de calabaza', 'pochoclos', 'locro', 'pastel', 'cucurucho', 'damajuana', 'tabla de picada', 'exprimidor']
 }, {
-  id: 'cultura',
-  nombre: 'Cultura pop ARG',
-  emoji: '📺',
-  f: ['Susana Giménez', 'Tinelli', 'Gran Hermano', 'Casados con Hijos', 'Mirtha Legrand', 'Patito Feo', 'Chiquititas', 'Floricienta', 'Cebollitas', 'Showmatch', 'Telefe', 'Sandro', 'Moria Casán', 'Ricardo Fort', 'Francella', 'El Marginal', 'Okupas', 'Cris Morena', 'Rebelde Way', 'Verano del 98'],
-  d: ['Diego Capusotto', 'Los Simuladores', 'Tumberos', 'Poné a Francella', 'CQC', 'Videomatch', 'Antonio Gasalla', 'Alberto Olmedo', 'Jorge Porcel', 'Tato Bores', 'Pelito', 'Pinky', 'Nini Marshall', 'Resto del Mundo', 'Magazine For Fai', 'Peter Capusotto', 'Mex Urtizberea', 'La niñera', 'Pol-ka', 'Caiga Quien Caiga']
-}, {
-  id: 'musica',
-  nombre: 'Música',
-  emoji: '🎸',
-  f: ['Soda Stereo', 'Los Redondos', 'cuarteto', 'cumbia villera', 'La Mona Jiménez', 'Charly García', 'Fito Páez', 'La Renga', 'Los Piojos', 'Babasónicos', 'Rodrigo', 'Gilda', 'Damas Gratis', 'recital', 'pogo', 'una previa', 'Tan Biónica', 'Miranda!', 'Los Palmeras', 'Andrés Calamaro'],
-  d: ['Gustavo Cerati', 'Luis Alberto Spinetta', 'Divididos', 'Sumo', 'Virus', 'Bersuit', 'El Indio Solari', 'Los Fabulosos Cadillacs', 'Auténticos Decadentes', 'Catupecu Machu', 'Intoxicados', 'Callejeros', 'Attaque 77', 'Las Pelotas', 'Vilma Palma', 'Memphis La Blusera', 'Pity Álvarez', 'ricoteros', '2 Minutos']
+  id: 'animales',
+  nombre: 'Animales',
+  emoji: '🐶',
+  f: ['perro', 'gato', 'vaca', 'caballo', 'gallina', 'chancho', 'oveja', 'pato', 'conejo', 'ratón', 'pez', 'pájaro', 'mariposa', 'araña', 'abeja', 'león', 'elefante', 'jirafa', 'mono', 'tortuga', 'serpiente', 'pingüino', 'tiburón', 'pulpo', 'cangrejo', 'caracol', 'rana', 'búho', 'gallo', 'perro salchicha'],
+  d: ['hornero', 'carpincho', 'ñandú', 'puma', 'mulita', 'cóndor', 'yacaré', 'llama', 'zorro', 'murciélago', 'dinosaurio', 'dragón', 'unicornio', 'ballena', 'delfín', 'flamenco', 'cebra', 'canguro', 'camaleón', 'erizo']
 }, {
   id: 'objetos',
-  nombre: 'Objetos y nostalgia',
-  emoji: '📼',
-  f: ['walkman', 'Tamagotchi', 'el bondi', 'la SUBE', 'casete', 'discman', 'control remoto', 'ojotas', 'mochila', 'riñonera', 'gomera', 'kiosco', 'remís', 'colectivo', 'subte', 'tren', 'plasticola', 'témperas', 'cartuchera', 'VHS'],
-  d: ['cospel', 'ficha de teléfono', 'dial up', 'diskette', 'Family Game', 'teléfono a disco', 'cabina telefónica', 'guía telefónica', 'el monedero', 'australes', 'patacón', 'lecop', 'baldosa floja', 'maxikiosco', 'goma Milán', 'El Gráfico', 'Billiken', 'Anteojito', 'Topper', 'zapatillas Flecha']
+  nombre: 'Objetos y cosas',
+  emoji: '🎒',
+  f: ['pelota', 'paraguas', 'anteojos', 'reloj', 'teléfono', 'llave', 'lámpara', 'silla', 'mesa', 'cama', 'puerta', 'ventana', 'televisor', 'ventilador', 'mochila', 'lápiz', 'tijera', 'martillo', 'escalera', 'escoba', 'taza', 'botella', 'sombrero', 'zapatilla', 'ojotas', 'gorra', 'globo', 'vela', 'peine', 'foco'],
+  d: ['walkman', 'casete', 'control remoto', 'Tamagotchi', 'VHS', 'teléfono a disco', 'máquina de escribir', 'telescopio', 'brújula', 'candado', 'plancha', 'secador de pelo', 'gomera', 'trompo', 'yo-yo', 'barrilete', 'calesita', 'ficha de teléfono', 'diskette', 'linterna']
 }, {
-  id: 'modismos',
-  nombre: 'Modismos y mímica',
-  emoji: '🗣️',
-  f: ['estar al horno', 'mandar fruta', 'hacer fiaca', 'mala leche', 'qué quilombo', 'estar en pedo', 'tirar los perros', 'hacerse el boludo', 'qué bajón', 'estar manija', 'no dar bola', 'estar piola', 'pegar la vuelta', 'hacerse humo', 'tirar onda', 'estar embolado', 'comerse un garrón', 'estar de joda', 'salir de previa', 'estar re copado'],
-  d: ['estar para el orto', 'meter la mula', 'hacerse el vivo', 'tirar la chancleta', 'estar en la lona', 'hacer gancho', 'estar al palo', 'tener mambo', 'irse al pasto', 'estar hasta las manos', 'mandar al frente', 'comerse los mocos', 'pegar un tubazo', 'hacer la plancha', 'mandarse una cagada', 'estar de cama', 'tener fiaca', 'estar en bolas', 'hacer la del avión', 'irse a la mierda']
+  id: 'transporte',
+  nombre: 'Transporte',
+  emoji: '🚌',
+  f: ['auto', 'colectivo', 'bici', 'moto', 'avión', 'barco', 'tren', 'camión', 'helicóptero', 'ambulancia', 'bote', 'cohete', 'taxi', 'monopatín', 'triciclo', 'carretilla', 'globo aerostático', 'patineta', 'lancha', 'submarino'],
+  d: ['el bondi', 'el subte', 'tractor', 'grúa', 'ovni', 'locomotora', 'canoa', 'teleférico', 'kayak', 'montaña rusa', 'carrito de supermercado', 'cuatriciclo', 'monociclo', 'carroza', 'zeppelin', 'jet ski', 'batimóvil', 'remís', 'balsa', 'tobogán']
+}, {
+  id: 'lugares',
+  nombre: 'Lugares y construcciones',
+  emoji: '🏠',
+  f: ['casa', 'escuela', 'iglesia', 'hospital', 'castillo', 'puente', 'faro', 'torre', 'carpa', 'granja', 'edificio', 'banco', 'kiosco', 'cancha', 'pileta', 'playa', 'montaña', 'isla', 'plaza', 'molino'],
+  d: ['el Obelisco', 'Caminito', 'la bombonera', 'la Casa Rosada', 'las Cataratas', 'la pirámide', 'el iglú', 'el rascacielos', 'el estadio', 'el muelle', 'la fábrica', 'la noria', 'la hamaca', 'el tobogán', 'el cementerio', 'la cárcel', 'el acueducto', 'el campanario', 'el ancla en el puerto', 'el cartel de la ruta']
+}, {
+  id: 'naturaleza',
+  nombre: 'Naturaleza y clima',
+  emoji: '🌳',
+  f: ['sol', 'luna', 'estrella', 'árbol', 'flor', 'nube', 'lluvia', 'arcoíris', 'río', 'mar', 'fuego', 'rayo', 'nieve', 'hoja', 'cactus', 'palmera', 'volcán', 'planeta', 'tornado', 'montaña'],
+  d: ['eclipse', 'glaciar', 'desierto', 'meteorito', 'cometa', 'ola gigante', 'remolino', 'témpano', 'oasis', 'selva', 'acantilado', 'caverna', 'laguna', 'médano', 'granizo', 'géiser', 'aurora', 'pantano', 'catarata', 'arrecife']
 }, {
   id: 'futbol',
   nombre: 'Fútbol y deporte',
   emoji: '⚽',
-  f: ['Messi', 'Maradona', 'la mano de Dios', 'golazo', 'penal', 'arquero', 'gambeta', 'hinchada', 'el clásico', 'Boca', 'River', 'la pelota de trapo', 'el picado', 'chilena', 'caño', 'tiro libre', 'córner', 'offside', 'tarjeta roja', 'el referí'],
-  d: ['el VAR', 'la Scaloneta', 'Dibu Martínez', 'la tercera estrella', 'Qatar 2022', 'la bombonera', 'el monumental', 'superclásico', 'la 12', 'barrabrava', 'el potrero', 'el travesaño', 'sombrerito', 'la celeste y blanca', 'atajada', 'pelota de trapo', 'la redonda', 'gol a los ingleses', 'picadito', 'el aguante']
-}, {
-  id: 'lugares',
-  nombre: 'Lugares y costumbres',
-  emoji: '🇦🇷',
-  f: ['la playa de Mar del Plata', 'el Obelisco', 'Bariloche', 'las Cataratas', 'la cancha', 'el barrio', 'la quinta', 'el parque', 'la pileta', 'el camping', 'la previa', 'el after', 'el cumpleaños de 15', 'el casamiento', 'el peaje', 'la ruta', 'la estación de servicio', 'el cyber', 'la verdulería', 'el chino'],
-  d: ['Caminito', 'la 9 de Julio', 'el Tigre', 'las sierras de Córdoba', 'el Aconcagua', 'la Quebrada', 'el corte de luz', 'el paro', 'la cola del banco', 'el feriado puente', 'el día del amigo', 'la siesta', 'el quincho', 'la parrilla del finde', 'el viaje de egresados', 'la previa del mundial', 'la sobremesa', 'el asado de oficina', 'la juntada de ex compañeros', 'el bondi 60']
+  f: ['pelota de fútbol', 'arco', 'camiseta', 'botines', 'copa', 'silbato', 'tarjeta roja', 'red', 'guante de arquero', 'bandera', 'bombo', 'medalla', 'trofeo', 'raqueta', 'guante de boxeo', 'pesas', 'soga de saltar', 'aro de básquet', 'metegol', 'paleta de ping pong'],
+  d: ['Maradona con la 10', 'Messi', 'la copa del mundo', 'palo de hockey', 'tabla de surf', 'snowboard', 'patín', 'casco de ciclista', 'dardos', 'red de vóley', 'bate de béisbol', 'arco de hockey', 'silla de gimnasio', 'cronómetro', 'podio', 'antorcha olímpica', 'remo', 'pelota de rugby', 'red de tenis', 'cancha de paddle']
 }];
+
+// Categoría picante (modo after/previa): cosas dibujables pero subidas de tono.
 const PICANTE = {
   id: 'picante',
   nombre: 'Picante (after/previa)',
   emoji: '🌶️',
-  f: ['boludo', 'pelotudo', 'forro', 'en pedo', 'garca', 'careta', 'ortiva', 'chamuyo', 'levante', 'telo', 'escabio', 'resaca', 'transar', 'despelote', 'ratón', 'chongo', 'after office', 'la previa zarpada', 'mandar nudes', 'vomitar de borracho'],
-  d: ['la concha de la lora', 'hacer la chancha', 'sacar ficha', 'meter los cuernos', 'ponerse en pedo', 'estar en bolas', 'salir de chongo', 'touch and go', 'mojar la factura', 'quedar como el orto', 'la birra hasta el amanecer', 'el bajón post escabio', 'el arrepentido del grupo', 'mandarse la cagada', 'el que arruina la previa', 'tomar fernet hasta caer', 'el chamuyo barato', 'ligar un garrón', 'la resaca del domingo', 'el plan que se pinchó']
+  f: ['bombacha', 'tanga', 'sostén', 'calzoncillo', 'preservativo', 'beso', 'corazón roto', 'vaso de chupito', 'cigarrillo', 'cama', 'ducha', 'labios', 'cola', 'bikini', 'malla', 'lengua afuera', 'botella vacía', 'baño', 'gorrito de fiesta', 'globos'],
+  d: ['caño de baile', 'lencería', 'antifaz', 'esposas de juguete', 'pintalabios', 'tatuaje', 'piercing', 'peluca', 'disfraz', 'máscara', 'serpentina', 'borracho tirado', 'despedida de soltero', 'cartel de telo', 'tacos altos', 'liga', 'plumas de cabaret', 'dado del amor', 'naipes', 'cartel de prohibido']
 };
 const TEAM_COLORS = ['#4AA3C7', '#FF6B6B', '#2FD27A', '#FFA53C', '#8B6FE8', '#FF7FB6'];
 const TEAM_EMOJIS = ['🦊', '🐯', '🐸', '🦁', '🐙', '🦄', '🐧', '🐲'];
