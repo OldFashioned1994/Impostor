@@ -19,15 +19,20 @@ sin registro: abrís el archivo y jugás. Listos para instalar como PWA.
   Incluye armado de equipos, cronómetro configurable (60/90/120s) con sonidos
   y vibración, banco de 220+ películas con títulos argentinos, pistas
   canjeables, tablero entre rondas, muerte súbita y estadísticas finales.
-- **`pictionary.html` — Dibujá, Che.** Pictionary mobile bien argento (asado,
-  fernet, modismos, fútbol y más). App mobile-first (React + Canvas)
-  autocontenida que corre sin internet. Modo "pasá el celu": armado de equipos,
-  selección de categorías/dificultad/tiempo/rondas (con modo after 🌶️ opcional),
-  canvas con lápiz, goma, deshacer, limpiar y paleta de colores, cronómetro con
-  tic-tac/fanfarria/bocinazo y vibración, tablero de puntajes, ganador con
-  estadísticas y muerte súbita para desempate.
+- **`pictionary.html` — Dibujá, Che.** Pictionary de pizarra bien argento:
+  ustedes dibujan en una pizarra o pared con fibrón, y el celu hace de **mazo
+  de cartas** (la palabra secreta) y de **tablero** (turnos, cronómetro y
+  puntajes). No se dibuja en el celular. Incluye carta de palabra con efecto
+  flip y categoría, cronómetro circular, tablero siempre a mano, botones de
+  "¡Adivinaron!" y "Saltear" (con penalidad opcional), categorías por
+  dificultad con modo after 🌶️, sonidos, vibración, muerte súbita,
+  estadísticas finales y confeti.
 
 ## Cómo correr
 
 Abrí cualquiera de los `.html` en el navegador del celu (o servilo con
 `python3 -m http.server`). No requiere build ni instalación.
+
+> Para el Pictionary, el código fuente legible (JSX) está en
+> `src/pictionary.src.html`; `pictionary.html` es la versión compilada con
+> React inlineado para que funcione offline.

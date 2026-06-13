@@ -3,205 +3,195 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-<title>Dibujá, Che — Pictionary Argentino</title>
-<meta name="theme-color" content="#4AA3C7">
+<title>Dibujá, Che — Pictionary de pizarra</title>
+<meta name="theme-color" content="#3B7FB0">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Dibujá, Che">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%234AA3C7'/%3E%3Ctext x='50' y='72' font-size='62' text-anchor='middle'%3E%E2%9C%8F%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%234AA3C7'/%3E%3Ctext x='50' y='73' font-size='60' text-anchor='middle'%3E%E2%9C%8F%EF%B8%8F%3C/text%3E%3C/svg%3E">
 <link id="manifest" rel="manifest">
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700..900&family=Nunito:wght@400;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700..900&family=Nunito:wght@400;600;700;800;900&display=swap');
 
 :root{
-  --celeste:#4AA3C7; --celeste2:#74C0DF; --celesteSoft:#DFF1F8;
-  --sol:#F6C445; --sol2:#FFD972;
-  --tinta:#1E2A33; --suave:#5A6B76;
-  --blanco:#FFFFFF; --crema:#FBF7EE;
-  --verde:#2FAE66; --rojo:#E5524B; --naranja:#F08A3C; --violeta:#7C5CCB;
+  --c1:#5BC8EA; --c2:#4AA3C7; --c3:#3B7FB0; --c4:#2E6A98;
+  --sol:#FFD24A; --sol2:#FFE08A;
+  --coral:#FF6B6B; --coralD:#E5524B;
+  --verde:#2FD27A; --verdeD:#1FA85E;
+  --violeta:#8B6FE8; --rosa:#FF7FB6;
+  --tinta:#16242E; --suave:#5C7280;
   --ft:'Bricolage Grotesque',system-ui,sans-serif;
   --fb:'Nunito',system-ui,sans-serif;
-  --sombra:0 8px 0 rgba(30,42,51,.18);
 }
-*{box-sizing:border-box; -webkit-tap-highlight-color:transparent; margin:0; padding:0}
+*{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent}
 html,body{height:100%}
 body{
-  font-family:var(--fb); color:var(--tinta);
-  background:
-    radial-gradient(120% 120% at 50% -10%, var(--celeste2) 0%, var(--celeste) 45%, #3690B4 100%);
-  user-select:none; -webkit-user-select:none; -webkit-touch-callout:none;
-  overflow:hidden;
+  font-family:var(--fb); color:var(--tinta); overflow:hidden;
+  background:linear-gradient(160deg,var(--c1) 0%, var(--c2) 38%, var(--c3) 72%, var(--c4) 100%);
+  user-select:none; -webkit-user-select:none; -webkit-touch-callout:none; position:relative;
 }
-#root{height:100%}
+/* blobs decorativos modernos */
+body::before,body::after{content:'';position:fixed;border-radius:50%;filter:blur(60px);opacity:.45;z-index:0;pointer-events:none}
+body::before{width:340px;height:340px;background:var(--violeta);top:-120px;right:-90px}
+body::after{width:300px;height:300px;background:var(--sol);bottom:-110px;left:-90px;opacity:.35}
+#root{height:100%;position:relative;z-index:1}
 
-/* ====== Layout base ====== */
-.screen{
-  height:100%; width:100%; max-width:520px; margin:0 auto;
-  display:flex; flex-direction:column;
+.screen{height:100%;width:100%;max-width:520px;margin:0 auto;display:flex;flex-direction:column;
   padding:max(18px,env(safe-area-inset-top)) 18px max(18px,env(safe-area-inset-bottom));
-  overflow-y:auto; -webkit-overflow-scrolling:touch;
-}
+  overflow-y:auto;-webkit-overflow-scrolling:touch}
 .grow{flex:1}
 .center{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
 .stack{display:flex;flex-direction:column;gap:12px}
 .row{display:flex;gap:10px;align-items:center}
 .wrap{flex-wrap:wrap}
 
-/* ====== Tipografía ====== */
-h1.logo{font-family:var(--ft);font-weight:900;color:#fff;line-height:.92;
-  font-size:clamp(44px,15vw,72px);letter-spacing:-1px;
-  text-shadow:0 4px 0 rgba(30,42,51,.22)}
+h1.logo{font-family:var(--ft);font-weight:900;color:#fff;line-height:.9;
+  font-size:clamp(46px,16vw,76px);letter-spacing:-1.5px;text-shadow:0 6px 0 rgba(22,36,46,.18)}
 .logo .sol{color:var(--sol)}
-.tag{font-family:var(--ft);font-weight:800;color:#fff;opacity:.92;font-size:16px;letter-spacing:.5px}
-h2{font-family:var(--ft);font-weight:800;font-size:26px;color:var(--tinta);letter-spacing:-.5px}
-h2.light{color:#fff}
-.sub{color:var(--suave);font-weight:600;font-size:15px}
-.sub.light{color:rgba(255,255,255,.85)}
+.tag{font-family:var(--ft);font-weight:800;color:#fff;font-size:15px;letter-spacing:.4px;opacity:.95}
+h2{font-family:var(--ft);font-weight:800;font-size:25px;color:var(--tinta);letter-spacing:-.4px}
+h2.light{color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.15)}
+.sub{color:var(--suave);font-weight:700;font-size:14px}
+.sub.light{color:rgba(255,255,255,.9)}
 
-/* ====== Tarjetas ====== */
-.card{background:var(--blanco);border-radius:22px;padding:18px;box-shadow:var(--sombra)}
-.card.crema{background:var(--crema)}
+.card{background:rgba(255,255,255,.94);border-radius:24px;padding:18px;
+  box-shadow:0 14px 34px rgba(16,36,50,.22);backdrop-filter:blur(10px)}
+.glass{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.25);
+  border-radius:22px;padding:16px;backdrop-filter:blur(8px)}
 
-/* ====== Botones ====== */
-.btn{
-  font-family:var(--ft);font-weight:800;font-size:19px;letter-spacing:.3px;
-  border:none;border-radius:18px;padding:17px 20px;width:100%;cursor:pointer;
-  color:#fff;background:var(--tinta);box-shadow:0 6px 0 rgba(30,42,51,.35);
-  transition:transform .05s, box-shadow .05s; touch-action:manipulation;
-}
-.btn:active{transform:translateY(4px);box-shadow:0 2px 0 rgba(30,42,51,.35)}
-.btn:disabled{opacity:.4;box-shadow:none}
-.btn.sol{background:var(--sol);color:var(--tinta);box-shadow:0 6px 0 #D9A82F}
+.btn{font-family:var(--ft);font-weight:800;font-size:19px;letter-spacing:.2px;border:none;
+  border-radius:18px;padding:17px 20px;width:100%;cursor:pointer;color:#fff;
+  background:linear-gradient(180deg,#243642,#16242E);box-shadow:0 7px 0 rgba(0,0,0,.28);
+  transition:transform .06s,box-shadow .06s;touch-action:manipulation}
+.btn:active{transform:translateY(5px);box-shadow:0 2px 0 rgba(0,0,0,.28)}
+.btn:disabled{opacity:.45;box-shadow:none}
+.btn.sol{background:linear-gradient(180deg,var(--sol2),var(--sol));color:var(--tinta);box-shadow:0 7px 0 #D9A82F}
 .btn.sol:active{box-shadow:0 2px 0 #D9A82F}
-.btn.verde{background:var(--verde);box-shadow:0 6px 0 #1E7E48}
-.btn.verde:active{box-shadow:0 2px 0 #1E7E48}
-.btn.rojo{background:var(--rojo);box-shadow:0 6px 0 #B23A34}
+.btn.verde{background:linear-gradient(180deg,var(--verde),var(--verdeD));box-shadow:0 7px 0 #178A4C}
+.btn.verde:active{box-shadow:0 2px 0 #178A4C}
+.btn.rojo{background:linear-gradient(180deg,var(--coral),var(--coralD));box-shadow:0 7px 0 #B23A34}
 .btn.rojo:active{box-shadow:0 2px 0 #B23A34}
-.btn.celeste{background:var(--celeste);box-shadow:0 6px 0 #2F7E9C}
-.btn.celeste:active{box-shadow:0 2px 0 #2F7E9C}
-.btn.ghost{background:transparent;color:#fff;box-shadow:none;border:2px solid rgba(255,255,255,.6)}
-.btn.ghost.dark{color:var(--tinta);border-color:rgba(30,42,51,.25)}
+.btn.ghost{background:rgba(255,255,255,.14);color:#fff;box-shadow:none;border:2px solid rgba(255,255,255,.5)}
+.btn.ghost.dark{color:var(--tinta);border-color:rgba(22,36,46,.2);background:rgba(255,255,255,.5)}
 .btn.sm{font-size:15px;padding:12px 14px}
 .btn.auto{width:auto}
 
-/* ====== Inputs ====== */
-input.txt{
-  flex:1;font-family:var(--fb);font-weight:700;font-size:16px;color:var(--tinta);
-  background:#fff;border:2px solid #E3E8EB;border-radius:14px;padding:13px 14px;outline:none;
-}
-input.txt:focus{border-color:var(--celeste)}
+input.txt{flex:1;font-family:var(--fb);font-weight:700;font-size:16px;color:var(--tinta);background:#fff;
+  border:2px solid #E3E8EB;border-radius:14px;padding:13px 14px;outline:none}
+input.txt:focus{border-color:var(--c2)}
 
-/* ====== Chips / toggles ====== */
-.chip{
-  font-family:var(--ft);font-weight:800;font-size:14px;letter-spacing:.3px;
-  border:2px solid #E3E8EB;background:#fff;color:var(--suave);
-  border-radius:999px;padding:10px 16px;cursor:pointer;transition:all .12s;
-}
-.chip.on{background:var(--tinta);color:#fff;border-color:var(--tinta)}
-.chip.on.celeste{background:var(--celeste);border-color:var(--celeste)}
+.chip{font-family:var(--ft);font-weight:800;font-size:14px;border:2px solid #E3E8EB;background:#fff;
+  color:var(--suave);border-radius:999px;padding:10px 16px;cursor:pointer;transition:all .12s}
+.chip.on{background:var(--c2);color:#fff;border-color:var(--c2);transform:scale(1.03)}
 
-.optrow{display:flex;align-items:center;justify-content:space-between;gap:10px;
-  padding:14px 4px;border-bottom:1px dashed #E3E8EB}
-.optrow:last-child{border-bottom:none}
 .optname{font-family:var(--ft);font-weight:800;font-size:16px}
-.optdesc{font-size:13px;color:var(--suave);font-weight:600}
+.optdesc{font-size:13px;color:var(--suave);font-weight:700}
 
-/* check de categoría */
-.catbtn{display:flex;align-items:center;gap:12px;width:100%;text-align:left;
-  background:#fff;border:2px solid #E3E8EB;border-radius:16px;padding:14px;cursor:pointer;transition:all .12s}
-.catbtn.on{border-color:var(--celeste);background:var(--celesteSoft)}
+.catbtn{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#fff;
+  border:2px solid #E3E8EB;border-radius:16px;padding:14px;cursor:pointer;transition:all .12s}
+.catbtn.on{border-color:var(--c2);background:#EAF6FB}
 .catbox{width:26px;height:26px;border-radius:8px;border:2px solid #C9D2D7;display:grid;place-items:center;
   font-size:16px;flex-shrink:0;background:#fff;color:#fff}
 .catbtn.on .catbox{background:var(--verde);border-color:var(--verde)}
 .catemoji{font-size:24px}
-.cattxt{flex:1}
 .catname{font-family:var(--ft);font-weight:800;font-size:16px}
-.catcount{font-size:12px;color:var(--suave);font-weight:700}
+.catcount{font-size:12px;color:var(--suave);font-weight:800}
 
-/* switch */
-.switch{width:54px;height:32px;border-radius:999px;background:#D5DCE0;position:relative;
-  cursor:pointer;transition:background .15s;flex-shrink:0}
+.switch{width:56px;height:32px;border-radius:999px;background:#D5DCE0;position:relative;cursor:pointer;transition:.15s;flex-shrink:0}
 .switch.on{background:var(--verde)}
-.switch .knob{position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;
-  background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.2);transition:left .15s}
-.switch.on .knob{left:25px}
+.switch .knob{position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.2);transition:.15s}
+.switch.on .knob{left:27px}
 
-/* ====== Equipos ====== */
-.teamcard{border-radius:18px;padding:14px;color:#fff;box-shadow:var(--sombra)}
+/* equipos */
+.teamcard{border-radius:20px;padding:14px;color:#fff;box-shadow:0 10px 24px rgba(16,36,50,.2)}
 .teamhead{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.teamdot{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:20px;background:rgba(255,255,255,.25)}
-.teamname-in{flex:1;background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.35);
-  border-radius:12px;padding:10px 12px;color:#fff;font-family:var(--ft);font-weight:800;font-size:17px;outline:none}
-.teamname-in::placeholder{color:rgba(255,255,255,.7)}
-.player{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.16);
-  border-radius:10px;padding:7px 10px;font-weight:700;font-size:14px}
-.player .x{margin-left:auto;opacity:.8;cursor:pointer;font-size:18px;padding:0 4px}
+.teamdot{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;font-size:20px;background:rgba(255,255,255,.25)}
+.teamname-in{flex:1;background:rgba(255,255,255,.22);border:2px solid rgba(255,255,255,.4);border-radius:12px;
+  padding:10px 12px;color:#fff;font-family:var(--ft);font-weight:800;font-size:17px;outline:none}
+.teamname-in::placeholder{color:rgba(255,255,255,.75)}
+.player{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.18);border-radius:10px;padding:7px 10px;font-weight:800;font-size:14px}
+.player .x{margin-left:auto;opacity:.85;cursor:pointer;font-size:18px;padding:0 4px}
 .addp{display:flex;gap:8px;margin-top:8px}
-.addp input{flex:1;background:rgba(255,255,255,.22);border:2px solid rgba(255,255,255,.3);
-  border-radius:10px;padding:9px 10px;color:#fff;font-weight:700;outline:none;font-family:var(--fb)}
-.addp input::placeholder{color:rgba(255,255,255,.7)}
+.addp input{flex:1;background:rgba(255,255,255,.24);border:2px solid rgba(255,255,255,.35);border-radius:10px;padding:9px 10px;color:#fff;font-weight:800;outline:none;font-family:var(--fb)}
+.addp input::placeholder{color:rgba(255,255,255,.75)}
 .addp button{background:#fff;border:none;border-radius:10px;width:44px;font-size:24px;font-weight:800;cursor:pointer}
 
-/* ====== Reloj ====== */
-.clock{font-family:var(--ft);font-weight:900;font-size:64px;letter-spacing:1px;line-height:1}
-.clock.warn{color:var(--rojo);animation:pulse .5s infinite alternate}
-@keyframes pulse{to{transform:scale(1.08)}}
-.tbar{height:10px;border-radius:999px;background:rgba(0,0,0,.12);overflow:hidden;margin-top:8px}
-.tbar>i{display:block;height:100%;background:var(--verde);border-radius:999px;transition:width 1s linear}
-.tbar>i.mid{background:var(--sol)}
-.tbar>i.low{background:var(--rojo)}
+/* tablero / scoreboard strip */
+.boardstrip{display:flex;gap:8px;overflow-x:auto;padding:2px}
+.boardchip{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.25);
+  border-radius:14px;padding:9px 12px;color:#fff;flex-shrink:0;backdrop-filter:blur(6px)}
+.boardchip .bdot{width:12px;height:12px;border-radius:50%}
+.boardchip .bnm{font-family:var(--ft);font-weight:800;font-size:14px;white-space:nowrap}
+.boardchip .bpts{font-family:var(--ft);font-weight:900;font-size:18px;margin-left:2px}
+.boardchip.lead{background:var(--sol);color:var(--tinta);border-color:var(--sol)}
 
-/* ====== Pantalla de dibujo ====== */
-.draw-wrap{position:fixed;inset:0;background:var(--celesteSoft);display:flex;flex-direction:column;max-width:520px;margin:0 auto;left:0;right:0}
-.draw-top{display:flex;align-items:center;gap:12px;padding:max(12px,env(safe-area-inset-top)) 14px 8px}
-.draw-top .word{flex:1;text-align:center;font-family:var(--ft);font-weight:900;font-size:22px;
-  text-transform:uppercase;letter-spacing:.5px;color:var(--tinta);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.miniclock{font-family:var(--ft);font-weight:900;font-size:26px;min-width:54px;text-align:center}
-.miniclock.warn{color:var(--rojo)}
-canvas#board{flex:1;background:#fff;touch-action:none;display:block;width:100%}
-.tools{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#fff;
-  border-top:1px solid #E3E8EB;overflow-x:auto}
-.swatch{width:30px;height:30px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1.5px #CDD6DB;cursor:pointer;flex-shrink:0}
-.swatch.on{box-shadow:0 0 0 3px var(--tinta);transform:scale(1.12)}
-.tool{width:42px;height:42px;border-radius:12px;border:2px solid #E3E8EB;background:#fff;
-  font-size:20px;display:grid;place-items:center;cursor:pointer;flex-shrink:0}
-.tool.on{background:var(--celesteSoft);border-color:var(--celeste)}
-.sizes{display:flex;gap:6px;align-items:center;flex-shrink:0}
-.sizedot{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;border:2px solid #E3E8EB;background:#fff;cursor:pointer;flex-shrink:0}
-.sizedot.on{border-color:var(--celeste);background:var(--celesteSoft)}
-.sizedot i{display:block;border-radius:50%;background:var(--tinta)}
-.draw-bottom{display:flex;gap:10px;padding:10px 12px max(12px,env(safe-area-inset-bottom));background:#fff;border-top:1px solid #E3E8EB}
-.draw-bottom .btn{font-size:20px;padding:16px}
-
-/* ====== Scoreboard ====== */
-.scorerow{display:flex;align-items:center;gap:12px;padding:14px;border-radius:16px;background:#fff;box-shadow:0 4px 0 rgba(30,42,51,.1);margin-bottom:10px}
-.scorerow .rank{font-family:var(--ft);font-weight:900;font-size:20px;width:30px;color:var(--suave)}
+.scorerow{display:flex;align-items:center;gap:12px;padding:15px;border-radius:18px;background:#fff;
+  box-shadow:0 6px 0 rgba(16,36,50,.08);margin-bottom:10px}
+.scorerow .rank{font-family:var(--ft);font-weight:900;font-size:22px;width:34px;text-align:center}
 .scorerow .nm{flex:1;font-family:var(--ft);font-weight:800;font-size:18px}
-.scorerow .pts{font-family:var(--ft);font-weight:900;font-size:26px}
+.scorerow .pts{font-family:var(--ft);font-weight:900;font-size:28px}
 .scorerow .dot{width:14px;height:14px;border-radius:50%}
 
-/* ====== Confetti / fin ====== */
-.trophy{font-size:90px;animation:bounce 1s infinite alternate ease-in-out}
-@keyframes bounce{to{transform:translateY(-14px) rotate(4deg)}}
-.statline{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px dashed rgba(255,255,255,.3);color:#fff;font-weight:700}
+/* carta de palabra (flip) */
+.flip{perspective:1200px;width:100%}
+.flip-in{position:relative;width:100%;min-height:190px;transition:transform .55s cubic-bezier(.4,.2,.2,1);transform-style:preserve-3d}
+.flip.on .flip-in{transform:rotateY(180deg)}
+.flip-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  border-radius:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:22px;text-align:center}
+.flip-front{background:linear-gradient(150deg,#fff,#EAF6FB);box-shadow:0 14px 34px rgba(16,36,50,.22);border:3px dashed var(--c2)}
+.flip-front .q{font-family:var(--ft);font-weight:900;font-size:64px;color:var(--c2)}
+.flip-back{background:linear-gradient(150deg,#fff,#FFF6DD);box-shadow:0 14px 34px rgba(16,36,50,.22);
+  border:3px solid var(--sol);transform:rotateY(180deg)}
+.flip-back .w{font-family:var(--ft);font-weight:900;font-size:clamp(28px,8.5vw,44px);text-transform:uppercase;line-height:1.04;color:var(--tinta)}
+.flip-back .cat{margin-top:8px;font-weight:800;font-size:13px;color:var(--suave)}
+
+/* cronómetro circular */
+.ringwrap{position:relative;width:min(74vw,280px);height:min(74vw,280px)}
+.ringwrap svg{transform:rotate(-90deg)}
+.ringtxt{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ringtxt .num{font-family:var(--ft);font-weight:900;font-size:clamp(54px,18vw,78px);line-height:1;color:#fff;text-shadow:0 3px 10px rgba(0,0,0,.18)}
+.ringtxt .lbl{font-family:var(--ft);font-weight:800;font-size:13px;color:rgba(255,255,255,.85);letter-spacing:2px}
+.ringwrap.warn{animation:beat .5s infinite alternate}
+@keyframes beat{to{transform:scale(1.05)}}
+
+.peek{width:100%;border:none;border-radius:16px;padding:14px;font-family:var(--ft);font-weight:800;font-size:16px;cursor:pointer;
+  background:rgba(255,255,255,.18);color:#fff;border:2px solid rgba(255,255,255,.4)}
+.peekword{font-family:var(--ft);font-weight:900;font-size:clamp(26px,8vw,40px);text-transform:uppercase;color:var(--sol)}
+
+.pill{display:inline-block;background:rgba(255,255,255,.22);color:#fff;font-family:var(--ft);font-weight:800;font-size:13px;padding:6px 14px;border-radius:999px;backdrop-filter:blur(6px)}
+.hint{font-size:13px;color:rgba(255,255,255,.85);font-weight:700;text-align:center}
+.trophy{font-size:96px;animation:bounce 1s infinite alternate ease-in-out}
+@keyframes bounce{to{transform:translateY(-16px) rotate(5deg)}}
+.statline{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px dashed rgba(255,255,255,.3);color:#fff;font-weight:800}
 .statline:last-child{border:none}
 .statline .e{font-size:24px}
 .statline b{margin-left:auto;font-family:var(--ft);font-weight:900}
 
-.fade{animation:fade .25s ease}
-@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1}}
-.toast{position:fixed;left:50%;top:18%;transform:translateX(-50%);background:var(--tinta);color:#fff;
-  font-family:var(--ft);font-weight:800;padding:14px 22px;border-radius:14px;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,.3);animation:fade .2s}
-.pill{display:inline-block;background:rgba(255,255,255,.2);color:#fff;font-weight:800;font-size:13px;padding:5px 12px;border-radius:999px}
-.hint{font-size:13px;color:var(--suave);font-weight:600;text-align:center}
+.fade{animation:fade .28s ease}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1}}
+.pop{animation:pop .3s ease}
+@keyframes pop{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.12)}to{transform:scale(1);opacity:1}}
+.toast{position:fixed;left:50%;top:16%;transform:translateX(-50%);background:var(--tinta);color:#fff;
+  font-family:var(--ft);font-weight:800;padding:14px 22px;border-radius:14px;z-index:80;box-shadow:0 8px 24px rgba(0,0,0,.3);animation:fade .2s}
+
+/* flash de resultado */
+.flash{position:fixed;inset:0;z-index:70;pointer-events:none;opacity:0;animation:flash .6s ease}
+.flash.ok{background:radial-gradient(circle,rgba(47,210,122,.55),transparent 70%)}
+.flash.bad{background:radial-gradient(circle,rgba(229,82,75,.5),transparent 70%)}
+@keyframes flash{0%{opacity:0}30%{opacity:1}to{opacity:0}}
+
+/* confeti */
+.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:60}
+.confetti span{position:absolute;top:-40px;font-size:22px;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(112vh) rotate(540deg);opacity:.95}}
 </style>
 </head>
 <body>
 <div id="root"></div>
 
-<!-- React + app inlineados: la app corre 100% offline (las fuentes son una mejora opcional con red). -->
+<!-- React + app inlineados: corre 100% offline (las fuentes son mejora opcional con red). -->
 <script>/**
  * @license React
  * react.production.min.js
@@ -511,8 +501,7 @@ function(a,b,c){if(!Vd(b))throw Error(m(200));return Wd(null,a,b,!1,c)};Q.unmoun
 
 /* =====================================================================
    BANCO DE PALABRAS — bien argento, noventoso/dosmilero.
-   Cada categoría tiene palabras fáciles (f) y difíciles (d).
-   "picante" arranca apagado y se activa con el toggle del modo after/previa.
+   f = fáciles, d = difíciles. "picante" se activa con el modo after.
    ===================================================================== */
 const CATS = [{
   id: 'comida',
@@ -557,8 +546,6 @@ const CATS = [{
   f: ['la playa de Mar del Plata', 'el Obelisco', 'Bariloche', 'las Cataratas', 'la cancha', 'el barrio', 'la quinta', 'el parque', 'la pileta', 'el camping', 'la previa', 'el after', 'el cumpleaños de 15', 'el casamiento', 'el peaje', 'la ruta', 'la estación de servicio', 'el cyber', 'la verdulería', 'el chino'],
   d: ['Caminito', 'la 9 de Julio', 'el Tigre', 'las sierras de Córdoba', 'el Aconcagua', 'la Quebrada', 'el corte de luz', 'el paro', 'la cola del banco', 'el feriado puente', 'el día del amigo', 'la siesta', 'el quincho', 'la parrilla del finde', 'el viaje de egresados', 'la previa del mundial', 'la sobremesa', 'el asado de oficina', 'la juntada de ex compañeros', 'el bondi 60']
 }];
-
-// Categoría picante (modo after/previa). Apagada por defecto.
 const PICANTE = {
   id: 'picante',
   nombre: 'Picante (after/previa)',
@@ -566,15 +553,11 @@ const PICANTE = {
   f: ['boludo', 'pelotudo', 'forro', 'en pedo', 'garca', 'careta', 'ortiva', 'chamuyo', 'levante', 'telo', 'escabio', 'resaca', 'transar', 'despelote', 'ratón', 'chongo', 'after office', 'la previa zarpada', 'mandar nudes', 'vomitar de borracho'],
   d: ['la concha de la lora', 'hacer la chancha', 'sacar ficha', 'meter los cuernos', 'ponerse en pedo', 'estar en bolas', 'salir de chongo', 'touch and go', 'mojar la factura', 'quedar como el orto', 'la birra hasta el amanecer', 'el bajón post escabio', 'el arrepentido del grupo', 'mandarse la cagada', 'el que arruina la previa', 'tomar fernet hasta caer', 'el chamuyo barato', 'ligar un garrón', 'la resaca del domingo', 'el plan que se pinchó']
 };
-
-/* Paleta del canvas (6-8 colores) */
-const COLORES = ['#1E2A33', '#E5524B', '#F08A3C', '#F6C445', '#2FAE66', '#4AA3C7', '#7C5CCB', '#E36BA4'];
-const GROSORES = [4, 9, 18, 30];
-const TEAM_COLORS = ['#4AA3C7', '#E5524B', '#2FAE66', '#F08A3C', '#7C5CCB', '#E36BA4'];
+const TEAM_COLORS = ['#4AA3C7', '#FF6B6B', '#2FD27A', '#FFA53C', '#8B6FE8', '#FF7FB6'];
 const TEAM_EMOJIS = ['🦊', '🐯', '🐸', '🦁', '🐙', '🦄', '🐧', '🐲'];
 
 /* =====================================================================
-   AUDIO — tic-tac, fanfarria y bocinazo con Web Audio API (sin archivos).
+   AUDIO — tic-tac, fanfarria y bocinazo (Web Audio API, sin archivos)
    ===================================================================== */
 const Audio = (() => {
   let ctx = null;
@@ -613,12 +596,14 @@ const Audio = (() => {
     tock() {
       beep(660, 0.05, 'square', 0.08);
     },
+    flip() {
+      beep(520, 0.07, 'triangle', 0.18);
+      beep(720, 0.07, 'triangle', 0.14, 0.05);
+    },
     acierto() {
-      // fanfarria
       [523, 659, 784, 1046].forEach((f, i) => beep(f, 0.18, 'triangle', 0.25, i * 0.09));
     },
     bocina() {
-      // se acabó el tiempo
       beep(180, 0.5, 'sawtooth', 0.3);
       beep(140, 0.55, 'sawtooth', 0.25, 0.05);
     },
@@ -633,144 +618,34 @@ const vibrar = ms => {
   } catch (e) {}
 };
 
-/* =====================================================================
-   CANVAS — dibujo suave con pointer events. Deshacer por snapshots.
-   El trazo se pinta directo sobre el canvas (no pasa por React) => sin lag.
-   ===================================================================== */
-function Pizarra({
-  color,
-  grosor,
-  borrador,
-  apiRef
-}) {
-  const ref = useRef(null);
-  const draw = useRef({
-    on: false,
-    x: 0,
-    y: 0
-  });
-  const undoStack = useRef([]);
-  const getCtx = () => ref.current.getContext('2d');
-  const setup = useCallback(() => {
-    const cv = ref.current;
-    if (!cv) return;
-    const dpr = window.devicePixelRatio || 1;
-    const r = cv.getBoundingClientRect();
-    cv.width = Math.round(r.width * dpr);
-    cv.height = Math.round(r.height * dpr);
-    const ctx = getCtx();
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    ctx.fillStyle = '#fff';
-    ctx.fillRect(0, 0, r.width, r.height);
-    undoStack.current = [];
-  }, []);
-  useEffect(() => {
-    setup();
-    const onResize = () => setup();
-    window.addEventListener('resize', onResize);
-    window.addEventListener('orientationchange', onResize);
-    return () => {
-      window.removeEventListener('resize', onResize);
-      window.removeEventListener('orientationchange', onResize);
+/* Confeti simpático */
+function Confetti() {
+  const emojis = ['🎉', '🎊', '⭐', '✏️', '🟡', '🔵', '🟢', '🔴', '🟣', '🧡'];
+  return /*#__PURE__*/React.createElement("div", {
+    className: "confetti"
+  }, Array.from({
+    length: 46
+  }).map((_, i) => {
+    const st = {
+      left: Math.random() * 100 + '%',
+      animationDelay: Math.random() * 0.7 + 's',
+      animationDuration: 2 + Math.random() * 1.6 + 's',
+      fontSize: 16 + Math.random() * 16 + 'px'
     };
-  }, [setup]);
-
-  // Guardamos snapshot ANTES de cada trazo => deshacer vuelve al estado previo.
-  const snapshot = () => {
-    const cv = ref.current;
-    const ctx = getCtx();
-    try {
-      const img = ctx.getImageData(0, 0, cv.width, cv.height);
-      undoStack.current.push(img);
-      if (undoStack.current.length > 25) undoStack.current.shift();
-    } catch (e) {}
-  };
-
-  // Exponemos undo y clear al padre.
-  useEffect(() => {
-    apiRef.current = {
-      undo() {
-        if (!undoStack.current.length) return;
-        const img = undoStack.current.pop();
-        getCtx().putImageData(img, 0, 0);
-      },
-      clear() {
-        snapshot();
-        const cv = ref.current;
-        const r = cv.getBoundingClientRect();
-        const ctx = getCtx();
-        ctx.fillStyle = '#fff';
-        ctx.fillRect(0, 0, r.width, r.height);
-      }
-    };
-  });
-  const pos = e => {
-    const r = ref.current.getBoundingClientRect();
-    return {
-      x: e.clientX - r.left,
-      y: e.clientY - r.top
-    };
-  };
-  const down = e => {
-    e.preventDefault();
-    snapshot();
-    const p = pos(e);
-    draw.current = {
-      on: true,
-      x: p.x,
-      y: p.y
-    };
-    const ctx = getCtx();
-    ctx.strokeStyle = borrador ? '#fff' : color;
-    ctx.lineWidth = borrador ? grosor * 2.4 : grosor;
-    // punto inicial (para que un toque marque)
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, ctx.lineWidth / 2, 0, Math.PI * 2);
-    ctx.fillStyle = ctx.strokeStyle;
-    ctx.fill();
-    ctx.beginPath();
-    ctx.moveTo(p.x, p.y);
-  };
-  const move = e => {
-    if (!draw.current.on) return;
-    e.preventDefault();
-    const ctx = getCtx();
-    // coalesced events => trazo más suave en dispositivos que lo soportan
-    const evs = e.nativeEvent.getCoalescedEvents ? e.nativeEvent.getCoalescedEvents() : [e.nativeEvent];
-    for (const ev of evs) {
-      const r = ref.current.getBoundingClientRect();
-      const x = ev.clientX - r.left,
-        y = ev.clientY - r.top;
-      ctx.lineTo(x, y);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(x, y);
-    }
-  };
-  const up = () => {
-    draw.current.on = false;
-  };
-  return /*#__PURE__*/React.createElement("canvas", {
-    id: "board",
-    ref: ref,
-    onPointerDown: down,
-    onPointerMove: move,
-    onPointerUp: up,
-    onPointerCancel: up,
-    onPointerLeave: up
-  });
+    return /*#__PURE__*/React.createElement("span", {
+      key: i,
+      style: st
+    }, emojis[i % emojis.length]);
+  }));
 }
 
 /* =====================================================================
-   APP
+   APP — el celu es el MAZO DE CARTAS (la palabra) + el TABLERO (turnos,
+   cronómetro y puntajes). Se dibuja en una pizarra/pared con fibrón.
    ===================================================================== */
 function App() {
-  const [pantalla, setPantalla] = useState('inicio'); // inicio | equipos | config | reparto | mirar | dibujar | ronda | tablero | fin
+  const [pantalla, setPantalla] = useState('inicio');
   const [toast, setToast] = useState('');
-
-  // Equipos
   const [equipos, setEquipos] = useState([{
     id: 1,
     nombre: '',
@@ -784,51 +659,62 @@ function App() {
     score: 0,
     salteos: 0
   }]);
-
-  // Config
   const [catsOn, setCatsOn] = useState(() => new Set(CATS.map(c => c.id)));
-  const [dif, setDif] = useState('todas'); // facil | dificil | todas
+  const [dif, setDif] = useState('todas');
   const [picante, setPicante] = useState(false);
   const [tiempo, setTiempo] = useState(90);
   const [rondas, setRondas] = useState(3);
   const [penalSaltear, setPenalSaltear] = useState(false);
-
-  // Estado de partida
   const [turno, setTurno] = useState({
     eq: 0,
     ronda: 1
   });
   const [palabra, setPalabra] = useState('');
+  const [catActual, setCatActual] = useState('');
   const [usadas, setUsadas] = useState(() => new Set());
   const [stats, setStats] = useState({
-    rapido: null,
-    drawCount: []
+    rapido: null
   });
+  const [resultado, setResultado] = useState({});
   const mostrarToast = t => {
     setToast(t);
     setTimeout(() => setToast(''), 1400);
   };
-
-  /* ---------- Pool de palabras según config ---------- */
   const armarPool = useCallback(() => {
     let lista = [];
     const fuentes = [...CATS];
     if (picante) fuentes.push(PICANTE);
     for (const c of fuentes) {
       if (c.id !== 'picante' && !catsOn.has(c.id)) continue;
-      if (dif === 'todas' || dif === 'facil') lista = lista.concat(c.f);
-      if (dif === 'todas' || dif === 'dificil') lista = lista.concat(c.d);
+      const add = arr => arr.forEach(t => lista.push({
+        t,
+        cat: c.nombre
+      }));
+      if (dif === 'todas' || dif === 'facil') add(c.f);
+      if (dif === 'todas' || dif === 'dificil') add(c.d);
     }
     return lista;
   }, [catsOn, dif, picante]);
   const sacarPalabra = useCallback(usadasSet => {
     const pool = armarPool();
-    const dispo = pool.filter(p => !usadasSet.has(p));
-    const fuente = dispo.length ? dispo : pool; // si se agotan, reciclamos
-    return fuente[Math.floor(Math.random() * fuente.length)] || 'che, dibujá algo';
+    const dispo = pool.filter(p => !usadasSet.has(p.t));
+    const fuente = dispo.length ? dispo : pool;
+    return fuente[Math.floor(Math.random() * fuente.length)] || {
+      t: 'che, dibujá algo',
+      cat: ''
+    };
   }, [armarPool]);
-
-  /* ---------- Navegación de equipos ---------- */
+  const nuevaPalabra = set => {
+    const w = sacarPalabra(set || usadas);
+    setPalabra(w.t);
+    setCatActual(w.cat);
+    setUsadas(u => {
+      const n = new Set(u);
+      n.add(w.t);
+      return n;
+    });
+    return w;
+  };
   const updEquipo = (i, patch) => setEquipos(es => es.map((e, j) => j === i ? {
     ...e,
     ...patch
@@ -851,11 +737,9 @@ function App() {
   const delJugador = (i, j) => updEquipo(i, {
     jugadores: equipos[i].jugadores.filter((_, k) => k !== j)
   });
-
-  /* ---------- Empezar partida ---------- */
+  const drawerDe = e => e.jugadores && e.jugadores.length ? e.jugadores[(e.drawerIdx || 0) % e.jugadores.length] : null;
   const empezar = () => {
     Audio.unlock();
-    // normalizamos nombres y reseteamos puntajes
     const norm = equipos.map((e, i) => ({
       ...e,
       nombre: e.nombre.trim() || `Equipo ${i + 1}`,
@@ -875,8 +759,52 @@ function App() {
     setPantalla('reparto');
   };
   const poolCount = armarPool().length;
-
-  /* ---------- Render por pantalla ---------- */
+  const finTurno = (adivino, segUsados, agoto) => {
+    if (adivino) {
+      setEquipos(es => es.map((e, i) => i === turno.eq ? {
+        ...e,
+        score: e.score + 1
+      } : e));
+      Audio.acierto();
+      vibrar([60, 40, 120]);
+      setStats(s => !s.rapido || segUsados < s.rapido.seg ? {
+        ...s,
+        rapido: {
+          eq: turno.eq,
+          seg: segUsados
+        }
+      } : s);
+    } else {
+      Audio.bocina();
+      vibrar([300, 80, 300]);
+    }
+    setResultado({
+      adivino,
+      segUsados,
+      agoto
+    });
+    setPantalla('ronda');
+  };
+  const avanzar = () => {
+    const nextEq = turno.eq + 1;
+    if (nextEq < equipos.length) {
+      setTurno(t => ({
+        ...t,
+        eq: nextEq
+      }));
+      setPantalla('reparto');
+    } else if (turno.ronda < rondas) {
+      setEquipos(es => es.map(e => ({
+        ...e,
+        drawerIdx: (e.drawerIdx + 1) % Math.max(1, e.jugadores.length || 1)
+      })));
+      setTurno({
+        eq: 0,
+        ronda: turno.ronda + 1
+      });
+      setPantalla('reparto');
+    } else setPantalla('tablero');
+  };
   return /*#__PURE__*/React.createElement(React.Fragment, null, toast && /*#__PURE__*/React.createElement("div", {
     className: "toast"
   }, toast), pantalla === 'inicio' && /*#__PURE__*/React.createElement(Inicio, {
@@ -916,58 +844,31 @@ function App() {
       empezar();
     }
   }), pantalla === 'reparto' && /*#__PURE__*/React.createElement(Reparto, {
-    equipo: equipos[turno.eq],
-    ronda: turno.ronda,
+    equipos: equipos,
+    turno: turno,
     totalRondas: rondas,
+    drawer: drawerDe(equipos[turno.eq]),
     onListo: () => {
-      const w = sacarPalabra(usadas);
-      setPalabra(w);
-      setUsadas(u => new Set(u).add(w));
+      nuevaPalabra();
       setPantalla('mirar');
     }
   }), pantalla === 'mirar' && /*#__PURE__*/React.createElement(Mirar, {
     equipo: equipos[turno.eq],
     palabra: palabra,
-    onOtra: () => {
-      const w = sacarPalabra(usadas);
-      setPalabra(w);
-      setUsadas(u => new Set(u).add(w));
-    },
+    cat: catActual,
+    onOtra: () => nuevaPalabra(),
     onEmpezar: () => {
       Audio.unlock();
-      setPantalla('dibujar');
+      setPantalla('juego');
     }
-  }), pantalla === 'dibujar' && /*#__PURE__*/React.createElement(Dibujar, {
+  }), pantalla === 'juego' && /*#__PURE__*/React.createElement(EnJuego, {
     equipo: equipos[turno.eq],
     palabra: palabra,
+    cat: catActual,
     tiempo: tiempo,
     penalSaltear: penalSaltear,
-    onResultado: (adivino, segUsados) => {
-      setEquipos(es => es.map((e, i) => i === turno.eq ? {
-        ...e,
-        score: e.score + (adivino ? 1 : 0)
-      } : e));
-      if (adivino) {
-        Audio.acierto();
-        vibrar([60, 40, 120]);
-        // récord de rapidez
-        setStats(s => {
-          if (!s.rapido || segUsados < s.rapido.seg) return {
-            ...s,
-            rapido: {
-              eq: turno.eq,
-              seg: segUsados
-            }
-          };
-          return s;
-        });
-      }
-      setPantalla('ronda');
-      window.__ultimoResultado = {
-        adivino,
-        segUsados
-      };
-    },
+    onResultado: (ok, seg) => finTurno(ok, seg, false),
+    onTiempo: () => finTurno(false, tiempo, true),
     onSaltear: () => {
       setEquipos(es => es.map((e, i) => i === turno.eq ? {
         ...e,
@@ -975,50 +876,13 @@ function App() {
         score: e.score + (penalSaltear ? -1 : 0)
       } : e));
       Audio.pop();
-      // nueva palabra, sigue el mismo turno
-      const w = sacarPalabra(usadas);
-      setPalabra(w);
-      setUsadas(u => new Set(u).add(w));
-    },
-    onTiempo: () => {
-      Audio.bocina();
-      vibrar([300, 80, 300]);
-      setPantalla('ronda');
-      window.__ultimoResultado = {
-        adivino: false,
-        agoto: true
-      };
+      nuevaPalabra();
     }
   }), pantalla === 'ronda' && /*#__PURE__*/React.createElement(FinRonda, {
     equipos: equipos,
     turno: turno,
-    resultado: window.__ultimoResultado || {},
-    onSeguir: () => {
-      // ¿avanzamos de equipo / ronda / fin?
-      const nextEq = turno.eq + 1;
-      if (nextEq < equipos.length) {
-        setTurno(t => ({
-          ...t,
-          eq: nextEq
-        }));
-        setPantalla('reparto');
-      } else {
-        // terminó la vuelta: ¿más rondas?
-        if (turno.ronda < rondas) {
-          setEquipos(es => es.map(e => ({
-            ...e,
-            drawerIdx: (e.drawerIdx + 1) % Math.max(1, e.jugadores.length || 1)
-          })));
-          setTurno({
-            eq: 0,
-            ronda: turno.ronda + 1
-          });
-          setPantalla('reparto');
-        } else {
-          setPantalla('tablero');
-        }
-      }
-    }
+    resultado: resultado,
+    onSeguir: avanzar
   }), pantalla === 'tablero' && /*#__PURE__*/React.createElement(Tablero, {
     equipos: equipos,
     onVerFin: () => setPantalla('fin')
@@ -1026,22 +890,11 @@ function App() {
     equipos: equipos,
     stats: stats,
     tiempo: tiempo,
-    sacarPalabra: () => {
-      const w = sacarPalabra(usadas);
-      setPalabra(w);
-      setUsadas(u => new Set(u).add(w));
-      return w;
-    },
+    nuevaPalabra: nuevaPalabra,
     setEquipos: setEquipos,
-    setTurno: setTurno,
-    setPantalla: setPantalla,
-    setPalabra: setPalabra,
-    usadas: usadas,
-    setUsadas: setUsadas,
     onReiniciar: () => {
-      setEquipos(es => es.map((e, i) => ({
+      setEquipos(es => es.map(e => ({
         ...e,
-        nombre: e.nombre,
         score: 0,
         salteos: 0,
         drawerIdx: 0
@@ -1061,56 +914,53 @@ function App() {
 }
 
 /* ===================== PANTALLAS ===================== */
-
 function Inicio({
   onJugar
 }) {
   return /*#__PURE__*/React.createElement("div", {
     className: "screen center fade"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "grow",
+    className: "grow center",
     style: {
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
-      gap: 18
+      gap: 16
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: 78
-    }
+    },
+    className: "pop"
   }, "\u270F\uFE0F"), /*#__PURE__*/React.createElement("h1", {
     className: "logo"
   }, "DIBUJ\xC1,", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("span", {
     className: "sol"
   }, "CHE")), /*#__PURE__*/React.createElement("div", {
     className: "tag"
-  }, "EL PICTIONARY M\xC1S ARGENTO \uD83C\uDDE6\uD83C\uDDF7"), /*#__PURE__*/React.createElement("div", {
-    className: "card crema",
+  }, "PICTIONARY DE PIZARRA \xB7 BIEN ARGENTO \uD83C\uDDE6\uD83C\uDDF7"), /*#__PURE__*/React.createElement("div", {
+    className: "glass",
     style: {
-      marginTop: 10,
-      width: '100%'
+      marginTop: 8
     }
   }, /*#__PURE__*/React.createElement("div", {
     className: "hint",
     style: {
-      lineHeight: 1.5
+      lineHeight: 1.55
     }
-  }, "Juntate con la banda, pasate el celu y a dibujar.", /*#__PURE__*/React.createElement("br", null), "Sin registro, sin vueltas. En 30 segundos est\xE1s jugando."))), /*#__PURE__*/React.createElement("div", {
-    className: "stack",
+  }, "Colg\xE1 una ", /*#__PURE__*/React.createElement("b", {
     style: {
-      paddingBottom: 8
+      color: '#fff'
     }
+  }, "pizarra o un papel en la pared"), " y dibuj\xE1 con fibr\xF3n.", /*#__PURE__*/React.createElement("br", null), "El celu es ", /*#__PURE__*/React.createElement("b", {
+    style: {
+      color: 'var(--sol)'
+    }
+  }, "las cartas y el tablero"), ": te da la palabra, lleva el tiempo y los puntos."))), /*#__PURE__*/React.createElement("div", {
+    className: "stack"
   }, /*#__PURE__*/React.createElement("button", {
     className: "btn sol",
     onClick: onJugar
   }, "\xA1DALE, A JUGAR!"), /*#__PURE__*/React.createElement("div", {
-    className: "hint",
-    style: {
-      color: 'rgba(255,255,255,.8)'
-    }
-  }, "Modo \"Pas\xE1 el celu\" \xB7 2 a 6 equipos")));
+    className: "hint"
+  }, "Pas\xE1 el celu \xB7 2 a 6 equipos \xB7 sin internet")));
 }
 function Equipos({
   equipos,
@@ -1131,7 +981,6 @@ function Equipos({
     addJugador(i, drafts[i] || '');
     setDraft(i, '');
   };
-  const validos = equipos.length >= 2;
   return /*#__PURE__*/React.createElement("div", {
     className: "screen fade"
   }, /*#__PURE__*/React.createElement("div", {
@@ -1219,15 +1068,13 @@ function Equipos({
     }
   }, /*#__PURE__*/React.createElement("button", {
     className: "btn sol",
-    disabled: !validos,
     onClick: onSeguir
   }, "SEGUIR \u2192"), /*#__PURE__*/React.createElement("div", {
     className: "hint",
     style: {
-      color: 'rgba(255,255,255,.8)',
       marginTop: 8
     }
-  }, "Los jugadores son opcionales: si no carg\xE1s nombres, igual pueden jugar pas\xE1ndose el celu.")));
+  }, "Los jugadores son opcionales: igual pueden ir pas\xE1ndose el celu.")));
 }
 function Config({
   catsOn,
@@ -1282,9 +1129,8 @@ function Config({
       marginBottom: 4
     }
   }, "Categor\xEDas"), /*#__PURE__*/React.createElement("div", {
-    className: "hint",
+    className: "sub",
     style: {
-      textAlign: 'left',
       marginBottom: 10
     }
   }, "Eleg\xED qu\xE9 entra en la partida."), /*#__PURE__*/React.createElement("div", {
@@ -1301,7 +1147,9 @@ function Config({
   }, catsOn.has(c.id) ? '✓' : ''), /*#__PURE__*/React.createElement("span", {
     className: "catemoji"
   }, c.emoji), /*#__PURE__*/React.createElement("span", {
-    className: "cattxt"
+    style: {
+      flex: 1
+    }
   }, /*#__PURE__*/React.createElement("span", {
     className: "catname"
   }, c.nombre), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("span", {
@@ -1317,21 +1165,20 @@ function Config({
     className: "row wrap"
   }, [['facil', 'Fácil 😎'], ['dificil', 'Difícil 🤔'], ['todas', 'Todas 🎲']].map(([v, l]) => /*#__PURE__*/React.createElement("button", {
     key: v,
-    className: 'chip celeste' + (dif === v ? ' on' : ''),
+    className: 'chip' + (dif === v ? ' on' : ''),
     onClick: () => setDif(v)
   }, l)))), /*#__PURE__*/React.createElement("div", {
     className: "card"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "optrow",
+    className: "row",
     style: {
-      borderBottom: 'none',
-      padding: '4px'
+      justifyContent: 'space-between'
     }
   }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     className: "optname"
   }, "\uD83C\uDF36\uFE0F Modo after / previa"), /*#__PURE__*/React.createElement("div", {
     className: "optdesc"
-  }, "Suma palabras subidas de tono. Solo para grandes.")), /*#__PURE__*/React.createElement("div", {
+  }, "Palabras subidas de tono. Solo para grandes.")), /*#__PURE__*/React.createElement("div", {
     className: 'switch' + (picante ? ' on' : ''),
     onClick: () => setPicante(p => !p)
   }, /*#__PURE__*/React.createElement("div", {
@@ -1347,7 +1194,7 @@ function Config({
     className: "row wrap"
   }, [60, 90, 120].map(t => /*#__PURE__*/React.createElement("button", {
     key: t,
-    className: 'chip celeste' + (tiempo === t ? ' on' : ''),
+    className: 'chip' + (tiempo === t ? ' on' : ''),
     onClick: () => setTiempo(t)
   }, t, "s")))), /*#__PURE__*/React.createElement("div", {
     className: "card"
@@ -1360,21 +1207,19 @@ function Config({
     className: "row wrap"
   }, [2, 3, 5, 8].map(r => /*#__PURE__*/React.createElement("button", {
     key: r,
-    className: 'chip celeste' + (rondas === r ? ' on' : ''),
+    className: 'chip' + (rondas === r ? ' on' : ''),
     onClick: () => setRondas(r)
   }, r))), /*#__PURE__*/React.createElement("div", {
-    className: "hint",
+    className: "sub",
     style: {
-      textAlign: 'left',
       marginTop: 8
     }
   }, "Cada equipo dibuja 1 vez por ronda.")), /*#__PURE__*/React.createElement("div", {
     className: "card"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "optrow",
+    className: "row",
     style: {
-      borderBottom: 'none',
-      padding: '4px'
+      justifyContent: 'space-between'
     }
   }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     className: "optname"
@@ -1394,34 +1239,65 @@ function Config({
     onClick: onJugar
   }, "EMPEZAR (", poolCount, " palabras) \u25B6")));
 }
+
+/* Tablero compacto reutilizable (el "tablero" siempre a mano) */
+function BoardStrip({
+  equipos
+}) {
+  const max = Math.max(1, ...equipos.map(e => e.score));
+  return /*#__PURE__*/React.createElement("div", {
+    className: "boardstrip"
+  }, equipos.map((e, i) => /*#__PURE__*/React.createElement("div", {
+    key: e.id,
+    className: 'boardchip' + (e.score === max && max > 0 ? ' lead' : '')
+  }, !(e.score === max && max > 0) && /*#__PURE__*/React.createElement("span", {
+    className: "bdot",
+    style: {
+      background: TEAM_COLORS[i % TEAM_COLORS.length]
+    }
+  }), /*#__PURE__*/React.createElement("span", {
+    className: "bnm"
+  }, e.score === max && max > 0 ? '👑 ' : '', e.nombre), /*#__PURE__*/React.createElement("span", {
+    className: "bpts"
+  }, e.score))));
+}
 function Reparto({
-  equipo,
-  ronda,
+  equipos,
+  turno,
   totalRondas,
+  drawer,
   onListo
 }) {
-  const col = equipo.colHint || '#4AA3C7';
-  const drawer = equipo.jugadores && equipo.jugadores.length ? equipo.jugadores[(equipo.drawerIdx || 0) % equipo.jugadores.length] : null;
+  const eq = equipos[turno.eq];
   return /*#__PURE__*/React.createElement("div", {
-    className: "screen center fade"
+    className: "screen fade"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "row",
+    style: {
+      justifyContent: 'center',
+      marginBottom: 12
+    }
   }, /*#__PURE__*/React.createElement("span", {
     className: "pill"
-  }, "Ronda ", ronda, " de ", totalRondas), /*#__PURE__*/React.createElement("div", {
+  }, "Ronda ", turno.ronda, " de ", totalRondas)), /*#__PURE__*/React.createElement(BoardStrip, {
+    equipos: equipos
+  }), /*#__PURE__*/React.createElement("div", {
     className: "grow center",
     style: {
       gap: 16
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 66
-    }
+      fontSize: 64
+    },
+    className: "pop"
   }, "\uD83D\uDCF2"), /*#__PURE__*/React.createElement("h2", {
     className: "light",
     style: {
       fontSize: 22
     }
   }, "Pasale el celu a\u2026"), /*#__PURE__*/React.createElement("div", {
-    className: "card",
+    className: "card pop",
     style: {
       padding: '22px 26px'
     }
@@ -1431,7 +1307,7 @@ function Reparto({
       fontWeight: 900,
       fontSize: 30
     }
-  }, equipo.nombre), drawer && /*#__PURE__*/React.createElement("div", {
+  }, eq.nombre), drawer && /*#__PURE__*/React.createElement("div", {
     className: "sub",
     style: {
       marginTop: 6
@@ -1440,20 +1316,21 @@ function Reparto({
     style: {
       color: 'var(--tinta)'
     }
-  }, drawer), " \uD83C\uDFA8")), /*#__PURE__*/React.createElement("div", {
-    className: "sub light"
-  }, "Que el dibujante mire la palabra a solas.", /*#__PURE__*/React.createElement("br", null), "\xA1El resto no esp\xEDa! \uD83D\uDC40")), /*#__PURE__*/React.createElement("button", {
+  }, drawer), " \uD83D\uDD8A\uFE0F")), /*#__PURE__*/React.createElement("div", {
+    className: "hint"
+  }, "Mir\xE1 la palabra a solas, and\xE1 a la pizarra y dibuj\xE1.", /*#__PURE__*/React.createElement("br", null), "\xA1El resto no esp\xEDa! \uD83D\uDC40")), /*#__PURE__*/React.createElement("button", {
     className: "btn sol",
     onClick: onListo
-  }, "SOY EL DIBUJANTE \uD83C\uDFA8"));
+  }, "SOY EL QUE DIBUJA \uD83D\uDD8A\uFE0F"));
 }
 function Mirar({
   equipo,
   palabra,
+  cat,
   onOtra,
   onEmpezar
 }) {
-  const [visto, setVisto] = useState(false);
+  const [flip, setFlip] = useState(false);
   return /*#__PURE__*/React.createElement("div", {
     className: "screen center fade"
   }, /*#__PURE__*/React.createElement("span", {
@@ -1461,64 +1338,61 @@ function Mirar({
   }, equipo.nombre), /*#__PURE__*/React.createElement("div", {
     className: "grow center",
     style: {
-      gap: 18
-    }
-  }, !visto ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 60
-    }
-  }, "\uD83E\uDD2B"), /*#__PURE__*/React.createElement("h2", {
-    className: "light"
-  }, "Tu palabra secreta"), /*#__PURE__*/React.createElement("div", {
-    className: "sub light"
-  }, "Toc\xE1 para revelarla (que nadie m\xE1s mire)"), /*#__PURE__*/React.createElement("button", {
-    className: "btn sol",
-    style: {
-      maxWidth: 260
-    },
-    onClick: () => setVisto(true)
-  }, "VER PALABRA \uD83D\uDC41\uFE0F")) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
-    className: "sub light"
-  }, "A dibujar esto:"), /*#__PURE__*/React.createElement("div", {
-    className: "card",
-    style: {
-      padding: '28px 24px',
+      gap: 18,
       width: '100%'
     }
   }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontFamily: 'var(--ft)',
-      fontWeight: 900,
-      fontSize: 'clamp(30px,9vw,46px)',
-      textTransform: 'uppercase',
-      lineHeight: 1.05,
-      color: 'var(--tinta)'
+    className: "sub light"
+  }, "Toc\xE1 la carta para ver tu palabra \uD83E\uDD2B"), /*#__PURE__*/React.createElement("div", {
+    className: 'flip' + (flip ? ' on' : ''),
+    onClick: () => {
+      if (!flip) {
+        Audio.flip();
+      }
+      setFlip(f => !f);
     }
-  }, palabra)), /*#__PURE__*/React.createElement("button", {
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "flip-in"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "flip-face flip-front"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "q"
+  }, "?"), /*#__PURE__*/React.createElement("div", {
+    className: "sub",
+    style: {
+      marginTop: 6
+    }
+  }, "toc\xE1 para revelar")), /*#__PURE__*/React.createElement("div", {
+    className: "flip-face flip-back"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "w"
+  }, palabra), cat && /*#__PURE__*/React.createElement("div", {
+    className: "cat"
+  }, cat)))), flip && /*#__PURE__*/React.createElement("button", {
     className: "btn ghost auto sm",
-    onClick: onOtra
-  }, "\uD83D\uDD04 Dame otra"))), visto && /*#__PURE__*/React.createElement("button", {
+    onClick: e => {
+      e.stopPropagation();
+      onOtra();
+    }
+  }, "\uD83D\uDD04 Dame otra")), /*#__PURE__*/React.createElement("button", {
     className: "btn verde",
+    disabled: !flip,
     onClick: onEmpezar
-  }, "\xA1EMPEZAR A DIBUJAR! \u23F1\uFE0F"));
+  }, "\xA1A LA PIZARRA! \u23F1\uFE0F"));
 }
-function Dibujar({
+function EnJuego({
   equipo,
   palabra,
+  cat,
   tiempo,
   penalSaltear,
   onResultado,
-  onSaltear,
-  onTiempo
+  onTiempo,
+  onSaltear
 }) {
-  const [color, setColor] = useState(COLORES[0]);
-  const [grosor, setGrosor] = useState(GROSORES[1]);
-  const [borrador, setBorrador] = useState(false);
   const [restante, setRestante] = useState(tiempo);
-  const apiRef = useRef({});
+  const [peek, setPeek] = useState(false);
   const finRef = useRef(false);
-
-  // Cronómetro
   useEffect(() => {
     finRef.current = false;
     setRestante(tiempo);
@@ -1545,94 +1419,81 @@ function Dibujar({
     return () => clearInterval(id);
   }, [tiempo]);
   const usados = tiempo - restante;
-  const pct = Math.max(0, restante / tiempo * 100);
-  const barClass = pct > 50 ? '' : pct > 20 ? 'mid' : 'low';
+  const frac = restante / tiempo;
   const warn = restante <= 10;
+  const R = 130,
+    C = 2 * Math.PI * R;
+  const col = frac > 0.5 ? '#2FD27A' : frac > 0.2 ? '#FFD24A' : '#FF6B6B';
   const adivinaron = () => {
     if (finRef.current) return;
     finRef.current = true;
     onResultado(true, usados);
   };
+  const saltear = () => {
+    if (finRef.current) return;
+    onSaltear();
+  };
   return /*#__PURE__*/React.createElement("div", {
-    className: "draw-wrap fade"
+    className: "screen fade"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "draw-top"
+    className: "row",
+    style: {
+      justifyContent: 'space-between'
+    }
   }, /*#__PURE__*/React.createElement("span", {
-    className: "pill",
+    className: "pill"
+  }, equipo.nombre), /*#__PURE__*/React.createElement("span", {
+    className: "pill"
+  }, "\uD83D\uDD8A\uFE0F Dibuj\xE1 en la pizarra")), /*#__PURE__*/React.createElement("div", {
+    className: "grow center",
     style: {
-      background: 'rgba(0,0,0,.08)',
-      color: 'var(--tinta)'
+      gap: 18
     }
-  }, equipo.nombre), /*#__PURE__*/React.createElement("div", {
-    className: "word"
-  }, palabra), /*#__PURE__*/React.createElement("div", {
-    className: 'miniclock' + (warn ? ' warn' : '')
-  }, restante, "s")), /*#__PURE__*/React.createElement("div", {
-    className: "tbar",
+  }, /*#__PURE__*/React.createElement("div", {
+    className: 'ringwrap' + (warn ? ' warn' : '')
+  }, /*#__PURE__*/React.createElement("svg", {
+    width: "100%",
+    height: "100%",
+    viewBox: "0 0 300 300"
+  }, /*#__PURE__*/React.createElement("circle", {
+    cx: "150",
+    cy: "150",
+    r: R,
+    fill: "none",
+    stroke: "rgba(255,255,255,.22)",
+    strokeWidth: "20"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "150",
+    cy: "150",
+    r: R,
+    fill: "none",
+    stroke: col,
+    strokeWidth: "20",
+    strokeLinecap: "round",
+    strokeDasharray: C,
+    strokeDashoffset: C * (1 - frac),
     style: {
-      margin: '0 12px'
-    }
-  }, /*#__PURE__*/React.createElement("i", {
-    className: barClass,
-    style: {
-      width: pct + '%'
-    }
-  })), /*#__PURE__*/React.createElement(Pizarra, {
-    color: color,
-    grosor: grosor,
-    borrador: borrador,
-    apiRef: apiRef
-  }), /*#__PURE__*/React.createElement("div", {
-    className: "tools"
-  }, COLORES.map(c => /*#__PURE__*/React.createElement("div", {
-    key: c,
-    className: 'swatch' + (!borrador && color === c ? ' on' : ''),
-    style: {
-      background: c
-    },
-    onClick: () => {
-      setColor(c);
-      setBorrador(false);
+      transition: 'stroke-dashoffset 1s linear, stroke .4s'
     }
   })), /*#__PURE__*/React.createElement("div", {
-    style: {
-      width: 1,
-      height: 30,
-      background: '#E3E8EB',
-      flexShrink: 0
-    }
-  }), /*#__PURE__*/React.createElement("div", {
-    className: "sizes"
-  }, GROSORES.map(g => /*#__PURE__*/React.createElement("div", {
-    key: g,
-    className: 'sizedot' + (grosor === g ? ' on' : ''),
-    onClick: () => setGrosor(g)
-  }, /*#__PURE__*/React.createElement("i", {
-    style: {
-      width: Math.min(g, 22),
-      height: Math.min(g, 22)
-    }
-  })))), /*#__PURE__*/React.createElement("div", {
-    style: {
-      width: 1,
-      height: 30,
-      background: '#E3E8EB',
-      flexShrink: 0
-    }
-  }), /*#__PURE__*/React.createElement("div", {
-    className: 'tool' + (borrador ? ' on' : ''),
-    onClick: () => setBorrador(b => !b)
-  }, "\uD83E\uDDFD"), /*#__PURE__*/React.createElement("div", {
-    className: "tool",
-    onClick: () => apiRef.current.undo && apiRef.current.undo()
-  }, "\u21A9\uFE0F"), /*#__PURE__*/React.createElement("div", {
-    className: "tool",
-    onClick: () => apiRef.current.clear && apiRef.current.clear()
-  }, "\uD83D\uDDD1\uFE0F")), /*#__PURE__*/React.createElement("div", {
-    className: "draw-bottom"
+    className: "ringtxt"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "num"
+  }, restante), /*#__PURE__*/React.createElement("div", {
+    className: "lbl"
+  }, "SEGUNDOS"))), /*#__PURE__*/React.createElement("button", {
+    className: "peek",
+    onPointerDown: () => setPeek(true),
+    onPointerUp: () => setPeek(false),
+    onPointerLeave: () => setPeek(false),
+    onPointerCancel: () => setPeek(false)
+  }, peek ? /*#__PURE__*/React.createElement("span", {
+    className: "peekword"
+  }, palabra) : /*#__PURE__*/React.createElement("span", null, "\uD83D\uDC41\uFE0F Manten\xE9 apretado para ver la palabra"))), /*#__PURE__*/React.createElement("div", {
+    className: "row"
   }, /*#__PURE__*/React.createElement("button", {
     className: "btn rojo",
-    onClick: onSaltear
+    onClick: saltear
   }, "SALTEAR", penalSaltear ? ' (-1)' : '', " \u23ED\uFE0F"), /*#__PURE__*/React.createElement("button", {
     className: "btn verde",
     onClick: adivinaron
@@ -1648,21 +1509,26 @@ function FinRonda({
   const ok = resultado.adivino;
   return /*#__PURE__*/React.createElement("div", {
     className: "screen center fade"
-  }, /*#__PURE__*/React.createElement("div", {
+  }, ok && /*#__PURE__*/React.createElement(Confetti, null), /*#__PURE__*/React.createElement("div", {
+    className: 'flash ' + (ok ? 'ok' : 'bad')
+  }), /*#__PURE__*/React.createElement(BoardStrip, {
+    equipos: equipos
+  }), /*#__PURE__*/React.createElement("div", {
     className: "grow center",
     style: {
       gap: 16
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 80
-    }
+      fontSize: 84
+    },
+    className: "pop"
   }, ok ? '🎉' : resultado.agoto ? '⏰' : '😬'), /*#__PURE__*/React.createElement("h2", {
     className: "light"
   }, ok ? '¡La sacaron!' : resultado.agoto ? 'Se acabó el tiempo' : 'Esta vez no…'), ok && /*#__PURE__*/React.createElement("div", {
     className: "sub light"
-  }, "en ", resultado.segUsados, "s \xB7 sos un crack \uD83D\uDE0E"), /*#__PURE__*/React.createElement("div", {
-    className: "card",
+  }, "en ", resultado.segUsados, "s \xB7 \xA1sos un crack! \uD83D\uDE0E"), /*#__PURE__*/React.createElement("div", {
+    className: "card pop",
     style: {
       width: '100%'
     }
@@ -1678,7 +1544,7 @@ function FinRonda({
       fontFamily: 'var(--ft)',
       fontWeight: 900,
       fontSize: 26,
-      color: ok ? 'var(--verde)' : 'var(--suave)'
+      color: ok ? 'var(--verdeD)' : 'var(--suave)'
     }
   }, eq.score, " ", ok && '(+1)')))), /*#__PURE__*/React.createElement("button", {
     className: "btn sol",
@@ -1705,15 +1571,19 @@ function Tablero({
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 50
-    }
+      fontSize: 52
+    },
+    className: "pop"
   }, "\uD83D\uDCCA"), /*#__PURE__*/React.createElement("h2", {
     className: "light"
   }, "Tablero de puntajes")), /*#__PURE__*/React.createElement("div", {
     className: "grow"
   }, orden.map((e, r) => /*#__PURE__*/React.createElement("div", {
-    className: "scorerow",
-    key: e.id
+    className: "scorerow pop",
+    key: e.id,
+    style: {
+      animationDelay: r * 0.05 + 's'
+    }
   }, /*#__PURE__*/React.createElement("span", {
     className: "rank"
   }, r === 0 ? '🥇' : r === 1 ? '🥈' : r === 2 ? '🥉' : `${r + 1}°`), /*#__PURE__*/React.createElement("span", {
@@ -1736,13 +1606,8 @@ function Fin({
   tiempo,
   onReiniciar,
   onInicio,
-  sacarPalabra,
-  setPalabra,
-  setEquipos,
-  setTurno,
-  setPantalla,
-  usadas,
-  setUsadas
+  nuevaPalabra,
+  setEquipos
 }) {
   const orden = ordenar(equipos);
   const top = orden[0].score;
@@ -1751,13 +1616,11 @@ function Fin({
   const masSalteador = [...equipos].sort((a, b) => b.salteos - a.salteos)[0];
   const rapidoEq = stats.rapido != null ? equipos[stats.rapido.eq] : null;
   const [muerteSubita, setMuerteSubita] = useState(false);
-
-  // Modo muerte súbita: el primero que acierte gana. Turno simple sobre los empatados.
   if (muerteSubita) {
     return /*#__PURE__*/React.createElement(MuerteSubita, {
       empatados: empatados,
       tiempo: tiempo,
-      sacarPalabra: sacarPalabra,
+      nuevaPalabra: nuevaPalabra,
       onGana: idGanador => {
         setEquipos(es => es.map(e => e.id === idGanador ? {
           ...e,
@@ -1769,15 +1632,16 @@ function Fin({
   }
   return /*#__PURE__*/React.createElement("div", {
     className: "screen center fade"
-  }, /*#__PURE__*/React.createElement("div", {
+  }, !hayEmpate && /*#__PURE__*/React.createElement(Confetti, null), /*#__PURE__*/React.createElement("div", {
     className: "grow center",
     style: {
       gap: 10
     }
   }, hayEmpate ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 70
-    }
+      fontSize: 72
+    },
+    className: "pop"
   }, "\uD83E\uDD1D"), /*#__PURE__*/React.createElement("h2", {
     className: "light"
   }, "\xA1Empate t\xE9cnico!"), /*#__PURE__*/React.createElement("div", {
@@ -1799,10 +1663,8 @@ function Fin({
   }, "\xA1Gan\xF3 ", orden[0].nombre, "!"), /*#__PURE__*/React.createElement("div", {
     className: "sub light"
   }, "con ", top, " puntos \xB7 \xA1aplausos! \uD83D\uDC4F")), /*#__PURE__*/React.createElement("div", {
-    className: "card",
+    className: "glass",
     style: {
-      background: 'rgba(255,255,255,.12)',
-      backdropFilter: 'blur(4px)',
       width: '100%',
       marginTop: 14
     }
@@ -1810,15 +1672,15 @@ function Fin({
     className: "statline"
   }, /*#__PURE__*/React.createElement("span", {
     className: "e"
-  }, "\u26A1"), " El m\xE1s r\xE1pido", /*#__PURE__*/React.createElement("b", null, rapidoEq ? `${rapidoEq.nombre} (${stats.rapido.seg}s)` : '—')), /*#__PURE__*/React.createElement("div", {
+  }, "\u26A1"), " El m\xE1s r\xE1pido ", /*#__PURE__*/React.createElement("b", null, rapidoEq ? `${rapidoEq.nombre} (${stats.rapido.seg}s)` : '—')), /*#__PURE__*/React.createElement("div", {
     className: "statline"
   }, /*#__PURE__*/React.createElement("span", {
     className: "e"
-  }, "\u23ED\uFE0F"), " El que m\xE1s salte\xF3", /*#__PURE__*/React.createElement("b", null, masSalteador && masSalteador.salteos > 0 ? `${masSalteador.nombre} (${masSalteador.salteos})` : 'nadie 😇')), /*#__PURE__*/React.createElement("div", {
+  }, "\u23ED\uFE0F"), " El que m\xE1s salte\xF3 ", /*#__PURE__*/React.createElement("b", null, masSalteador && masSalteador.salteos > 0 ? `${masSalteador.nombre} (${masSalteador.salteos})` : 'nadie 😇')), /*#__PURE__*/React.createElement("div", {
     className: "statline"
   }, /*#__PURE__*/React.createElement("span", {
     className: "e"
-  }, "\uD83C\uDFAF"), " Puntos del campe\xF3n", /*#__PURE__*/React.createElement("b", null, top))), /*#__PURE__*/React.createElement("div", {
+  }, "\uD83C\uDFAF"), " Puntos del campe\xF3n ", /*#__PURE__*/React.createElement("b", null, top))), /*#__PURE__*/React.createElement("div", {
     style: {
       width: '100%',
       marginTop: 6
@@ -1841,12 +1703,15 @@ function Fin({
 function MuerteSubita({
   empatados,
   tiempo,
-  sacarPalabra,
+  nuevaPalabra,
   onGana
 }) {
-  const [idx, setIdx] = useState(0); // equipo empatado actual
-  const [fase, setFase] = useState('reparto'); // reparto | mirar | dibujar
-  const [palabra, setPalabra] = useState('');
+  const [idx, setIdx] = useState(0);
+  const [fase, setFase] = useState('reparto');
+  const [pal, setPal] = useState({
+    t: '',
+    cat: ''
+  });
   const eq = empatados[idx];
   const siguiente = () => setIdx(i => (i + 1) % empatados.length);
   if (fase === 'reparto') {
@@ -1862,11 +1727,12 @@ function MuerteSubita({
     }, /*#__PURE__*/React.createElement("div", {
       style: {
         fontSize: 64
-      }
+      },
+      className: "pop"
     }, "\uD83D\uDD25"), /*#__PURE__*/React.createElement("h2", {
       className: "light"
     }, "El que acierta, gana"), /*#__PURE__*/React.createElement("div", {
-      className: "card"
+      className: "card pop"
     }, /*#__PURE__*/React.createElement("div", {
       style: {
         fontFamily: 'var(--ft)',
@@ -1874,14 +1740,15 @@ function MuerteSubita({
         fontSize: 28
       }
     }, eq.nombre)), /*#__PURE__*/React.createElement("div", {
-      className: "sub light"
-    }, "Pasale el celu al dibujante")), /*#__PURE__*/React.createElement("button", {
+      className: "hint"
+    }, "Pasale el celu al que dibuja")), /*#__PURE__*/React.createElement("button", {
       className: "btn sol",
       onClick: () => {
-        setPalabra(sacarPalabra());
+        const w = nuevaPalabra();
+        setPal(w);
         setFase('mirar');
       }
-    }, "SOY EL DIBUJANTE \uD83C\uDFA8"));
+    }, "SOY EL QUE DIBUJA \uD83D\uDD8A\uFE0F"));
   }
   if (fase === 'mirar') {
     return /*#__PURE__*/React.createElement("div", {
@@ -1891,11 +1758,12 @@ function MuerteSubita({
     }, eq.nombre), /*#__PURE__*/React.createElement("div", {
       className: "grow center",
       style: {
-        gap: 16
+        gap: 16,
+        width: '100%'
       }
     }, /*#__PURE__*/React.createElement("div", {
       className: "sub light"
-    }, "Dibuj\xE1 esto:"), /*#__PURE__*/React.createElement("div", {
+    }, "Dibuj\xE1 esto en la pizarra:"), /*#__PURE__*/React.createElement("div", {
       className: "card",
       style: {
         width: '100%'
@@ -1907,38 +1775,42 @@ function MuerteSubita({
         fontSize: 'clamp(28px,8vw,42px)',
         textTransform: 'uppercase'
       }
-    }, palabra))), /*#__PURE__*/React.createElement("button", {
+    }, pal.t), pal.cat && /*#__PURE__*/React.createElement("div", {
+      className: "sub",
+      style: {
+        marginTop: 6
+      }
+    }, pal.cat))), /*#__PURE__*/React.createElement("button", {
       className: "btn verde",
       onClick: () => {
         Audio.unlock();
-        setFase('dibujar');
+        setFase('juego');
       }
-    }, "\xA1EMPEZAR! \u23F1\uFE0F"));
+    }, "\xA1A LA PIZARRA! \u23F1\uFE0F"));
   }
-  // fase dibujar
-  return /*#__PURE__*/React.createElement(Dibujar, {
+  return /*#__PURE__*/React.createElement(EnJuego, {
     equipo: eq,
-    palabra: palabra,
+    palabra: pal.t,
+    cat: pal.cat,
     tiempo: tiempo,
     penalSaltear: false,
     onResultado: ok => {
       if (ok) {
-        Audio.acierto();
-        vibrar([60, 40, 120]);
         onGana(eq.id);
       } else {
         siguiente();
         setFase('reparto');
       }
     },
-    onSaltear: () => {
-      setPalabra(sacarPalabra());
-    },
     onTiempo: () => {
       Audio.bocina();
       vibrar(300);
       siguiente();
       setFase('reparto');
+    },
+    onSaltear: () => {
+      const w = nuevaPalabra();
+      setPal(w);
     }
   });
 }
@@ -1948,14 +1820,14 @@ function MuerteSubita({
   const manifest = {
     name: 'Dibujá, Che',
     short_name: 'Dibujá Che',
-    description: 'El Pictionary más argento, para jugar entre amigos.',
+    description: 'Pictionary de pizarra para jugar entre amigos: el celu es las cartas y el tablero.',
     start_url: '.',
     display: 'standalone',
     orientation: 'portrait',
-    background_color: '#4AA3C7',
-    theme_color: '#4AA3C7',
+    background_color: '#3B7FB0',
+    theme_color: '#3B7FB0',
     icons: [{
-      src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%234AA3C7'/%3E%3Ctext x='50' y='72' font-size='62' text-anchor='middle'%3E%E2%9C%8F%EF%B8%8F%3C/text%3E%3C/svg%3E",
+      src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%234AA3C7'/%3E%3Ctext x='50' y='73' font-size='60' text-anchor='middle'%3E%E2%9C%8F%EF%B8%8F%3C/text%3E%3C/svg%3E",
       sizes: 'any',
       type: 'image/svg+xml',
       purpose: 'any'
