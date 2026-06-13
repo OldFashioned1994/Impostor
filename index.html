@@ -3,268 +3,704 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-<title>El Impostor</title>
-<meta name="theme-color" content="#2B241C">
+<title>El Impostor · Edición Argenta</title>
+<meta name="theme-color" content="#0E0B1A">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="El Impostor">
+<meta name="description" content="El juego del Impostor para jugar pasando el celu en la previa, el asado o la juntada. 100% argentino.">
 <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAIAAADdvvtQAAACd0lEQVR42u3dvVHDQBSFUdh5nZEQuAQIXBkBlEBAwrgRF+AiCEg9QwD4T/uuzsmZ0T5/rGRhi/vDfncHpxpGgIAQEAJCQCAgBISAEBAICAEhIAQEAkJAzKT++wNvm62pZXt6f7ED4RSGgBAQCIh53oWdedHObM58W20HwikMASEgBAQCQkAICAGBgBAQAkJAICAEhIAQEAgIASEgBISAQEAICAEhIBAQAkJACAgExFVU3pIeHp9nPrzPj1cB6ebc44zJaKhnqQNud8yxAfV9JQIaGupx/OsNKOMs0HoVw9ytxUU0AkJA9vwVrsgOhIAQEAJCQCAgBISAEBAICAEhIAQEAkJACAgBgYAQEAJCQAgIBISAEBACAgEhIGbX9SGb20p7vuzL15cdCKcwEBACQkAICASEgBAQkTrdzz1+EG7enejjBTb6Z1DVKJr1OF715DGVaMQUEpBuOp7jqmk3Tf92nVdStUuHnzNcMKOSjozOMdQTebkdG5B6wsY71KOhHgGpJ3LUQz0aanYRTRIBISDiA2r0+YQMNxv4yFsStxz1SF2YejKvgTQUNt6xhkWq53pqwaW6uxjwO1mLL1tGrbfzmmcESup4GVATDkVJjS4fa/IxicnXesSU/Ea1Wo81I6nW9zUqb/QzV5V3DyzwG+a/vkjXK2yF90jrbn3cCr8gnwdCQAgIASEgEBACQkAICASEgBAQAgIBISAEhIBAQAgIASEgBAQCQkAICAGBgBAQAkJAICAEhIAQEAgIASEgBISA4GQXeE7022ZrjnYgEBACQkAICP7m/rDfmQJ2IASEgBAQCAgBISAEBAJCQAgIAYGAEBDT+Aalco/8IjvjewAAAABJRU5ErkJggg==">
 <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAIAAADdvvtQAAACd0lEQVR42u3dvVHDQBSFUdh5nZEQuAQIXBkBlEBAwrgRF+AiCEg9QwD4T/uuzsmZ0T5/rGRhi/vDfncHpxpGgIAQEAJCQCAgBISAEBAICAEhIAQEAkJAzKT++wNvm62pZXt6f7ED4RSGgBAQCIh53oWdedHObM58W20HwikMASEgBAQCQkAICAGBgBAQAkJAICAEhIAQEAgIASEgBISAQEAICAEhIBAQAkJACAgExFVU3pIeHp9nPrzPj1cB6ebc44zJaKhnqQNud8yxAfV9JQIaGupx/OsNKOMs0HoVw9ytxUU0AkJA9vwVrsgOhIAQEAJCQCAgBISAEBAICAEhIAQEAkJACAgBgYAQEAJCQAgIBISAEBACAgEhIGbX9SGb20p7vuzL15cdCKcwEBACQkAICASEgBAQkTrdzz1+EG7enejjBTb6Z1DVKJr1OF715DGVaMQUEpBuOp7jqmk3Tf92nVdStUuHnzNcMKOSjozOMdQTebkdG5B6wsY71KOhHgGpJ3LUQz0aanYRTRIBISDiA2r0+YQMNxv4yFsStxz1SF2YejKvgTQUNt6xhkWq53pqwaW6uxjwO1mLL1tGrbfzmmcESup4GVATDkVJjS4fa/IxicnXesSU/Ea1Wo81I6nW9zUqb/QzV5V3DyzwG+a/vkjXK2yF90jrbn3cCr8gnwdCQAgIASEgEBACQkAICASEgBAQAgIBISAEhIBAQAgIASEgBAQCQkAICAGBgBAQAkJAICAEhIAQEAgIASEgBISA4GQXeE7022ZrjnYgEBACQkAICP7m/rDfmQJ2IASEgBAQCAgBISAEBAJCQAgIAYGAEBDT+Aalco/8IjvjewAAAABJRU5ErkJggg==">
 <link id="manifest" rel="manifest">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=IBM+Plex+Sans:wght@400;600&display=swap');
+/* =========================================================
+   EL IMPOSTOR · EDICIÓN ARGENTA
+   App web autocontenida (pass-and-play). Sin dependencias.
+   Modo oscuro por defecto, estética vibrante.
+   ========================================================= */
 :root{
-  --papel:#E8DCBF; --papel2:#DCCDA6; --tinta:#2B241C; --suave:#6B5F4D;
-  --rojo:#A82E26; --sello:#8C2820; --verde:#3F5D3A; --celeste:#5B8FA8;
-  --fd:'Special Elite','Courier New',monospace; --fb:'IBM Plex Sans',system-ui,sans-serif;
+  /* Paleta oscura vibrante */
+  --bg:#0E0B1A;        /* fondo base, noche */
+  --bg2:#171228;       /* tarjetas */
+  --bg3:#221A3D;       /* tarjetas elevadas / inputs */
+  --linea:#322a52;     /* bordes suaves */
+  --txt:#F5F1FF;       /* texto principal */
+  --muted:#9b92bd;     /* texto secundario */
+  --celeste:#4FC4FF;   /* cielo argentino */
+  --sol:#FFC93C;       /* sol de mayo */
+  --fuego:#FF6B35;     /* naranja fernet/atardecer */
+  --magenta:#FF2E7E;   /* acento caliente */
+  --verde:#2FE6A0;     /* éxito */
+  --rojo:#FF4D6D;      /* peligro / impostor */
+  --fb:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
 }
-*{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;min-height:100%}
 body{
-  background:repeating-linear-gradient(0deg,var(--papel),var(--papel) 34px,var(--papel2) 34px,var(--papel2) 35px);
-  color:var(--tinta); font-family:var(--fb);
-  user-select:none; -webkit-user-select:none; -webkit-touch-callout:none;
-  padding:max(24px, env(safe-area-inset-top)) 16px 48px;
+  background:
+    radial-gradient(1200px 600px at 80% -10%, rgba(255,46,126,.18), transparent 60%),
+    radial-gradient(1000px 500px at -10% 10%, rgba(79,196,255,.16), transparent 55%),
+    var(--bg);
+  background-attachment:fixed;
+  color:var(--txt); font-family:var(--fb);
+  user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;
+  padding:max(20px,env(safe-area-inset-top)) 16px calc(32px + env(safe-area-inset-bottom));
   display:flex; justify-content:center;
+  -webkit-font-smoothing:antialiased;
 }
-#app{width:100%;max-width:420px}
-.head{text-align:center;margin-bottom:20px}
-.exp{font-family:var(--fd);font-size:13px;letter-spacing:4px;color:var(--suave)}
-h1{font-family:var(--fd);font-size:40px;margin:2px 0 6px;letter-spacing:2px}
-.sello{display:inline-block;font-family:var(--fd);color:var(--sello);border:3px solid var(--sello);
-  border-radius:6px;padding:4px 14px;letter-spacing:3px;text-transform:uppercase;opacity:.92;
-  font-size:26px;transform:rotate(-5deg)}
-.sello.chico{font-size:22px}
-.sello.azul{color:var(--celeste);border-color:var(--celeste);transform:rotate(5deg)}
-.btn{font-family:var(--fd);font-size:17px;padding:14px 20px;width:100%;border:2px solid var(--tinta);
-  border-radius:4px;cursor:pointer;letter-spacing:1px;box-shadow:3px 3px 0 var(--tinta);
-  background:var(--tinta);color:var(--papel);transition:transform .06s}
-.btn:active{transform:translate(2px,2px)}
-.btn:disabled{opacity:.4;box-shadow:none}
-.btn.rojo{background:var(--rojo)}
-.btn.sec{background:transparent;color:var(--tinta)}
-.btn.mini{width:64px;padding:12px 0}
-label{font-family:var(--fd);font-size:14px;letter-spacing:2px}
-input{flex:1;padding:12px 14px;font-size:16px;font-family:var(--fb);background:rgba(255,255,255,.45);
-  border:2px solid var(--tinta);border-radius:4px;color:var(--tinta);outline:none}
-input::placeholder{color:var(--suave);opacity:.7}
-.fila{display:flex;gap:8px;margin:6px 0 10px}
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;min-height:36px}
-.chip{font-family:var(--fd);font-size:15px;padding:5px 12px;border:1.5px dashed var(--tinta);
-  border-radius:3px;cursor:pointer;background:rgba(255,255,255,.35)}
-.nota{font-size:13px;color:var(--suave)}
-.opts{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 18px}
-.opt{padding:8px 14px;font-family:var(--fd);font-size:14px;border:2px solid var(--tinta);
-  border-radius:4px;cursor:pointer;background:transparent;color:var(--tinta)}
-.opt.on{background:var(--tinta);color:var(--papel)}
-.opt.num{flex:1;font-size:18px;padding:10px 0}
-.opt.num.on{background:var(--rojo)}
-.opt:disabled{opacity:.3}
-.check{display:flex;align-items:center;gap:10px;margin-bottom:22px;cursor:pointer;font-size:14px}
-.box{width:22px;height:22px;border:2px solid var(--tinta);border-radius:4px;color:var(--papel);
-  display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
-.box.on{background:var(--verde)}
+#app{width:100%;max-width:460px}
+
+/* ---------- Tipografía / encabezados ---------- */
+.brand{text-align:center;margin:6px 0 18px}
+.kicker{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);font-weight:700}
+.logo{
+  font-size:clamp(38px,12vw,56px);font-weight:900;line-height:.95;margin:6px 0 2px;letter-spacing:-1px;
+  background:linear-gradient(100deg,var(--celeste),var(--sol) 45%,var(--fuego) 75%,var(--magenta));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  text-shadow:0 0 40px rgba(255,46,126,.15);
+}
+.flag{height:5px;width:84px;margin:8px auto 0;border-radius:99px;
+  background:linear-gradient(90deg,var(--celeste),#fff 50%,var(--celeste))}
+h2{font-size:26px;font-weight:900;margin:2px 0 10px;letter-spacing:-.5px;line-height:1.1}
+.sub{color:var(--muted);font-size:15px;line-height:1.5;margin:0 0 18px}
 .centro{text-align:center}
-.doc{font-family:var(--fd);font-size:14px;letter-spacing:2px;color:var(--suave)}
-h2{font-family:var(--fd);font-size:30px;margin:4px 0 16px}
-.sobre{margin:0 auto 8px;max-width:320px;min-height:220px;border:3px solid var(--tinta);border-radius:6px;
-  background:var(--papel2);box-shadow:5px 5px 0 var(--tinta);display:flex;flex-direction:column;
-  align-items:center;justify-content:center;padding:20px;touch-action:manipulation;cursor:pointer;
-  transition:background .15s}
-.sobre.abierto{background:#FFF8E4}
-.palabra{font-family:var(--fd);font-size:30px;margin:10px 0;line-height:1.15}
-.timer{font-family:var(--fd);font-size:72px;letter-spacing:4px;margin:8px 0 16px}
-.timer.urgente{color:var(--rojo)}
-.col{display:flex;flex-direction:column;gap:10px}
-.intro{font-size:14px;color:var(--suave);text-align:center;margin:0 0 18px}
-@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+
+/* ---------- Tarjetas ---------- */
+.card{background:var(--bg2);border:1px solid var(--linea);border-radius:20px;padding:18px;margin-bottom:14px;
+  box-shadow:0 12px 30px rgba(0,0,0,.35)}
+
+/* ---------- Botones ---------- */
+.btn{font-family:var(--fb);font-size:17px;font-weight:800;padding:16px 18px;width:100%;
+  border:none;border-radius:16px;cursor:pointer;letter-spacing:.3px;color:#0E0B1A;
+  background:linear-gradient(100deg,var(--celeste),var(--magenta));
+  box-shadow:0 10px 24px rgba(255,46,126,.28); transition:transform .07s ease, filter .15s, opacity .15s}
+.btn:active{transform:translateY(2px) scale(.99)}
+.btn:disabled{opacity:.35;box-shadow:none;cursor:not-allowed}
+.btn.fuego{background:linear-gradient(100deg,var(--sol),var(--fuego));box-shadow:0 10px 24px rgba(255,107,53,.3)}
+.btn.verde{background:linear-gradient(100deg,var(--verde),var(--celeste));box-shadow:0 10px 24px rgba(47,230,160,.28)}
+.btn.ghost{background:transparent;color:var(--txt);border:1.5px solid var(--linea);box-shadow:none}
+.btn.mini{width:auto;padding:14px 18px}
+.btn + .btn{margin-top:10px}
+.row-btns{display:flex;gap:10px}
+.row-btns .btn{margin:0}
+
+/* ---------- Inputs / chips ---------- */
+label{display:block;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);
+  font-weight:800;margin:2px 0 8px}
+.fila{display:flex;gap:8px;margin-bottom:14px}
+input{flex:1;padding:15px 16px;font-size:16px;font-family:var(--fb);background:var(--bg3);
+  border:1.5px solid var(--linea);border-radius:14px;color:var(--txt);outline:none}
+input::placeholder{color:var(--muted)}
+input:focus{border-color:var(--celeste)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px;min-height:30px}
+.chip{font-size:15px;font-weight:700;padding:9px 14px;border-radius:99px;cursor:pointer;
+  background:var(--bg3);border:1px solid var(--linea);display:flex;align-items:center;gap:8px}
+.chip b{color:var(--magenta);font-weight:900}
+.empty{color:var(--muted);font-size:14px}
+
+/* ---------- Opciones / segmentos ---------- */
+.seg{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.opt{flex:1;min-width:64px;padding:12px 10px;text-align:center;font-weight:800;font-size:15px;
+  border:1.5px solid var(--linea);border-radius:14px;cursor:pointer;background:var(--bg3);color:var(--txt);
+  transition:transform .06s}
+.opt:active{transform:scale(.97)}
+.opt.on{background:linear-gradient(100deg,var(--celeste),var(--magenta));color:#0E0B1A;border-color:transparent}
+.opt:disabled{opacity:.3;cursor:not-allowed}
+
+/* ---------- Toggle (switch) ---------- */
+.toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;
+  background:var(--bg3);border:1.5px solid var(--linea);border-radius:14px;padding:14px 16px;
+  margin-bottom:12px;cursor:pointer}
+.toggle .t-txt{font-size:14px;line-height:1.35}
+.toggle .t-txt b{font-weight:800;font-size:15px}
+.toggle .t-txt span{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+.switch{width:50px;height:30px;border-radius:99px;background:#3a3357;flex-shrink:0;position:relative;
+  transition:background .18s}
+.switch::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;
+  background:#fff;transition:transform .18s}
+.toggle.on .switch{background:linear-gradient(100deg,var(--verde),var(--celeste))}
+.toggle.on .switch::after{transform:translateX(20px)}
+
+/* ---------- Reparto de roles (sobre) ---------- */
+.passer{font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:800}
+.sobre{margin:14px auto;border-radius:24px;border:1.5px solid var(--linea);
+  background:linear-gradient(160deg,var(--bg3),var(--bg2));min-height:260px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:26px;
+  cursor:pointer;touch-action:none;position:relative;overflow:hidden;transition:border-color .2s}
+.sobre.crew{border-color:var(--celeste);box-shadow:0 0 40px rgba(79,196,255,.18) inset}
+.sobre.imp{border-color:var(--rojo);box-shadow:0 0 40px rgba(255,77,109,.2) inset}
+.sobre .lock{font-size:42px}
+.sobre .hint{font-size:15px;font-weight:800;letter-spacing:1px}
+.sobre .tiny{font-size:12px;color:var(--muted)}
+.role{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);font-weight:800}
+.palabra{font-size:34px;font-weight:900;line-height:1.1;letter-spacing:-.5px;
+  background:linear-gradient(100deg,var(--celeste),var(--sol));-webkit-background-clip:text;background-clip:text;color:transparent}
+.palabra.imp{background:linear-gradient(100deg,var(--rojo),var(--fuego));-webkit-background-clip:text;background-clip:text;color:transparent}
+.cat-tag{font-size:13px;color:var(--muted)}
+.consejo{font-size:14px;line-height:1.45;color:var(--txt);max-width:300px}
+
+/* ---------- Orden de pistas ---------- */
+.orden{display:flex;flex-direction:column;gap:8px;margin:6px 0 16px}
+.orden .paso{display:flex;align-items:center;gap:12px;background:var(--bg3);border:1px solid var(--linea);
+  border-radius:14px;padding:12px 14px;font-weight:700}
+.orden .num{width:28px;height:28px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:14px;color:#0E0B1A;background:linear-gradient(100deg,var(--celeste),var(--magenta))}
+
+/* ---------- Temporizador ---------- */
+.timer{font-size:74px;font-weight:900;letter-spacing:2px;margin:10px 0;font-variant-numeric:tabular-nums}
+.timer.urgente{color:var(--rojo);animation:pulse .6s infinite alternate}
+@keyframes pulse{from{opacity:1}to{opacity:.55}}
+
+/* ---------- Votación ---------- */
+.voto{display:flex;align-items:center;gap:10px;background:var(--bg3);border:1.5px solid var(--linea);
+  border-radius:16px;padding:10px 12px;margin-bottom:10px;transition:border-color .15s}
+.voto.lider{border-color:var(--sol);box-shadow:0 0 24px rgba(255,201,60,.15)}
+.voto .nom{flex:1;font-weight:800;font-size:17px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.voto .cnt{font-weight:900;font-size:22px;min-width:30px;text-align:center;font-variant-numeric:tabular-nums}
+.vbtn{width:46px;height:46px;border-radius:12px;border:none;font-size:24px;font-weight:900;cursor:pointer;
+  background:var(--bg2);color:var(--txt);border:1.5px solid var(--linea);flex-shrink:0}
+.vbtn:active{transform:scale(.92)}
+.vbtn.plus{background:linear-gradient(100deg,var(--celeste),var(--magenta));color:#0E0B1A;border:none}
+
+/* ---------- Resultado ---------- */
+.veredicto{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);font-weight:800;margin-bottom:6px}
+.ganador{font-size:30px;font-weight:900;margin:2px 0 4px;line-height:1.1}
+.ganador.crew{color:var(--verde)}
+.ganador.imp{color:var(--rojo)}
+.nombres-imp{font-size:24px;font-weight:900;color:var(--rojo);margin:8px 0}
+.dato{font-size:16px;margin:8px 0;line-height:1.4}
+.dato b{font-weight:900}
+.castigo{font-size:14px;color:var(--sol);font-style:italic;margin:14px 0 4px;line-height:1.4}
+
+/* ---------- Tabla de posiciones ---------- */
+.rank{display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid var(--linea)}
+.rank:last-child{border-bottom:none}
+.rank .pos{font-size:20px;width:34px;text-align:center;flex-shrink:0}
+.rank .rnom{flex:1;font-weight:800;font-size:17px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rank .pts{font-weight:900;font-size:20px;color:var(--sol);font-variant-numeric:tabular-nums}
+.rank .pts small{font-size:12px;color:var(--muted);font-weight:700;margin-left:3px}
+.rank.top .rnom{background:linear-gradient(100deg,var(--celeste),var(--sol));-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* ---------- Misc ---------- */
+.nav-top{display:flex;justify-content:flex-end;margin-bottom:4px}
+.link{background:none;border:none;color:var(--muted);font-weight:700;font-size:14px;cursor:pointer;padding:6px 8px}
+.aviso{background:var(--bg3);border:1px solid var(--linea);border-radius:14px;padding:12px 14px;
+  font-size:14px;color:var(--muted);line-height:1.5;margin-bottom:14px}
+.como{font-size:14px;line-height:1.6;color:var(--muted)}
+.como b{color:var(--txt)}
+.fade{animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
 <div id="app"></div>
 <script>
-// manifest inline para "instalar" como app
+"use strict";
+/* =========================================================
+   1) MANIFEST INLINE  (permite "instalar" como app, sin internet)
+   ========================================================= */
 const manifest = {
-  name: "El Impostor", short_name: "Impostor", display: "standalone",
-  background_color: "#E8DCBF", theme_color: "#2B241C", start_url: ".",
-  icons: [
-    { src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAIAAADdvvtQAAACd0lEQVR42u3dvVHDQBSFUdh5nZEQuAQIXBkBlEBAwrgRF+AiCEg9QwD4T/uuzsmZ0T5/rGRhi/vDfncHpxpGgIAQEAJCQCAgBISAEBAICAEhIAQEAkJAzKT++wNvm62pZXt6f7ED4RSGgBAQCIh53oWdedHObM58W20HwikMASEgBAQCQkAICAGBgBAQAkJAICAEhIAQEAgIASEgBISAQEAICAEhIBAQAkJACAgExFVU3pIeHp9nPrzPj1cB6ebc44zJaKhnqQNud8yxAfV9JQIaGupx/OsNKOMs0HoVw9ytxUU0AkJA9vwVrsgOhIAQEAJCQCAgBISAEBAICAEhIAQEAkJACAgBgYAQEAJCQAgIBISAEBACAgEhIGbX9SGb20p7vuzL15cdCKcwEBACQkAICASEgBAQkTrdzz1+EG7enejjBTb6Z1DVKJr1OF715DGVaMQUEpBuOp7jqmk3Tf92nVdStUuHnzNcMKOSjozOMdQTebkdG5B6wsY71KOhHgGpJ3LUQz0aanYRTRIBISDiA2r0+YQMNxv4yFsStxz1SF2YejKvgTQUNt6xhkWq53pqwaW6uxjwO1mLL1tGrbfzmmcESup4GVATDkVJjS4fa/IxicnXesSU/Ea1Wo81I6nW9zUqb/QzV5V3DyzwG+a/vkjXK2yF90jrbn3cCr8gnwdCQAgIASEgEBACQkAICASEgBAQAgIBISAEhIBAQAgIASEgBAQCQkAICAGBgBAQAkJAICAEhIAQEAgIASEgBISA4GQXeE7022ZrjnYgEBACQkAICP7m/rDfmQJ2IASEgBAQCAgBISAEBAJCQAgIAYGAEBDT+Aalco/8IjvjewAAAABJRU5ErkJggg==", sizes: "192x192", type: "image/png" },
-    { src: "data:image/png;base64,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", sizes: "512x512", type: "image/png" }
+  name:"El Impostor · Edición Argenta", short_name:"Impostor", display:"standalone",
+  background_color:"#0E0B1A", theme_color:"#0E0B1A", start_url:".", orientation:"portrait",
+  icons:[
+    {src:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAIAAADdvvtQAAACd0lEQVR42u3dvVHDQBSFUdh5nZEQuAQIXBkBlEBAwrgRF+AiCEg9QwD4T/uuzsmZ0T5/rGRhi/vDfncHpxpGgIAQEAJCQCAgBISAEBAICAEhIAQEAkJAzKT++wNvm62pZXt6f7ED4RSGgBAQCIh53oWdedHObM58W20HwikMASEgBAQCQkAICAGBgBAQAkJAICAEhIAQEAgIASEgBISAQEAICAEhIBAQAkJACAgExFVU3pIeHp9nPrzPj1cB6ebc44zJaKhnqQNud8yxAfV9JQIaGupx/OsNKOMs0HoVw9ytxUU0AkJA9vwVrsgOhIAQEAJCQCAgBISAEBAICAEhIAQEAkJACAgBgYAQEAJCQAgIBISAEBACAgEhIGbX9SGb20p7vuzL15cdCKcwEBACQkAICASEgBAQkTrdzz1+EG7enejjBTb6Z1DVKJr1OF715DGVaMQUEpBuOp7jqmk3Tf92nVdStUuHnzNcMKOSjozOMdQTebkdG5B6wsY71KOhHgGpJ3LUQz0aanYRTRIBISDiA2r0+YQMNxv4yFsStxz1SF2YejKvgTQUNt6xhkWq53pqwaW6uxjwO1mLL1tGrbfzmmcESup4GVATDkVJjS4fa/IxicnXesSU/Ea1Wo81I6nW9zUqb/QzV5V3DyzwG+a/vkjXK2yF90jrbn3cCr8gnwdCQAgIASEgEBACQkAICASEgBAQAgIBISAEhIBAQAgIASEgBAQCQkAICAGBgBAQAkJAICAEhIAQEAgIASEgBISA4GQXeE7022ZrjnYgEBACQkAICP7m/rDfmQJ2IASEgBAQCAgBISAEBAJCQAgIAYGAEBDT+Aalco/8IjvjewAAAABJRU5ErkJggg==",sizes:"192x192",type:"image/png"}
   ]
 };
 document.getElementById("manifest").href =
   "data:application/manifest+json," + encodeURIComponent(JSON.stringify(manifest));
 
+/* =========================================================
+   2) BANCO DE PALABRAS  (100% argento, +120 palabras)
+   --- Para AGREGAR contenido: sumá strings a cualquier array,
+       o creá una categoría nueva con su array. Listo, ya entra
+       al modo "Mezcla" y al selector automáticamente. ---
+   ========================================================= */
 const CATEGORIAS = {
-  "Comida y birra": ["el choripán","el fernet con coca","la milanesa napolitana","el mate amargo","la tortafrita","el sanguche de bondiola","el asado del domingo","el vacío","el chimichurri","el locro del 25","la empanada de carne","el dulce de leche","los ñoquis del 29","la picada con vermut","el matambre a la pizza","los pastelitos de membrillo","la fainá","el alfajor triple","el salamín picado grueso","las medialunas con café","el helado de dulce de leche granizado","la pizza de parado","el sanguche de milanesa tucumano","la ensalada criolla","el budín de pan"],
-  "Lugares": ["la Bombonera","el Monumental","el Obelisco","Mar del Plata","Bariloche","las Cataratas del Iguazú","el Tigre","la peatonal","el kiosco de la esquina","el supermercado chino","la parrilla del barrio","la calle Corrientes","Plaza de Mayo","Villa Gesell","la ruta 2","el conurbano","Puerto Madero","la estación Constitución","La Salada","el cerro Uritorco","La Quiaca","Ushuaia","el delta","la costanera","Carlos Paz"],
-  "Costumbres": ["tomar fresco en la vereda","la sobremesa eterna","el truco","la siesta","el dólar blue","cargar la SUBE","el grupo de WhatsApp de la familia","la previa","el tercer tiempo","el feriado puente","hacer fila en el banco","el paro de colectivos","atar todo con alambre","el asado de obra","regatear en la feria","la quiniela","el club del barrio","cebar mate al que maneja","el 'ahí voy' que dura una hora","decir 'última y nos vamos'","el brindis de Año Nuevo","la pirotecnia de las 12","ir al chino en pantuflas","el ventilador de techo en enero","guardar las bolsas del súper"],
-  "Ídolos": ["Messi","Maradona","el Dibu Martínez","Riquelme","Gallardo","el Kun Agüero","Franco Colapinto","Manu Ginóbili","Gabriela Sabatini","Charly García","Fito Páez","el Indio Solari","Duki","Bizarrap","Lali","Tini","Nicki Nicole","María Becerra","Mirtha Legrand","Susana Giménez","Moria Casán","Marcelo Tinelli","Ricardo Darín","Guillermo Francella","Pampita"],
-  "Lunfardo": ["quilombo","chamuyo","fiaca","bondi","guita","mufa","gauchada","trucho","ñoqui","chanta","cheto","joda","posta","zarpado","atorrante","gil","birra","pibe","laburo","bardo","careta","ortiba","manija","bajón","mango"],
-  "Oficina argenta": ["el aguinaldo","el monotributo","la reunión que pudo ser un mail","el after office","el mate en la oficina","la impresora rota","recursos humanos","el home office","el franco","el presentismo","la quincena","el viático","el pase a planta","el gremio","el café de máquina","el amigo invisible","el asado de fin de año","el bono","el CV","la licencia","el jefe","la guerra por el aire acondicionado","el Excel","la caja chica","el feriado trabajado"],
-  "Fútbol y cancha": ["el superclásico","el descenso","el VAR","el penal atajado","la palomita","el caño","la rabona","la chilena","el alargue","los penales","el aguante","la popular","el potrero","el nueve de área","el arquero","el relator","el banderazo","la camiseta alternativa","el utilero","la final de Qatar","el clásico de barrio","el offside","el tiro libre","la barrera","el córner"]
+  "Comida y joda": [
+    "el asado del domingo","el fernet con coca","el choripán","el mate amargo","la milanesa napolitana",
+    "los criollos","la tortafrita","el sanguche de bondiola","el vacío","el chimichurri","el locro del 25",
+    "la empanada de carne","el dulce de leche","los ñoquis del 29","la picada con vermut","el matambre a la pizza",
+    "los pastelitos de membrillo","la fainá","el alfajor triple","el salamín","las medialunas con café",
+    "la pizza de parado","el helado de dulce de leche","el sifón de soda","el vino en damajuana"
+  ],
+  "Fútbol y deporte": [
+    "el superclásico","el VAR","el picadito","el Mundial 2022","el Dibu Martínez","Messi","la chilena",
+    "el caño","la rabona","la palomita","el descenso","el penal atajado","la popular","el potrero",
+    "el alargue","el banderazo","la final de Qatar","el relator","el aguante","la camiseta titular",
+    "el offside","el tiro libre","la barrera","el clásico de barrio","el básquet de Ginóbili"
+  ],
+  "Cultura pop y TV": [
+    "Tinelli","Capusotto","Okupas","la cumbia","el trap argentino","Bizarrap","Mirtha Legrand",
+    "Susana Giménez","Gran Hermano","ShowMatch","Casados con Hijos","Los Simpson en la tele","Duki",
+    "Lali","Tini","Nicki Nicole","María Becerra","el Indio Solari","Charly García","Fito Páez",
+    "Ricardo Darín","Guillermo Francella","Moria Casán","el Cuarteto de Córdoba","la novela de las 21"
+  ],
+  "Lugares": [
+    "el kiosco de 24 horas","el bondi","el subte","la Costanera","Bariloche","la cancha","el Obelisco",
+    "la Bombonera","el Monumental","Mar del Plata","las Cataratas del Iguazú","el Tigre","la peatonal",
+    "el chino de la esquina","la parrilla del barrio","la calle Corrientes","Plaza de Mayo","Villa Gesell",
+    "el conurbano","Puerto Madero","Constitución","Carlos Paz","el delta","Ushuaia","la terminal de micros"
+  ],
+  "Vida cotidiana de los 30": [
+    "el alquiler","el monotributo","el grupo de WhatsApp","la resaca","la previa de las 11 de la noche",
+    "el after office","el dólar blue","cargar la SUBE","el aguinaldo","el home office","la cuota del gimnasio",
+    "la reunión que pudo ser un mail","el delivery un martes","la obra social","el plazo fijo","el coworking",
+    "la tarjeta en cuotas","el psicólogo de los miércoles","el lavarropas roto","la mudanza","el seguro del auto",
+    "la juntada que se cae a último momento","la siesta del finde","el feriado puente","el resumen de la tarjeta"
+  ],
+  "Modismos y lunfardo": [
+    "quilombo","chamuyo","fiaca","guita","mufa","gauchada","trucho","ñoqui","chanta","cheto","posta",
+    "zarpado","atorrante","gil","birra","pibe","laburo","bardo","careta","manija","bajón","mango",
+    "boludo","che","de una"
+  ]
 };
 const NOMBRES_CAT = Object.keys(CATEGORIAS);
+
+/* Textos de color (humor argento) para impostor, discusión y castigos */
 const CONSEJOS = [
   "Cara de nada, como cuando preguntan quién dejó el mate lavado.",
   "Asentí con confianza y chamuyá con clase.",
-  "Repetí lo que dicen los demás pero con otra palabra. Viejo truco de oral de secundaria.",
+  "Repetí lo que dicen los demás pero con otra palabra. Viejo truco del oral de la secundaria.",
   "Vos tranqui, que hasta acá el VAR no llega.",
-  "Mentí sereno, como quien dice 'salgo en cinco minutos'."
+  "Mentí sereno, como quien dice 'salgo en cinco minutos'.",
+  "Tirá una pista bien genérica y bancátela como si fuera obvia.",
+  "Si te miran fijo, miralos peor vos. El que se ríe primero, pierde."
 ];
 const FRASES = [
   "Una pista por cabeza, en ronda. El que dice la palabra queda más quemado que termo de tachero.",
   "Pistas cortas y sutiles. Nada de tirarle el centro al impostor.",
   "Una pista cada uno. Mirá los ojos: el que titubea, sospechoso.",
-  "En ronda, una pista por persona. Acusar sin pruebas también es deporte nacional."
+  "En ronda, una pista por persona. Acusar sin pruebas también es deporte nacional.",
+  "Pistas de UNA palabra. El que se va de mambo y explica de más, cae."
 ];
 const CASTIGOS = [
-  "El descubierto banca la próxima ronda de birras.",
-  "Penitencia: el que perdió lava el termo y ceba la próxima.",
+  "El que perdió banca la próxima ronda de birras.",
+  "Penitencia: el perdedor lava el termo y ceba toda la noche.",
   "El que perdió cuenta su peor papelón laboral. Sin editar.",
   "Castigo: el perdedor manda un audio cantando al grupo de la familia.",
-  "El que perdió paga el fernet. Sin chistar."
+  "El que perdió paga el fernet. Sin chistar.",
+  "Penitencia: el perdedor hace el próximo asado de principio a fin."
 ];
-const azar = a => a[Math.floor(Math.random()*a.length)];
-const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");
 
+/* =========================================================
+   3) UTILIDADES
+   ========================================================= */
+const azar = a => a[Math.floor(Math.random()*a.length)];
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const fmtT = seg => Math.floor(seg/60)+":"+String(seg%60).padStart(2,"0");
+
+/* Guardado opcional (offline) para no perder jugadores/puntajes al cerrar */
+const STORE_KEY = "impostor_argenta_v1";
+function guardar(){
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify({
+    jugadores:S.jugadores, scores:S.scores, cant:S.cant, categoria:S.categoria,
+    pista:S.pista, usaTimer:S.usaTimer, dur:S.dur
+  })); }catch(e){}
+}
+function cargar(){
+  try{
+    const d = JSON.parse(localStorage.getItem(STORE_KEY)||"null");
+    if(d){
+      S.jugadores = Array.isArray(d.jugadores)?d.jugadores.slice(0,12):[];
+      S.scores = d.scores && typeof d.scores==="object" ? d.scores : {};
+      S.cant = d.cant===2?2:1;
+      S.categoria = (d.categoria==="Mezcla"||NOMBRES_CAT.includes(d.categoria))?d.categoria:"Mezcla";
+      S.pista = !!d.pista; S.usaTimer = !!d.usaTimer;
+      S.dur = [90,120,180].includes(d.dur)?d.dur:120;
+    }
+  }catch(e){}
+}
+
+/* =========================================================
+   4) ESTADO
+   ========================================================= */
 let S = {
-  fase:"setup", jugadores:[], cant:1, categoria:"Mezcla", pista:false,
+  fase:"inicio",          // inicio | setup | reveal | pistas | votacion | resultado | tabla
+  jugadores:[],           // nombres
+  scores:{},              // { nombre: puntos } acumulado entre rondas
+  cant:1,                 // cantidad de impostores (1 o 2)
+  categoria:"Mezcla",
+  pista:false,            // true = impostor "con pista" (sabe la categoría)
+  usaTimer:false,         // temporizador opcional
+  dur:120,                // duración en segundos
+  ronda:0,
+  // por ronda:
   palabra:"", catPal:"", imps:new Set(), turno:0, mostrando:false, visto:false,
-  arranca:"", consejo:"", frase:"", castigo:"", ronda:0, seg:180, corriendo:false
+  arranca:"", consejo:"", frase:"", castigo:"",
+  seg:120, corriendo:false,
+  votos:[],               // votos por jugador (índices)
+  acusado:null,           // índice acusado (más votado) o null
+  caught:false,           // impostor descubierto
+  robo:false,             // impostor zafó adivinando la palabra
+  delta:{}                // puntos otorgados esta ronda (para mostrar y revertir si cambia 'robo')
 };
 let timerId = null;
 const app = document.getElementById("app");
 
-function empezar(){
+/* =========================================================
+   5) LÓGICA DE RONDA Y PUNTAJE
+   ========================================================= */
+function nuevaRonda(){
   const cat = S.categoria==="Mezcla" ? azar(NOMBRES_CAT) : S.categoria;
-  S.catPal = cat; S.palabra = azar(CATEGORIAS[cat]);
+  S.catPal = cat;
+  S.palabra = azar(CATEGORIAS[cat]);
   S.imps = new Set();
   while(S.imps.size < S.cant) S.imps.add(Math.floor(Math.random()*S.jugadores.length));
   S.turno=0; S.visto=false; S.mostrando=false;
-  S.arranca=azar(S.jugadores); S.consejo=azar(CONSEJOS); S.frase=azar(FRASES); S.castigo=azar(CASTIGOS);
-  S.ronda++; S.seg=180; pararTimer(); S.fase="reveal"; render();
+  S.arranca = azar(S.jugadores);
+  S.consejo = azar(CONSEJOS); S.frase = azar(FRASES); S.castigo = azar(CASTIGOS);
+  S.ronda++;
+  S.seg = S.dur; pararTimer();
+  S.votos = S.jugadores.map(()=>0);
+  S.acusado=null; S.caught=false; S.robo=false; S.delta={};
+  // aseguro que todos los jugadores tengan entrada en el marcador
+  S.jugadores.forEach(j=>{ if(S.scores[j]==null) S.scores[j]=0; });
+  S.fase="reveal"; guardar(); render();
 }
+
+/* Cierra la votación: el más votado es el acusado (si hay empate o 0 votos => zafó) */
+function cerrarVotacion(){
+  const max = Math.max(...S.votos);
+  if(max<=0){ S.acusado=null; }
+  else {
+    const lideres = S.votos.map((v,i)=>v===max?i:-1).filter(i=>i>=0);
+    S.acusado = lideres.length===1 ? lideres[0] : null; // empate => sin acusación clara
+  }
+  S.caught = S.acusado!=null && S.imps.has(S.acusado);
+  S.robo = false;
+  aplicarPuntaje();
+  S.fase="resultado"; guardar(); render();
+}
+
+/* Calcula y aplica el delta de puntos de la ronda.
+   Reglas:
+   - Impostor descubierto (y no robó la palabra): la tripulación suma +1 c/u.
+   - Impostor zafa (no descubierto): cada impostor suma +2.
+   - Impostor descubierto PERO adivina la palabra: cada impostor suma +3 (robó la ronda).
+   Revierte el delta anterior antes de aplicar (por si se togglea 'robó'). */
+function aplicarPuntaje(){
+  // revertir delta previo
+  for(const n in S.delta){ S.scores[n] = (S.scores[n]||0) - S.delta[n]; }
+  const delta = {};
+  S.jugadores.forEach((n,i)=>{
+    const esImp = S.imps.has(i);
+    let p = 0;
+    if(S.robo){ if(esImp) p = 3; }                 // impostor robó la ronda adivinando
+    else if(S.caught){ if(!esImp) p = 1; }         // tripulación ganó
+    else { if(esImp) p = 2; }                      // impostor zafó
+    if(p) delta[n] = (delta[n]||0) + p;
+  });
+  for(const n in delta){ S.scores[n] = (S.scores[n]||0) + delta[n]; }
+  S.delta = delta;
+}
+
 function pararTimer(){ S.corriendo=false; if(timerId){clearInterval(timerId); timerId=null;} }
 function toggleTimer(){
-  if(S.corriendo){ pararTimer(); }
-  else { S.corriendo=true; timerId=setInterval(()=>{ S.seg=Math.max(0,S.seg-1);
+  if(S.corriendo){ pararTimer(); render(); return; }
+  S.corriendo=true;
+  timerId=setInterval(()=>{
+    S.seg=Math.max(0,S.seg-1);
     const t=document.getElementById("timer");
-    if(t){ t.textContent=fmt(); t.classList.toggle("urgente", S.seg<=20); }
+    if(t){ t.textContent=fmtT(S.seg); t.classList.toggle("urgente",S.seg<=15); }
     if(S.seg===0) pararTimer();
-  },1000); }
+  },1000);
   render();
 }
-function fmt(){ return Math.floor(S.seg/60)+":"+String(S.seg%60).padStart(2,"0"); }
+
+/* =========================================================
+   6) RENDER (una función por pantalla)
+   ========================================================= */
+function brand(){
+  return `<div class="brand fade">
+    <div class="kicker">Pasá el celu · ${S.ronda?("Ronda "+S.ronda):"Previa, asado o juntada"}</div>
+    <div class="logo">EL IMPOSTOR</div>
+    <div class="flag"></div>
+  </div>`;
+}
 
 function render(){
-  const selloTxt = {setup:"alto secreto", reveal:"ojos solamente", discusion:"en curso", resultado:"caso cerrado"}[S.fase];
-  let h = `<div class="head">
-    <div class="exp">EXPEDIENTE Nº ${1810+S.ronda} · REP. ARGENTINA</div>
-    <h1>EL IMPOSTOR</h1>
-    <span class="sello chico ${S.fase==="resultado"?"azul":""}">${selloTxt}</span>
-  </div>`;
-
-  if(S.fase==="setup"){
-    h += `<p class="intro">Todos reciben la misma palabra, menos el impostor, que tiene que zafar chamuyando. Pistas en ronda, sospechas, y al final se vota a mano alzada.</p>
-    <label>SOSPECHOSOS (${S.jugadores.length})</label>
-    <div class="fila"><input id="inp" placeholder="Nombre…" enterkeyhint="done"><button class="btn mini" id="add">+</button></div>
-    <div class="chips">${ S.jugadores.length ? S.jugadores.map((j,i)=>`<span class="chip" data-i="${i}">${esc(j)} ✕</span>`).join("") : `<span class="nota">Mínimo 3. Tocá un nombre para borrarlo.</span>` }</div>
-    <label>IMPOSTORES</label>
-    <div class="opts">${[1,2,3].map(n=>`<button class="opt num ${S.cant===n?"on":""}" data-n="${n}" ${n>Math.max(1,S.jugadores.length-2)?"disabled":""}>${n}</button>`).join("")}</div>
-    <label>CATEGORÍA</label>
-    <div class="opts">${["Mezcla",...NOMBRES_CAT].map(c=>`<button class="opt ${S.categoria===c?"on":""}" data-c="${esc(c)}">${esc(c)}</button>`).join("")}</div>
-    <div class="check" id="chk"><div class="box ${S.pista?"on":""}">${S.pista?"✓":""}</div>El impostor recibe la categoría de pista (modo para amigos nuevos)</div>
-    <button class="btn rojo" id="go" ${S.jugadores.length<3?"disabled":""}>▸ ABRIR EXPEDIENTE</button>`;
-    app.innerHTML = h;
-    const inp = document.getElementById("inp");
-    const add = ()=>{ const n=inp.value.trim(); if(n && !S.jugadores.includes(n)){ S.jugadores.push(n); render(); document.getElementById("inp").focus(); } };
-    document.getElementById("add").onclick = add;
-    inp.onkeydown = e=>{ if(e.key==="Enter") add(); };
-    document.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{ S.jugadores.splice(+c.dataset.i,1); if(S.cant>Math.max(1,S.jugadores.length-2)) S.cant=1; render(); });
-    document.querySelectorAll(".opt.num").forEach(b=>b.onclick=()=>{ S.cant=+b.dataset.n; render(); });
-    document.querySelectorAll(".opt:not(.num)").forEach(b=>b.onclick=()=>{ S.categoria=b.dataset.c; render(); });
-    document.getElementById("chk").onclick=()=>{ S.pista=!S.pista; render(); };
-    document.getElementById("go").onclick=empezar;
-  }
-
-  if(S.fase==="reveal"){
-    h += `<div class="centro">
-      <p class="doc">DOCUMENTO ${S.turno+1} / ${S.jugadores.length}</p>
-      <h2>Pasale el celu a ${esc(S.jugadores[S.turno])}</h2>
-      <div class="sobre" id="sobre"></div>
-      <div style="margin-top:22px"><button class="btn" id="sig" ${S.visto?"":"disabled"}>${S.turno+1<S.jugadores.length?"LISTO · PASAR AL SIGUIENTE ▸":"TODOS LISTOS ▸"}</button></div>
-    </div>`;
-    app.innerHTML = h;
-    const sobre = document.getElementById("sobre");
-    const pintar = ()=>{
-      if(!S.mostrando){
-        sobre.classList.remove("abierto");
-        sobre.innerHTML = `<span class="sello">secreto</span>
-          <p style="font-family:var(--fd);font-size:16px;margin-top:18px">MANTENÉ APRETADO<br>PARA CHUSMEAR</p>
-          <p class="nota" style="font-size:12px;margin-top:8px">(al soltar se oculta solo, no seas ortiba)</p>`;
-      } else if(S.imps.has(S.turno)){
-        sobre.classList.add("abierto");
-        sobre.innerHTML = `<span class="sello" style="font-size:30px">impostor</span>
-          <p style="font-size:15px;margin-top:16px;line-height:1.45">No conocés la palabra.<br>${esc(S.consejo)}</p>
-          ${S.pista?`<p style="font-family:var(--fd);font-size:14px;margin-top:10px;color:var(--suave)">pista: categoría «${esc(S.catPal)}»</p>`:""}`;
-      } else {
-        sobre.classList.add("abierto");
-        sobre.innerHTML = `<p style="font-family:var(--fd);font-size:13px;letter-spacing:3px;color:var(--suave)">LA PALABRA ES</p>
-          <p class="palabra">${esc(S.palabra)}</p>
-          <p class="nota" style="font-size:12px">categoría: ${esc(S.catPal)}</p>`;
-      }
-    };
-    pintar();
-    const mostrar = e=>{ e.preventDefault(); if(!S.mostrando){ S.mostrando=true; S.visto=true; pintar(); document.getElementById("sig").disabled=false; } };
-    const ocultar = ()=>{ if(S.mostrando){ S.mostrando=false; pintar(); } };
-    sobre.addEventListener("pointerdown", mostrar);
-    sobre.addEventListener("pointerup", ocultar);
-    sobre.addEventListener("pointerleave", ocultar);
-    sobre.addEventListener("touchend", ocultar);
-    sobre.addEventListener("contextmenu", e=>e.preventDefault());
-    document.addEventListener("pointerup", ocultar);
-    document.getElementById("sig").onclick = ()=>{
-      if(S.turno+1 < S.jugadores.length){ S.turno++; S.visto=false; S.mostrando=false; render(); }
-      else { S.fase="discusion"; render(); }
-    };
-  }
-
-  if(S.fase==="discusion"){
-    h += `<div class="centro">
-      <h2 style="font-size:26px;margin:8px 0 4px">Arranca hablando: ${esc(S.arranca)}</h2>
-      <p class="intro" style="margin:0 0 20px">${esc(S.frase)}</p>
-      <div class="timer ${S.seg<=20?"urgente":""}" id="timer">${fmt()}</div>
-      <div class="fila" style="margin-bottom:14px">
-        <button class="btn sec" id="play">${S.corriendo?"‖ PAUSA":"▸ INICIAR"}</button>
-        <button class="btn sec" id="reset">↺ 3:00</button>
-      </div>
-      <button class="btn rojo" id="rev">YA VOTAMOS · REVELAR</button>
-    </div>`;
-    app.innerHTML = h;
-    document.getElementById("play").onclick = toggleTimer;
-    document.getElementById("reset").onclick = ()=>{ pararTimer(); S.seg=180; render(); };
-    document.getElementById("rev").onclick = ()=>{ pararTimer(); S.fase="resultado"; render(); };
-  }
-
-  if(S.fase==="resultado"){
-    const nombres = S.jugadores.filter((_,i)=>S.imps.has(i)).map(esc).join(" y ");
-    h += `<div class="centro">
-      <p class="doc" style="letter-spacing:3px;margin-bottom:10px">${S.imps.size>1?"LOS IMPOSTORES ERAN":"EL IMPOSTOR ERA"}</p>
-      <h2 style="font-size:38px;margin:0 0 14px;color:var(--rojo)">${nombres}</h2>
-      <p style="font-size:16px;margin-bottom:8px">La palabra era <b style="font-family:var(--fd)">«${esc(S.palabra)}»</b> <span class="nota">(${esc(S.catPal)})</span></p>
-      <p class="nota" style="font-style:italic;margin:0 0 24px">${esc(S.castigo)}</p>
-      <div class="col">
-        <button class="btn rojo" id="otra">↻ OTRA RONDA (mismos jugadores)</button>
-        <button class="btn sec" id="conf">⚙ CAMBIAR JUGADORES / AJUSTES</button>
-      </div>
-    </div>`;
-    app.innerHTML = h;
-    document.getElementById("otra").onclick = empezar;
-    document.getElementById("conf").onclick = ()=>{ S.fase="setup"; render(); };
-  }
+  if(S.fase==="inicio")     return pantallaInicio();
+  if(S.fase==="setup")      return pantallaSetup();
+  if(S.fase==="reveal")     return pantallaReveal();
+  if(S.fase==="pistas")     return pantallaPistas();
+  if(S.fase==="votacion")   return pantallaVotacion();
+  if(S.fase==="resultado")  return pantallaResultado();
+  if(S.fase==="tabla")      return pantallaTabla();
 }
+
+/* ---------- INICIO ---------- */
+function pantallaInicio(){
+  app.innerHTML = brand() + `
+    <div class="card fade">
+      <p class="sub">Todos reciben la misma palabra secreta... menos el <b style="color:var(--rojo)">impostor</b>, que tiene que zafar chamuyando. Tiran pistas en ronda, sospechan, votan y se arma el bondi.</p>
+      <button class="btn" id="jugar">▸ JUGAR</button>
+      <button class="btn ghost" id="como">¿Cómo se juega?</button>
+      ${ tieneScores() ? `<button class="btn ghost" id="verTabla">🏆 Ver tabla de posiciones</button>` : "" }
+    </div>
+    <div id="comoBox"></div>`;
+  document.getElementById("jugar").onclick = ()=>{ S.fase="setup"; render(); };
+  document.getElementById("como").onclick = ()=>{
+    const box=document.getElementById("comoBox");
+    box.innerHTML = box.innerHTML ? "" : `<div class="card como fade">
+      <p><b>1.</b> Pongan los nombres (4 a 12) y elijan cuántos impostores (1 o 2).</p>
+      <p><b>2.</b> Se pasa el celu uno por uno: cada quien ve en secreto si le tocó la palabra o ser impostor.</p>
+      <p><b>3.</b> Por turnos, cada jugador dice <b>una sola palabra</b> de pista relacionada al secreto. El impostor improvisa.</p>
+      <p><b>4.</b> Después de una o dos vueltas, votan quién es el impostor.</p>
+      <p><b>5.</b> Si lo descubren, gana la tripulación. Si zafa (o adivina la palabra), gana el impostor.</p>
+      <p style="margin-bottom:0;color:var(--sol)">Tip: jueguen varias rondas, los puntos se acumulan en la tabla.</p>
+    </div>`;
+  };
+  const vt=document.getElementById("verTabla");
+  if(vt) vt.onclick=()=>{ S.fase="tabla"; render(); };
+}
+
+/* ---------- SETUP / CONFIGURACIÓN ---------- */
+function pantallaSetup(){
+  const maxImp = Math.min(2, Math.max(1, S.jugadores.length-2)); // con 4+ jug. permite hasta 2
+  if(S.cant>maxImp) S.cant=1;
+  const puedeArrancar = S.jugadores.length>=4 && S.jugadores.length<=12;
+
+  app.innerHTML = brand() + `
+    <div class="card fade">
+      <label>Jugadores (${S.jugadores.length}/12) · mínimo 4</label>
+      <div class="fila">
+        <input id="inp" placeholder="Nombre del crack…" enterkeyhint="done" maxlength="16" ${S.jugadores.length>=12?"disabled":""}>
+        <button class="btn mini" id="add" ${S.jugadores.length>=12?"disabled":""}>+</button>
+      </div>
+      <div class="chips">
+        ${ S.jugadores.length
+            ? S.jugadores.map((j,i)=>`<span class="chip" data-i="${i}">${esc(j)} <b>✕</b></span>`).join("")
+            : `<span class="empty">Tocá un nombre cargado para borrarlo.</span>` }
+      </div>
+    </div>
+
+    <div class="card fade">
+      <label>Cantidad de impostores</label>
+      <div class="seg">
+        ${[1,2].map(n=>`<button class="opt ${S.cant===n?"on":""}" data-n="${n}" ${n>maxImp?"disabled":""}>${n} impostor${n>1?"es":""}</button>`).join("")}
+      </div>
+
+      <label>Categoría</label>
+      <div class="seg">
+        ${["Mezcla",...NOMBRES_CAT].map(c=>`<button class="opt ${S.categoria===c?"on":""}" data-c="${esc(c)}">${esc(c)}</button>`).join("")}
+      </div>
+
+      <div class="toggle ${S.pista?"on":""}" id="tg-pista">
+        <div class="t-txt"><b>Impostor con pista</b><span>Le decimos la categoría (más fácil para grupos nuevos). Apagado = a ciegas.</span></div>
+        <div class="switch"></div>
+      </div>
+
+      <div class="toggle ${S.usaTimer?"on":""}" id="tg-timer">
+        <div class="t-txt"><b>Temporizador por ronda</b><span>Cuenta regresiva para la charla de pistas.</span></div>
+        <div class="switch"></div>
+      </div>
+      ${ S.usaTimer ? `<div class="seg" id="durSeg">
+        ${[90,120,180].map(d=>`<button class="opt ${S.dur===d?"on":""}" data-d="${d}">${fmtT(d)}</button>`).join("")}
+      </div>` : "" }
+    </div>
+
+    <button class="btn fuego" id="go" ${puedeArrancar?"":"disabled"}>▸ EMPEZAR RONDA ${S.ronda+1}</button>
+    <button class="btn ghost" id="volver">‹ Volver al inicio</button>
+  `;
+
+  const inp=document.getElementById("inp");
+  const add=()=>{ const n=inp.value.trim(); if(n && !S.jugadores.includes(n) && S.jugadores.length<12){ S.jugadores.push(n); guardar(); render(); document.getElementById("inp").focus(); } };
+  document.getElementById("add").onclick=add;
+  inp.onkeydown=e=>{ if(e.key==="Enter") add(); };
+  document.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{ S.jugadores.splice(+c.dataset.i,1); guardar(); render(); });
+  document.querySelectorAll(".opt[data-n]").forEach(b=>b.onclick=()=>{ if(!b.disabled){ S.cant=+b.dataset.n; render(); } });
+  document.querySelectorAll(".opt[data-c]").forEach(b=>b.onclick=()=>{ S.categoria=b.dataset.c; guardar(); render(); });
+  document.getElementById("tg-pista").onclick=()=>{ S.pista=!S.pista; guardar(); render(); };
+  document.getElementById("tg-timer").onclick=()=>{ S.usaTimer=!S.usaTimer; guardar(); render(); };
+  document.querySelectorAll(".opt[data-d]").forEach(b=>b.onclick=()=>{ S.dur=+b.dataset.d; guardar(); render(); });
+  document.getElementById("go").onclick=()=>{ if(puedeArrancar) nuevaRonda(); };
+  document.getElementById("volver").onclick=()=>{ S.fase="inicio"; render(); };
+}
+
+/* ---------- REPARTO DE ROLES (pasá el celu) ---------- */
+function pantallaReveal(){
+  app.innerHTML = brand() + `
+    <div class="card centro fade">
+      <p class="passer">Tarjeta ${S.turno+1} de ${S.jugadores.length}</p>
+      <h2 style="margin-top:6px">Pasale el celu a<br>${esc(S.jugadores[S.turno])}</h2>
+      <div class="sobre" id="sobre"></div>
+      <button class="btn" id="sig" ${S.visto?"":"disabled"}>
+        ${ S.turno+1<S.jugadores.length ? "Listo, pasar al siguiente ▸" : "¡Todos listos! ▸" }
+      </button>
+    </div>`;
+
+  const sobre=document.getElementById("sobre");
+  const pintar=()=>{
+    sobre.className="sobre";
+    if(!S.mostrando){
+      sobre.innerHTML=`<div class="lock">🔒</div>
+        <div class="hint">MANTENÉ APRETADO PARA VER</div>
+        <div class="tiny">Al soltar se oculta solo. No seas ortiba 👀</div>`;
+    } else if(S.imps.has(S.turno)){
+      sobre.classList.add("imp");
+      sobre.innerHTML=`<div class="role">Tu rol</div>
+        <div class="palabra imp">SOS EL IMPOSTOR</div>
+        <p class="consejo">No conocés la palabra. ${esc(S.consejo)}</p>
+        ${ S.pista ? `<div class="cat-tag">Pista: categoría «${esc(S.catPal)}»</div>` : "" }`;
+    } else {
+      sobre.classList.add("crew");
+      sobre.innerHTML=`<div class="role">La palabra es</div>
+        <div class="palabra">${esc(S.palabra)}</div>
+        <div class="cat-tag">categoría: ${esc(S.catPal)}</div>`;
+    }
+  };
+  pintar();
+
+  const mostrar=e=>{ e.preventDefault(); if(!S.mostrando){ S.mostrando=true; S.visto=true; pintar(); const b=document.getElementById("sig"); if(b) b.disabled=false; } };
+  const ocultar=()=>{ if(S.mostrando){ S.mostrando=false; pintar(); } };
+  sobre.addEventListener("pointerdown",mostrar);
+  sobre.addEventListener("pointerup",ocultar);
+  sobre.addEventListener("pointercancel",ocultar);
+  sobre.addEventListener("pointerleave",ocultar);
+  sobre.addEventListener("contextmenu",e=>e.preventDefault());
+
+  document.getElementById("sig").onclick=()=>{
+    if(S.turno+1<S.jugadores.length){ S.turno++; S.visto=false; S.mostrando=false; render(); }
+    else { S.fase="pistas"; render(); }
+  };
+}
+
+/* ---------- RONDA DE PISTAS ---------- */
+function pantallaPistas(){
+  // orden de pistas arrancando por quien salió sorteado
+  const inicio = S.jugadores.indexOf(S.arranca);
+  const orden = S.jugadores.map((_,k)=>S.jugadores[(inicio+k)%S.jugadores.length]);
+
+  app.innerHTML = brand() + `
+    <div class="card fade">
+      <h2>Ronda de pistas</h2>
+      <p class="sub">${esc(S.frase)}</p>
+      <label>Orden (arranca ${esc(S.arranca)})</label>
+      <div class="orden">
+        ${orden.map((n,k)=>`<div class="paso"><span class="num">${k+1}</span>${esc(n)}</div>`).join("")}
+      </div>
+    </div>
+
+    ${ S.usaTimer ? `<div class="card centro fade">
+      <div class="timer ${S.seg<=15?"urgente":""}" id="timer">${fmtT(S.seg)}</div>
+      <div class="row-btns">
+        <button class="btn ghost" id="play">${S.corriendo?"‖ Pausa":"▸ Iniciar"}</button>
+        <button class="btn ghost" id="reset">↺ ${fmtT(S.dur)}</button>
+      </div>
+    </div>` : "" }
+
+    <button class="btn fuego" id="aVotar">Listos · IR A VOTAR ▸</button>
+  `;
+
+  if(S.usaTimer){
+    document.getElementById("play").onclick=toggleTimer;
+    document.getElementById("reset").onclick=()=>{ pararTimer(); S.seg=S.dur; render(); };
+  }
+  document.getElementById("aVotar").onclick=()=>{ pararTimer(); S.fase="votacion"; render(); };
+}
+
+/* ---------- VOTACIÓN ---------- */
+function pantallaVotacion(){
+  const max=Math.max(0,...S.votos);
+  const totalVotos=S.votos.reduce((a,b)=>a+b,0);
+
+  app.innerHTML = brand() + `
+    <div class="card fade">
+      <h2>¿Quién es el impostor?</h2>
+      <p class="sub">Voten a mano alzada y cargá los votos con <b>+ / −</b>. El más votado queda acusado.</p>
+      ${S.jugadores.map((n,i)=>`
+        <div class="voto ${S.votos[i]===max&&max>0?"lider":""}">
+          <button class="vbtn" data-m="${i}">−</button>
+          <span class="cnt">${S.votos[i]}</span>
+          <span class="nom">${esc(n)}</span>
+          <button class="vbtn plus" data-p="${i}">+</button>
+        </div>`).join("")}
+    </div>
+    <button class="btn fuego" id="cerrar" ${totalVotos>0?"":"disabled"}>CERRAR VOTACIÓN Y REVELAR ▸</button>
+    <button class="btn ghost" id="saltar">Saltar votación (revelar sin acusar)</button>
+  `;
+
+  document.querySelectorAll(".vbtn[data-p]").forEach(b=>b.onclick=()=>{ S.votos[+b.dataset.p]++; render(); });
+  document.querySelectorAll(".vbtn[data-m]").forEach(b=>b.onclick=()=>{ const i=+b.dataset.m; S.votos[i]=Math.max(0,S.votos[i]-1); render(); });
+  document.getElementById("cerrar").onclick=cerrarVotacion;
+  document.getElementById("saltar").onclick=()=>{ S.votos=S.jugadores.map(()=>0); cerrarVotacion(); };
+}
+
+/* ---------- RESULTADO ---------- */
+function pantallaResultado(){
+  const nombresImp = S.jugadores.filter((_,i)=>S.imps.has(i)).map(esc).join(" y ");
+  const ganoCrew = S.caught && !S.robo;
+  const acusadoTxt = S.acusado!=null ? esc(S.jugadores[S.acusado]) : "nadie (no hubo acusación clara)";
+
+  // resumen de puntos de la ronda
+  const lineasDelta = Object.keys(S.delta).length
+    ? Object.entries(S.delta).map(([n,p])=>`${esc(n)} +${p}`).join(" · ")
+    : "Sin puntos esta ronda.";
+
+  app.innerHTML = brand() + `
+    <div class="card centro fade">
+      <p class="veredicto">Veredicto</p>
+      <div class="ganador ${ganoCrew?"crew":"imp"}">${ ganoCrew ? "🎉 ¡Ganó la tripulación!" : "😈 ¡Ganó el impostor!" }</div>
+      <p class="dato">El grupo acusó a <b>${acusadoTxt}</b>.</p>
+      <p class="dato">${S.imps.size>1?"Los impostores eran":"El impostor era"}:</p>
+      <div class="nombres-imp">${nombresImp}</div>
+      <p class="dato">La palabra era <b style="color:var(--celeste)">«${esc(S.palabra)}»</b><br><span class="cat-tag">(${esc(S.catPal)})</span></p>
+
+      ${ S.caught ? `<div class="toggle ${S.robo?"on":""}" id="tg-robo" style="text-align:left">
+        <div class="t-txt"><b>El impostor cantó la palabra</b><span>¿La adivinó al final? Si la dice, igual roba la ronda.</span></div>
+        <div class="switch"></div>
+      </div>` : "" }
+
+      <p class="castigo">${esc(S.castigo)}</p>
+      <div class="aviso" style="margin-top:10px">Puntos de la ronda: ${esc(lineasDelta)}</div>
+    </div>
+
+    <button class="btn" id="otra">↻ OTRA RONDA (mismos jugadores)</button>
+    <button class="btn verde" id="tabla">🏆 Tabla de posiciones</button>
+    <button class="btn ghost" id="conf">⚙ Cambiar jugadores / ajustes</button>
+  `;
+
+  const tg=document.getElementById("tg-robo");
+  if(tg) tg.onclick=()=>{ S.robo=!S.robo; aplicarPuntaje(); guardar(); render(); };
+  document.getElementById("otra").onclick=nuevaRonda;
+  document.getElementById("tabla").onclick=()=>{ S.fase="tabla"; render(); };
+  document.getElementById("conf").onclick=()=>{ S.fase="setup"; render(); };
+}
+
+/* ---------- TABLA DE POSICIONES ---------- */
+function tieneScores(){ return Object.values(S.scores).some(v=>v>0); }
+function pantallaTabla(){
+  const orden = Object.entries(S.scores).sort((a,b)=>b[1]-a[1]);
+  const medallas=["🥇","🥈","🥉"];
+  app.innerHTML = brand() + `
+    <div class="card fade">
+      <h2>Tabla de posiciones</h2>
+      <p class="sub">Puntaje acumulado tras ${S.ronda} ${S.ronda===1?"ronda":"rondas"}.</p>
+      ${ orden.length ? orden.map(([n,p],i)=>`
+        <div class="rank ${i===0&&p>0?"top":""}">
+          <span class="pos">${medallas[i]||(i+1)}</span>
+          <span class="rnom">${esc(n)}</span>
+          <span class="pts">${p}<small>pts</small></span>
+        </div>`).join("") : `<p class="empty">Todavía no se jugó ninguna ronda.</p>` }
+    </div>
+    ${ S.ronda ? `<button class="btn fuego" id="otra">↻ OTRA RONDA</button>` : "" }
+    <button class="btn ghost" id="conf">⚙ Ajustes / jugadores</button>
+    <button class="btn ghost" id="reset">🗑 Reiniciar puntajes</button>
+  `;
+  const o=document.getElementById("otra"); if(o) o.onclick=nuevaRonda;
+  document.getElementById("conf").onclick=()=>{ S.fase="setup"; render(); };
+  document.getElementById("reset").onclick=()=>{
+    S.scores={}; S.ronda=0; S.jugadores.forEach(j=>S.scores[j]=0); guardar();
+    S.fase="inicio"; render();
+  };
+}
+
+/* =========================================================
+   7) ARRANQUE
+   ========================================================= */
+cargar();
 render();
 </script>
 </body>
