@@ -1,0 +1,39 @@
+# Publica el juego en GitHub Pages automáticamente en cada push a main.
+# Da un link en vivo (https://oldfashioned1994.github.io/Impostor/) que
+# siempre sirve la última versión: no hay que descargar ningún archivo.
+name: Deploy a GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Configurar Pages (lo habilita si hace falta)
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+      - name: Subir el sitio
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+      - name: Publicar
+        id: deployment
+        uses: actions/deploy-pages@v4
