@@ -158,10 +158,14 @@ input::placeholder{color:var(--suave)}
 /* Manifest inline para "instalar" como app (PWA), sin archivos extra. */
 const manifest = {
   name:"Mímica de Películas", short_name:"Mímica", display:"standalone",
-  background_color:"#140a10", theme_color:"#140a10", start_url:".", orientation:"portrait"
+  background_color:"#140a10", theme_color:"#140a10", start_url:"./mimica.html", scope:"./", id:"./mimica.html", orientation:"portrait",
+  icons:[{ src:"data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="96" fill="#140a10"/><text x="50%" y="55%" font-size="300" text-anchor="middle" dominant-baseline="central">🍿</text></svg>'), sizes:"any", type:"image/svg+xml", purpose:"any maskable" }]
 };
 document.getElementById("manifest").href =
   "data:application/manifest+json," + encodeURIComponent(JSON.stringify(manifest));
+
+/* Service worker: que ande offline e instale como app de verdad. */
+if ("serviceWorker" in navigator) { window.addEventListener("load", function(){ navigator.serviceWorker.register("sw.js").catch(function(){}); }); }
 
 /* =========================================================================
    BANCO DE PELÍCULAS
