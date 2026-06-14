@@ -207,13 +207,17 @@ button.chip{font:inherit;color:inherit;text-align:inherit}
    ========================================================= */
 const manifest = {
   name:"El Impostor · Edición Argenta", short_name:"Impostor", display:"standalone",
-  background_color:"#0E0B1A", theme_color:"#0E0B1A", start_url:".", orientation:"portrait",
+  background_color:"#0E0B1A", theme_color:"#0E0B1A", start_url:"./", scope:"./", id:"./", orientation:"portrait",
   icons:[
-    {src:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAIAAADdvvtQAAACd0lEQVR42u3dvVHDQBSFUdh5nZEQuAQIXBkBlEBAwrgRF+AiCEg9QwD4T/uuzsmZ0T5/rGRhi/vDfncHpxpGgIAQEAJCQCAgBISAEBAICAEhIAQEAkJAzKT++wNvm62pZXt6f7ED4RSGgBAQCIh53oWdedHObM58W20HwikMASEgBAQCQkAICAGBgBAQAkJAICAEhIAQEAgIASEgBISAQEAICAEhIBAQAkJACAgExFVU3pIeHp9nPrzPj1cB6ebc44zJaKhnqQNud8yxAfV9JQIaGupx/OsNKOMs0HoVw9ytxUU0AkJA9vwVrsgOhIAQEAJCQCAgBISAEBAICAEhIAQEAkJACAgBgYAQEAJCQAgIBISAEBACAgEhIGbX9SGb20p7vuzL15cdCKcwEBACQkAICASEgBAQkTrdzz1+EG7enejjBTb6Z1DVKJr1OF715DGVaMQUEpBuOp7jqmk3Tf92nVdStUuHnzNcMKOSjozOMdQTebkdG5B6wsY71KOhHgGpJ3LUQz0aanYRTRIBISDiA2r0+YQMNxv4yFsStxz1SF2YejKvgTQUNt6xhkWq53pqwaW6uxjwO1mLL1tGrbfzmmcESup4GVATDkVJjS4fa/IxicnXesSU/Ea1Wo81I6nW9zUqb/QzV5V3DyzwG+a/vkjXK2yF90jrbn3cCr8gnwdCQAgIASEgEBACQkAICASEgBAQAgIBISAEhIBAQAgIASEgBAQCQkAICAGBgBAQAkJAICAEhIAQEAgIASEgBISA4GQXeE7022ZrjnYgEBACQkAICP7m/rDfmQJ2IASEgBAQCAgBISAEBAJCQAgIAYGAEBDT+Aalco/8IjvjewAAAABJRU5ErkJggg==",sizes:"192x192",type:"image/png"}
+    {src:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAIAAADdvvtQAAACd0lEQVR42u3dvVHDQBSFUdh5nZEQuAQIXBkBlEBAwrgRF+AiCEg9QwD4T/uuzsmZ0T5/rGRhi/vDfncHpxpGgIAQEAJCQCAgBISAEBAICAEhIAQEAkJAzKT++wNvm62pZXt6f7ED4RSGgBAQCIh53oWdedHObM58W20HwikMASEgBAQCQkAICAGBgBAQAkJAICAEhIAQEAgIASEgBISAQEAICAEhIBAQAkJACAgExFVU3pIeHp9nPrzPj1cB6ebc44zJaKhnqQNud8yxAfV9JQIaGupx/OsNKOMs0HoVw9ytxUU0AkJA9vwVrsgOhIAQEAJCQCAgBISAEBAICAEhIAQEAkJACAgBgYAQEAJCQAgIBISAEBACAgEhIGbX9SGb20p7vuzL15cdCKcwEBACQkAICASEgBAQkTrdzz1+EG7enejjBTb6Z1DVKJr1OF715DGVaMQUEpBuOp7jqmk3Tf92nVdStUuHnzNcMKOSjozOMdQTebkdG5B6wsY71KOhHgGpJ3LUQz0aanYRTRIBISDiA2r0+YQMNxv4yFsStxz1SF2YejKvgTQUNt6xhkWq53pqwaW6uxjwO1mLL1tGrbfzmmcESup4GVATDkVJjS4fa/IxicnXesSU/Ea1Wo81I6nW9zUqb/QzV5V3DyzwG+a/vkjXK2yF90jrbn3cCr8gnwdCQAgIASEgEBACQkAICASEgBAQAgIBISAEhIBAQAgIASEgBAQCQkAICAGBgBAQAkJAICAEhIAQEAgIASEgBISA4GQXeE7022ZrjnYgEBACQkAICP7m/rDfmQJ2IASEgBAQCAgBISAEBAJCQAgIAYGAEBDT+Aalco/8IjvjewAAAABJRU5ErkJggg==",sizes:"192x192",type:"image/png"},
+    {src:"data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="96" fill="#0E0B1A"/><text x="50%" y="55%" font-size="280" text-anchor="middle" dominant-baseline="central">🕵️</text></svg>'),sizes:"any",type:"image/svg+xml",purpose:"any maskable"}
   ]
 };
 document.getElementById("manifest").href =
   "data:application/manifest+json," + encodeURIComponent(JSON.stringify(manifest));
+
+/* Service worker: offline real e instalable como app. */
+if ("serviceWorker" in navigator) { window.addEventListener("load", function(){ navigator.serviceWorker.register("sw.js").catch(function(){}); }); }
 
 /* =========================================================
    2) BANCO DE PALABRAS  (+290 palabras, 10 categorías AMPLIAS)
