@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Dibujá, Che — Pictionary de pizarra</title>
 <meta name="theme-color" content="#3B7FB0">
 <meta name="mobile-web-app-capable" content="yes">
@@ -186,12 +186,23 @@ input.txt:focus{border-color:var(--c2)}
 .confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:60}
 .confetti span{position:absolute;top:-40px;font-size:22px;animation:fall linear forwards}
 @keyframes fall{to{transform:translateY(112vh) rotate(540deg);opacity:.95}}
+
+/* accesibilidad */
+:focus-visible{outline:3px solid var(--sol);outline-offset:2px}
+.teamname-in:focus-visible,.addp input:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(255,255,255,.9)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.player .x{background:none;border:none;color:inherit;font-family:inherit;display:grid;place-items:center;min-width:40px;min-height:40px;margin-left:auto}
+.flip[role=button]{cursor:pointer}
+/* pausa */
+.pausebtn{background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.45);color:#fff;border-radius:12px;
+  min-width:46px;height:46px;font-size:20px;cursor:pointer;font-family:var(--ft);font-weight:900;flex-shrink:0}
+.pause-overlay{position:fixed;inset:0;z-index:75;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:18px;background:rgba(22,36,46,.93);color:#fff;text-align:center;padding:24px}
+.pause-overlay .big{font-family:var(--ft);font-weight:900;font-size:48px}
 </style>
 </head>
 <body>
 <div id="root"></div>
-
-<!-- React + app inlineados: corre 100% offline (las fuentes son mejora opcional con red). -->
 <script>/**
  * @license React
  * react.production.min.js
@@ -526,13 +537,13 @@ const CATS = [{
   nombre: 'Transporte',
   emoji: '🚌',
   f: ['auto', 'colectivo', 'bici', 'moto', 'avión', 'barco', 'tren', 'camión', 'helicóptero', 'ambulancia', 'bote', 'cohete', 'taxi', 'monopatín', 'triciclo', 'carretilla', 'globo aerostático', 'patineta', 'lancha', 'submarino'],
-  d: ['el bondi', 'el subte', 'tractor', 'grúa', 'ovni', 'locomotora', 'canoa', 'teleférico', 'kayak', 'montaña rusa', 'carrito de supermercado', 'cuatriciclo', 'monociclo', 'carroza', 'zeppelin', 'jet ski', 'batimóvil', 'remís', 'balsa', 'tobogán']
+  d: ['bondi', 'subte', 'tractor', 'grúa', 'ovni', 'locomotora', 'canoa', 'teleférico', 'kayak', 'montaña rusa', 'carrito de supermercado', 'cuatriciclo', 'monociclo', 'carroza', 'zeppelin', 'jet ski', 'batimóvil', 'remís', 'balsa', 'funicular']
 }, {
   id: 'lugares',
   nombre: 'Lugares y construcciones',
   emoji: '🏠',
   f: ['casa', 'escuela', 'iglesia', 'hospital', 'castillo', 'puente', 'faro', 'torre', 'carpa', 'granja', 'edificio', 'banco', 'kiosco', 'cancha', 'pileta', 'playa', 'montaña', 'isla', 'plaza', 'molino'],
-  d: ['el Obelisco', 'Caminito', 'la bombonera', 'la Casa Rosada', 'las Cataratas', 'la pirámide', 'el iglú', 'el rascacielos', 'el estadio', 'el muelle', 'la fábrica', 'la noria', 'la hamaca', 'el tobogán', 'el cementerio', 'la cárcel', 'el acueducto', 'el campanario', 'el ancla en el puerto', 'el cartel de la ruta']
+  d: ['el Obelisco', 'Caminito', 'la Bombonera', 'la Casa Rosada', 'las Cataratas', 'la pirámide', 'el iglú', 'el rascacielos', 'el estadio', 'el muelle', 'la fábrica', 'la noria', 'la hamaca', 'el tobogán', 'el cementerio', 'la cárcel', 'el acueducto', 'el campanario', 'el ancla en el puerto', 'el cartel de la ruta']
 }, {
   id: 'naturaleza',
   nombre: 'Naturaleza y clima',
@@ -552,7 +563,7 @@ const PICANTE = {
   id: 'picante',
   nombre: 'Picante (after/previa)',
   emoji: '🌶️',
-  f: ['bombacha', 'tanga', 'sostén', 'calzoncillo', 'preservativo', 'beso', 'corazón roto', 'vaso de chupito', 'cigarrillo', 'cama', 'ducha', 'labios', 'cola', 'bikini', 'malla', 'lengua afuera', 'botella vacía', 'baño', 'gorrito de fiesta', 'globos'],
+  f: ['bombacha', 'tanga', 'sostén', 'calzoncillo', 'preservativo', 'beso', 'corazón roto', 'vaso de chupito', 'cigarrillo', 'cama', 'ducha', 'labios', 'cola', 'bikini', 'malla', 'lengua afuera', 'botella vacía', 'baño', 'gorrito de fiesta', 'corneta de fiesta'],
   d: ['caño de baile', 'lencería', 'antifaz', 'esposas de juguete', 'pintalabios', 'tatuaje', 'piercing', 'peluca', 'disfraz', 'máscara', 'serpentina', 'borracho tirado', 'despedida de soltero', 'cartel de telo', 'tacos altos', 'liga', 'plumas de cabaret', 'dado del amor', 'naipes', 'cartel de prohibido']
 };
 const TEAM_COLORS = ['#4AA3C7', '#FF6B6B', '#2FD27A', '#FFA53C', '#8B6FE8', '#FF7FB6'];
@@ -641,14 +652,30 @@ function Confetti() {
   }));
 }
 
+/* Persistencia en localStorage: config + equipos + partida en curso */
+const LS_KEY = 'dibuja_che_v1';
+function cargarGuardado() {
+  try {
+    return JSON.parse(localStorage.getItem(LS_KEY) || 'null');
+  } catch (e) {
+    return null;
+  }
+}
+function guardarEstado(o) {
+  try {
+    localStorage.setItem(LS_KEY, JSON.stringify(o));
+  } catch (e) {}
+}
+
 /* =====================================================================
    APP — el celu es el MAZO DE CARTAS (la palabra) + el TABLERO (turnos,
    cronómetro y puntajes). Se dibuja en una pizarra/pared con fibrón.
    ===================================================================== */
 function App() {
+  const [saved] = useState(() => cargarGuardado() || {});
   const [pantalla, setPantalla] = useState('inicio');
   const [toast, setToast] = useState('');
-  const [equipos, setEquipos] = useState([{
+  const [equipos, setEquipos] = useState(() => Array.isArray(saved.equipos) && saved.equipos.length >= 2 ? saved.equipos : [{
     id: 1,
     nombre: '',
     jugadores: [],
@@ -661,23 +688,44 @@ function App() {
     score: 0,
     salteos: 0
   }]);
-  const [catsOn, setCatsOn] = useState(() => new Set(CATS.map(c => c.id)));
-  const [dif, setDif] = useState('todas');
-  const [picante, setPicante] = useState(false);
-  const [tiempo, setTiempo] = useState(90);
-  const [rondas, setRondas] = useState(3);
-  const [penalSaltear, setPenalSaltear] = useState(false);
-  const [turno, setTurno] = useState({
+  const [catsOn, setCatsOn] = useState(() => Array.isArray(saved.catsOn) ? new Set(saved.catsOn) : new Set(CATS.map(c => c.id)));
+  const [dif, setDif] = useState(saved.dif || 'todas');
+  const [picante, setPicante] = useState(!!saved.picante);
+  const [tiempo, setTiempo] = useState([60, 90, 120].includes(saved.tiempo) ? saved.tiempo : 90);
+  const [rondas, setRondas] = useState([2, 3, 5, 8].includes(saved.rondas) ? saved.rondas : 3);
+  const [penalSaltear, setPenalSaltear] = useState(!!saved.penalSaltear);
+  const [turno, setTurno] = useState(saved.turno && typeof saved.turno === 'object' ? saved.turno : {
     eq: 0,
     ronda: 1
   });
-  const [palabra, setPalabra] = useState('');
-  const [catActual, setCatActual] = useState('');
-  const [usadas, setUsadas] = useState(() => new Set());
-  const [stats, setStats] = useState({
+  const [palabra, setPalabra] = useState(saved.palabra || '');
+  const [catActual, setCatActual] = useState(saved.catActual || '');
+  const [usadas, setUsadas] = useState(() => Array.isArray(saved.usadas) ? new Set(saved.usadas) : new Set());
+  const [stats, setStats] = useState(saved.stats || {
     rapido: null
   });
-  const [resultado, setResultado] = useState({});
+  const [resultado, setResultado] = useState(saved.resultado || {});
+  const hayPartida = saved.pantalla && ['reparto', 'mirar', 'juego', 'ronda', 'tablero', 'fin'].includes(saved.pantalla);
+
+  // guardar en cada cambio relevante (los Set van como array)
+  useEffect(() => {
+    guardarEstado({
+      pantalla,
+      equipos,
+      catsOn: [...catsOn],
+      dif,
+      picante,
+      tiempo,
+      rondas,
+      penalSaltear,
+      turno,
+      palabra,
+      catActual,
+      usadas: [...usadas],
+      stats,
+      resultado
+    });
+  }, [pantalla, equipos, catsOn, dif, picante, tiempo, rondas, penalSaltear, turno, palabra, catActual, usadas, stats, resultado]);
   const mostrarToast = t => {
     setToast(t);
     setTimeout(() => setToast(''), 1400);
@@ -732,13 +780,15 @@ function App() {
   const addJugador = (i, nombre) => {
     const n = nombre.trim();
     if (!n) return;
-    updEquipo(i, {
-      jugadores: [...equipos[i].jugadores, n]
-    });
+    setEquipos(es => es.map((e, j) => j === i ? {
+      ...e,
+      jugadores: [...e.jugadores, n]
+    } : e));
   };
-  const delJugador = (i, j) => updEquipo(i, {
-    jugadores: equipos[i].jugadores.filter((_, k) => k !== j)
-  });
+  const delJugador = (i, j) => setEquipos(es => es.map((e, k) => k === i ? {
+    ...e,
+    jugadores: e.jugadores.filter((_, m) => m !== j)
+  } : e));
   const drawerDe = e => e.jugadores && e.jugadores.length ? e.jugadores[(e.drawerIdx || 0) % e.jugadores.length] : null;
   const empezar = () => {
     Audio.unlock();
@@ -807,12 +857,32 @@ function App() {
       setPantalla('reparto');
     } else setPantalla('tablero');
   };
+
+  // deshacer un acierto marcado por error: revierte el punto y el record, y vuelve a jugar la misma palabra
+  const deshacerTurno = () => {
+    if (resultado.adivino) {
+      setEquipos(es => es.map((e, i) => i === turno.eq ? {
+        ...e,
+        score: Math.max(0, e.score - 1)
+      } : e));
+      setStats(s => s.rapido && s.rapido.eq === turno.eq && s.rapido.seg === resultado.segUsados ? {
+        ...s,
+        rapido: null
+      } : s);
+    }
+    setPantalla('juego');
+  };
   return /*#__PURE__*/React.createElement(React.Fragment, null, toast && /*#__PURE__*/React.createElement("div", {
     className: "toast"
   }, toast), pantalla === 'inicio' && /*#__PURE__*/React.createElement(Inicio, {
     onJugar: () => {
       Audio.unlock();
       setPantalla('equipos');
+    },
+    hayPartida: hayPartida,
+    onContinuar: () => {
+      Audio.unlock();
+      setPantalla(saved.pantalla === 'juego' ? 'mirar' : saved.pantalla);
     }
   }), pantalla === 'equipos' && /*#__PURE__*/React.createElement(Equipos, {
     equipos: equipos,
@@ -875,7 +945,7 @@ function App() {
       setEquipos(es => es.map((e, i) => i === turno.eq ? {
         ...e,
         salteos: e.salteos + 1,
-        score: e.score + (penalSaltear ? -1 : 0)
+        score: Math.max(0, e.score + (penalSaltear ? -1 : 0))
       } : e));
       Audio.pop();
       nuevaPalabra();
@@ -884,7 +954,8 @@ function App() {
     equipos: equipos,
     turno: turno,
     resultado: resultado,
-    onSeguir: avanzar
+    onSeguir: avanzar,
+    onDeshacer: deshacerTurno
   }), pantalla === 'tablero' && /*#__PURE__*/React.createElement(Tablero, {
     equipos: equipos,
     onVerFin: () => setPantalla('fin')
@@ -917,7 +988,9 @@ function App() {
 
 /* ===================== PANTALLAS ===================== */
 function Inicio({
-  onJugar
+  onJugar,
+  hayPartida,
+  onContinuar
 }) {
   return /*#__PURE__*/React.createElement("div", {
     className: "screen center fade"
@@ -957,7 +1030,10 @@ function Inicio({
     }
   }, "las cartas y el tablero"), ": te da la palabra, lleva el tiempo y los puntos."))), /*#__PURE__*/React.createElement("div", {
     className: "stack"
-  }, /*#__PURE__*/React.createElement("button", {
+  }, hayPartida && /*#__PURE__*/React.createElement("button", {
+    className: "btn verde",
+    onClick: onContinuar
+  }, "\u21BB CONTINUAR PARTIDA"), /*#__PURE__*/React.createElement("button", {
     className: "btn sol",
     onClick: onJugar
   }, "\xA1DALE, A JUGAR!"), /*#__PURE__*/React.createElement("div", {
@@ -1045,10 +1121,14 @@ function Equipos({
     }, eq.jugadores.map((j, k) => /*#__PURE__*/React.createElement("div", {
       className: "player",
       key: k
-    }, "\uD83D\uDC64 ", j, /*#__PURE__*/React.createElement("span", {
+    }, "\uD83D\uDC64 ", j, /*#__PURE__*/React.createElement("button", {
+      type: "button",
       className: "x",
+      "aria-label": 'Quitar a ' + j,
       onClick: () => delJugador(i, k)
-    }, "\xD7")))), /*#__PURE__*/React.createElement("div", {
+    }, /*#__PURE__*/React.createElement("span", {
+      "aria-hidden": "true"
+    }, "\xD7"))))), /*#__PURE__*/React.createElement("div", {
       className: "addp"
     }, /*#__PURE__*/React.createElement("input", {
       placeholder: "Sumar jugador\u2026",
@@ -1182,6 +1262,16 @@ function Config({
     className: "optdesc"
   }, "Palabras subidas de tono. Solo para grandes.")), /*#__PURE__*/React.createElement("div", {
     className: 'switch' + (picante ? ' on' : ''),
+    role: "switch",
+    tabIndex: 0,
+    "aria-checked": picante,
+    "aria-label": "Modo after / previa",
+    onKeyDown: e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        setPicante(p => !p);
+      }
+    },
     onClick: () => setPicante(p => !p)
   }, /*#__PURE__*/React.createElement("div", {
     className: "knob"
@@ -1229,6 +1319,16 @@ function Config({
     className: "optdesc"
   }, "Saltear palabra resta 1 punto.")), /*#__PURE__*/React.createElement("div", {
     className: 'switch' + (penalSaltear ? ' on' : ''),
+    role: "switch",
+    tabIndex: 0,
+    "aria-checked": penalSaltear,
+    "aria-label": "Penalidad al saltear",
+    onKeyDown: e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        setPenalSaltear(p => !p);
+      }
+    },
     onClick: () => setPenalSaltear(p => !p)
   }, /*#__PURE__*/React.createElement("div", {
     className: "knob"
@@ -1347,6 +1447,19 @@ function Mirar({
     className: "sub light"
   }, "Toc\xE1 la carta para ver tu palabra \uD83E\uDD2B"), /*#__PURE__*/React.createElement("div", {
     className: 'flip' + (flip ? ' on' : ''),
+    role: "button",
+    tabIndex: 0,
+    "aria-pressed": flip,
+    "aria-label": flip ? 'Palabra: ' + palabra + (cat ? '. Categoría: ' + cat : '') : 'Tocá o presioná Enter para revelar la palabra',
+    onKeyDown: e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        if (!flip) {
+          Audio.flip();
+        }
+        setFlip(f => !f);
+      }
+    },
     onClick: () => {
       if (!flip) {
         Audio.flip();
@@ -1394,12 +1507,18 @@ function EnJuego({
 }) {
   const [restante, setRestante] = useState(tiempo);
   const [peek, setPeek] = useState(false);
+  const [pausado, setPausado] = useState(false);
   const finRef = useRef(false);
+  const pausRef = useRef(false);
+  useEffect(() => {
+    pausRef.current = pausado;
+  }, [pausado]);
   useEffect(() => {
     finRef.current = false;
     setRestante(tiempo);
     const id = setInterval(() => {
       setRestante(r => {
+        if (pausRef.current) return r; // en pausa: no descontar
         const n = r - 1;
         if (n <= 0) {
           clearInterval(id);
@@ -1444,9 +1563,19 @@ function EnJuego({
     }
   }, /*#__PURE__*/React.createElement("span", {
     className: "pill"
-  }, equipo.nombre), /*#__PURE__*/React.createElement("span", {
+  }, equipo.nombre), /*#__PURE__*/React.createElement("div", {
+    className: "row",
+    style: {
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("span", {
     className: "pill"
-  }, "\uD83D\uDD8A\uFE0F Dibuj\xE1 en la pizarra")), /*#__PURE__*/React.createElement("div", {
+  }, "\uD83D\uDD8A\uFE0F Pizarra"), /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    className: "pausebtn",
+    "aria-label": "Pausar turno",
+    onClick: () => setPausado(true)
+  }, "\u275A\u275A"))), /*#__PURE__*/React.createElement("div", {
     className: "grow center",
     style: {
       gap: 18
@@ -1499,13 +1628,29 @@ function EnJuego({
   }, "SALTEAR", penalSaltear ? ' (-1)' : '', " \u23ED\uFE0F"), /*#__PURE__*/React.createElement("button", {
     className: "btn verde",
     onClick: adivinaron
-  }, "\xA1ADIVINARON! \u2705")));
+  }, "\xA1ADIVINARON! \u2705")), pausado && /*#__PURE__*/React.createElement("div", {
+    className: "pause-overlay",
+    role: "dialog",
+    "aria-label": "Juego en pausa",
+    onClick: () => setPausado(false)
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "big"
+  }, "\u275A\u275A PAUSA"), /*#__PURE__*/React.createElement("div", {
+    className: "hint"
+  }, "El cron\xF3metro est\xE1 detenido."), /*#__PURE__*/React.createElement("button", {
+    className: "btn sol",
+    style: {
+      maxWidth: 280
+    },
+    onClick: () => setPausado(false)
+  }, "\u25B8 SEGUIR")));
 }
 function FinRonda({
   equipos,
   turno,
   resultado,
-  onSeguir
+  onSeguir,
+  onDeshacer
 }) {
   const eq = equipos[turno.eq];
   const ok = resultado.adivino;
@@ -1548,10 +1693,15 @@ function FinRonda({
       fontSize: 26,
       color: ok ? 'var(--verdeD)' : 'var(--suave)'
     }
-  }, eq.score, " ", ok && '(+1)')))), /*#__PURE__*/React.createElement("button", {
+  }, eq.score, " ", ok && '(+1)')))), /*#__PURE__*/React.createElement("div", {
+    className: "stack"
+  }, /*#__PURE__*/React.createElement("button", {
     className: "btn sol",
     onClick: onSeguir
-  }, "SIGUIENTE TURNO \u2192"));
+  }, "SIGUIENTE TURNO \u2192"), /*#__PURE__*/React.createElement("button", {
+    className: "btn ghost",
+    onClick: onDeshacer
+  }, "\u21B6 Ups, me equivoqu\xE9 (volver a jugar)")));
 }
 function ordenar(equipos) {
   return equipos.map((e, i) => ({
