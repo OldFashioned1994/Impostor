@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Dibujá, Che — Pictionary de pizarra</title>
 <meta name="theme-color" content="#3B7FB0">
 <meta name="mobile-web-app-capable" content="yes">
@@ -186,6 +186,19 @@ input.txt:focus{border-color:var(--c2)}
 .confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:60}
 .confetti span{position:absolute;top:-40px;font-size:22px;animation:fall linear forwards}
 @keyframes fall{to{transform:translateY(112vh) rotate(540deg);opacity:.95}}
+
+/* accesibilidad */
+:focus-visible{outline:3px solid var(--sol);outline-offset:2px}
+.teamname-in:focus-visible,.addp input:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(255,255,255,.9)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.player .x{background:none;border:none;color:inherit;font-family:inherit;display:grid;place-items:center;min-width:40px;min-height:40px;margin-left:auto}
+.flip[role=button]{cursor:pointer}
+/* pausa */
+.pausebtn{background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.45);color:#fff;border-radius:12px;
+  min-width:46px;height:46px;font-size:20px;cursor:pointer;font-family:var(--ft);font-weight:900;flex-shrink:0}
+.pause-overlay{position:fixed;inset:0;z-index:75;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:18px;background:rgba(22,36,46,.93);color:#fff;text-align:center;padding:24px}
+.pause-overlay .big{font-family:var(--ft);font-weight:900;font-size:48px}
 </style>
 </head>
 <body>
@@ -225,13 +238,13 @@ const CATS = [
   { id:'transporte', nombre:'Transporte', emoji:'🚌',
     f:['auto','colectivo','bici','moto','avión','barco','tren','camión','helicóptero','ambulancia',
        'bote','cohete','taxi','monopatín','triciclo','carretilla','globo aerostático','patineta','lancha','submarino'],
-    d:['el bondi','el subte','tractor','grúa','ovni','locomotora','canoa','teleférico','kayak','montaña rusa',
-       'carrito de supermercado','cuatriciclo','monociclo','carroza','zeppelin','jet ski','batimóvil','remís','balsa','tobogán'] },
+    d:['bondi','subte','tractor','grúa','ovni','locomotora','canoa','teleférico','kayak','montaña rusa',
+       'carrito de supermercado','cuatriciclo','monociclo','carroza','zeppelin','jet ski','batimóvil','remís','balsa','funicular'] },
 
   { id:'lugares', nombre:'Lugares y construcciones', emoji:'🏠',
     f:['casa','escuela','iglesia','hospital','castillo','puente','faro','torre','carpa','granja',
        'edificio','banco','kiosco','cancha','pileta','playa','montaña','isla','plaza','molino'],
-    d:['el Obelisco','Caminito','la bombonera','la Casa Rosada','las Cataratas','la pirámide','el iglú',
+    d:['el Obelisco','Caminito','la Bombonera','la Casa Rosada','las Cataratas','la pirámide','el iglú',
        'el rascacielos','el estadio','el muelle','la fábrica','la noria','la hamaca','el tobogán','el cementerio',
        'la cárcel','el acueducto','el campanario','el ancla en el puerto','el cartel de la ruta'] },
 
@@ -254,7 +267,7 @@ const CATS = [
 const PICANTE = { id:'picante', nombre:'Picante (after/previa)', emoji:'🌶️',
   f:['bombacha','tanga','sostén','calzoncillo','preservativo','beso','corazón roto','vaso de chupito',
      'cigarrillo','cama','ducha','labios','cola','bikini','malla','lengua afuera','botella vacía','baño',
-     'gorrito de fiesta','globos'],
+     'gorrito de fiesta','corneta de fiesta'],
   d:['caño de baile','lencería','antifaz','esposas de juguete','pintalabios','tatuaje','piercing','peluca',
      'disfraz','máscara','serpentina','borracho tirado','despedida de soltero','cartel de telo','tacos altos',
      'liga','plumas de cabaret','dado del amor','naipes','cartel de prohibido'] };
@@ -302,32 +315,45 @@ function Confetti(){
   );
 }
 
+/* Persistencia en localStorage: config + equipos + partida en curso */
+const LS_KEY='dibuja_che_v1';
+function cargarGuardado(){ try{ return JSON.parse(localStorage.getItem(LS_KEY)||'null'); }catch(e){ return null; } }
+function guardarEstado(o){ try{ localStorage.setItem(LS_KEY, JSON.stringify(o)); }catch(e){} }
+
 /* =====================================================================
    APP — el celu es el MAZO DE CARTAS (la palabra) + el TABLERO (turnos,
    cronómetro y puntajes). Se dibuja en una pizarra/pared con fibrón.
    ===================================================================== */
 function App(){
+  const [saved] = useState(()=>cargarGuardado()||{});
   const [pantalla, setPantalla] = useState('inicio');
   const [toast, setToast] = useState('');
 
-  const [equipos, setEquipos] = useState([
+  const [equipos, setEquipos] = useState(()=> (Array.isArray(saved.equipos)&&saved.equipos.length>=2) ? saved.equipos : [
     {id:1, nombre:'', jugadores:[], score:0, salteos:0},
     {id:2, nombre:'', jugadores:[], score:0, salteos:0},
   ]);
 
-  const [catsOn, setCatsOn] = useState(() => new Set(CATS.map(c=>c.id)));
-  const [dif, setDif] = useState('todas');
-  const [picante, setPicante] = useState(false);
-  const [tiempo, setTiempo] = useState(90);
-  const [rondas, setRondas] = useState(3);
-  const [penalSaltear, setPenalSaltear] = useState(false);
+  const [catsOn, setCatsOn] = useState(() => Array.isArray(saved.catsOn) ? new Set(saved.catsOn) : new Set(CATS.map(c=>c.id)));
+  const [dif, setDif] = useState(saved.dif || 'todas');
+  const [picante, setPicante] = useState(!!saved.picante);
+  const [tiempo, setTiempo] = useState([60,90,120].includes(saved.tiempo)?saved.tiempo:90);
+  const [rondas, setRondas] = useState([2,3,5,8].includes(saved.rondas)?saved.rondas:3);
+  const [penalSaltear, setPenalSaltear] = useState(!!saved.penalSaltear);
 
-  const [turno, setTurno] = useState({eq:0, ronda:1});
-  const [palabra, setPalabra] = useState('');
-  const [catActual, setCatActual] = useState('');
-  const [usadas, setUsadas] = useState(() => new Set());
-  const [stats, setStats] = useState({ rapido:null });
-  const [resultado, setResultado] = useState({});
+  const [turno, setTurno] = useState(saved.turno && typeof saved.turno==='object' ? saved.turno : {eq:0, ronda:1});
+  const [palabra, setPalabra] = useState(saved.palabra || '');
+  const [catActual, setCatActual] = useState(saved.catActual || '');
+  const [usadas, setUsadas] = useState(() => Array.isArray(saved.usadas) ? new Set(saved.usadas) : new Set());
+  const [stats, setStats] = useState(saved.stats || { rapido:null });
+  const [resultado, setResultado] = useState(saved.resultado || {});
+
+  const hayPartida = saved.pantalla && ['reparto','mirar','juego','ronda','tablero','fin'].includes(saved.pantalla);
+
+  // guardar en cada cambio relevante (los Set van como array)
+  useEffect(()=>{
+    guardarEstado({ pantalla, equipos, catsOn:[...catsOn], dif, picante, tiempo, rondas, penalSaltear, turno, palabra, catActual, usadas:[...usadas], stats, resultado });
+  }, [pantalla, equipos, catsOn, dif, picante, tiempo, rondas, penalSaltear, turno, palabra, catActual, usadas, stats, resultado]);
 
   const mostrarToast = (t)=>{ setToast(t); setTimeout(()=>setToast(''),1400); };
 
@@ -360,8 +386,8 @@ function App(){
   const updEquipo = (i,patch)=>setEquipos(es=>es.map((e,j)=>j===i?{...e,...patch}:e));
   const addEquipo = ()=>setEquipos(es=>es.length>=6?es:[...es,{id:Date.now(),nombre:'',jugadores:[],score:0,salteos:0}]);
   const delEquipo = (i)=>setEquipos(es=>es.length<=2?es:es.filter((_,j)=>j!==i));
-  const addJugador = (i,nombre)=>{ const n=nombre.trim(); if(!n) return; updEquipo(i,{jugadores:[...equipos[i].jugadores,n]}); };
-  const delJugador = (i,j)=>updEquipo(i,{jugadores:equipos[i].jugadores.filter((_,k)=>k!==j)});
+  const addJugador = (i,nombre)=>{ const n=nombre.trim(); if(!n) return; setEquipos(es=>es.map((e,j)=>j===i?{...e,jugadores:[...e.jugadores,n]}:e)); };
+  const delJugador = (i,j)=>setEquipos(es=>es.map((e,k)=>k===i?{...e,jugadores:e.jugadores.filter((_,m)=>m!==j)}:e));
 
   const drawerDe = (e)=> (e.jugadores&&e.jugadores.length)? e.jugadores[(e.drawerIdx||0)%e.jugadores.length] : null;
 
@@ -393,11 +419,21 @@ function App(){
     } else setPantalla('tablero');
   };
 
+  // deshacer un acierto marcado por error: revierte el punto y el record, y vuelve a jugar la misma palabra
+  const deshacerTurno = ()=>{
+    if(resultado.adivino){
+      setEquipos(es=>es.map((e,i)=>i===turno.eq?{...e,score:Math.max(0,e.score-1)}:e));
+      setStats(s=> (s.rapido && s.rapido.eq===turno.eq && s.rapido.seg===resultado.segUsados) ? {...s, rapido:null} : s);
+    }
+    setPantalla('juego');
+  };
+
   return (
     <>
       {toast && <div className="toast">{toast}</div>}
 
-      {pantalla==='inicio' && <Inicio onJugar={()=>{Audio.unlock();setPantalla('equipos');}} />}
+      {pantalla==='inicio' && <Inicio onJugar={()=>{Audio.unlock();setPantalla('equipos');}}
+        hayPartida={hayPartida} onContinuar={()=>{Audio.unlock();setPantalla(saved.pantalla==='juego'?'mirar':saved.pantalla);}} />}
 
       {pantalla==='equipos' &&
         <Equipos equipos={equipos} updEquipo={updEquipo} addEquipo={addEquipo} delEquipo={delEquipo}
@@ -424,12 +460,12 @@ function App(){
           onResultado={(ok,seg)=>finTurno(ok,seg,false)}
           onTiempo={()=>finTurno(false,tiempo,true)}
           onSaltear={()=>{
-            setEquipos(es=>es.map((e,i)=>i===turno.eq?{...e,salteos:e.salteos+1,score:e.score+(penalSaltear?-1:0)}:e));
+            setEquipos(es=>es.map((e,i)=>i===turno.eq?{...e,salteos:e.salteos+1,score:Math.max(0,e.score+(penalSaltear?-1:0))}:e));
             Audio.pop(); nuevaPalabra();
           }} />}
 
       {pantalla==='ronda' &&
-        <FinRonda equipos={equipos} turno={turno} resultado={resultado} onSeguir={avanzar} />}
+        <FinRonda equipos={equipos} turno={turno} resultado={resultado} onSeguir={avanzar} onDeshacer={deshacerTurno} />}
 
       {pantalla==='tablero' && <Tablero equipos={equipos} onVerFin={()=>setPantalla('fin')} />}
 
@@ -446,7 +482,7 @@ function App(){
 }
 
 /* ===================== PANTALLAS ===================== */
-function Inicio({onJugar}){
+function Inicio({onJugar, hayPartida, onContinuar}){
   return (
     <div className="screen center fade">
       <div className="grow center" style={{gap:16}}>
@@ -462,6 +498,7 @@ function Inicio({onJugar}){
         </div>
       </div>
       <div className="stack">
+        {hayPartida && <button className="btn verde" onClick={onContinuar}>↻ CONTINUAR PARTIDA</button>}
         <button className="btn sol" onClick={onJugar}>¡DALE, A JUGAR!</button>
         <div className="hint">Pasá el celu · 2 a 6 equipos · sin internet</div>
       </div>
@@ -493,7 +530,7 @@ function Equipos({equipos, updEquipo, addEquipo, delEquipo, addJugador, delJugad
                   <button onClick={()=>delEquipo(i)} style={{background:'rgba(0,0,0,.15)',border:'none',color:'#fff',width:38,height:38,borderRadius:10,fontSize:20,cursor:'pointer'}}>🗑️</button>}
               </div>
               <div className="stack" style={{gap:6}}>
-                {eq.jugadores.map((j,k)=>(<div className="player" key={k}>👤 {j}<span className="x" onClick={()=>delJugador(i,k)}>×</span></div>))}
+                {eq.jugadores.map((j,k)=>(<div className="player" key={k}>👤 {j}<button type="button" className="x" aria-label={'Quitar a '+j} onClick={()=>delJugador(i,k)}><span aria-hidden="true">×</span></button></div>))}
               </div>
               <div className="addp">
                 <input placeholder="Sumar jugador…" value={drafts[i]||''} onChange={e=>setDraft(i,e.target.value)}
@@ -547,7 +584,9 @@ function Config({catsOn,setCatsOn,dif,setDif,picante,setPicante,tiempo,setTiempo
         <div className="card">
           <div className="row" style={{justifyContent:'space-between'}}>
             <div><div className="optname">🌶️ Modo after / previa</div><div className="optdesc">Palabras subidas de tono. Solo para grandes.</div></div>
-            <div className={'switch'+(picante?' on':'')} onClick={()=>setPicante(p=>!p)}><div className="knob"/></div>
+            <div className={'switch'+(picante?' on':'')} role="switch" tabIndex={0} aria-checked={picante} aria-label="Modo after / previa"
+              onKeyDown={e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); setPicante(p=>!p); } }}
+              onClick={()=>setPicante(p=>!p)}><div className="knob"/></div>
           </div>
         </div>
         <div className="card">
@@ -562,7 +601,9 @@ function Config({catsOn,setCatsOn,dif,setDif,picante,setPicante,tiempo,setTiempo
         <div className="card">
           <div className="row" style={{justifyContent:'space-between'}}>
             <div><div className="optname">Penalidad al saltear</div><div className="optdesc">Saltear palabra resta 1 punto.</div></div>
-            <div className={'switch'+(penalSaltear?' on':'')} onClick={()=>setPenalSaltear(p=>!p)}><div className="knob"/></div>
+            <div className={'switch'+(penalSaltear?' on':'')} role="switch" tabIndex={0} aria-checked={penalSaltear} aria-label="Penalidad al saltear"
+              onKeyDown={e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); setPenalSaltear(p=>!p); } }}
+              onClick={()=>setPenalSaltear(p=>!p)}><div className="knob"/></div>
           </div>
         </div>
       </div>
@@ -614,7 +655,10 @@ function Mirar({equipo, palabra, cat, onOtra, onEmpezar}){
       <span className="pill">{equipo.nombre}</span>
       <div className="grow center" style={{gap:18,width:'100%'}}>
         <div className="sub light">Tocá la carta para ver tu palabra 🤫</div>
-        <div className={'flip'+(flip?' on':'')} onClick={()=>{ if(!flip){Audio.flip();} setFlip(f=>!f); }}>
+        <div className={'flip'+(flip?' on':'')} role="button" tabIndex={0} aria-pressed={flip}
+          aria-label={flip ? ('Palabra: '+palabra+(cat?'. Categoría: '+cat:'')) : 'Tocá o presioná Enter para revelar la palabra'}
+          onKeyDown={e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); if(!flip){Audio.flip();} setFlip(f=>!f); } }}
+          onClick={()=>{ if(!flip){Audio.flip();} setFlip(f=>!f); }}>
           <div className="flip-in">
             <div className="flip-face flip-front"><div className="q">?</div><div className="sub" style={{marginTop:6}}>tocá para revelar</div></div>
             <div className="flip-face flip-back"><div className="w">{palabra}</div>{cat&&<div className="cat">{cat}</div>}</div>
@@ -630,12 +674,16 @@ function Mirar({equipo, palabra, cat, onOtra, onEmpezar}){
 function EnJuego({equipo, palabra, cat, tiempo, penalSaltear, onResultado, onTiempo, onSaltear}){
   const [restante,setRestante]=useState(tiempo);
   const [peek,setPeek]=useState(false);
+  const [pausado,setPausado]=useState(false);
   const finRef=useRef(false);
+  const pausRef=useRef(false);
+  useEffect(()=>{ pausRef.current=pausado; },[pausado]);
 
   useEffect(()=>{
     finRef.current=false; setRestante(tiempo);
     const id=setInterval(()=>{
       setRestante(r=>{
+        if(pausRef.current) return r; // en pausa: no descontar
         const n=r-1;
         if(n<=0){ clearInterval(id); if(!finRef.current){ finRef.current=true; onTiempo(); } return 0; }
         if(n<=5){ Audio.tock(); vibrar(20); } else if(n<=10){ (n%2?Audio.tick():Audio.tock()); }
@@ -658,7 +706,10 @@ function EnJuego({equipo, palabra, cat, tiempo, penalSaltear, onResultado, onTie
     <div className="screen fade">
       <div className="row" style={{justifyContent:'space-between'}}>
         <span className="pill">{equipo.nombre}</span>
-        <span className="pill">🖊️ Dibujá en la pizarra</span>
+        <div className="row" style={{gap:8}}>
+          <span className="pill">🖊️ Pizarra</span>
+          <button type="button" className="pausebtn" aria-label="Pausar turno" onClick={()=>setPausado(true)}>❚❚</button>
+        </div>
       </div>
 
       <div className="grow center" style={{gap:18}}>
@@ -683,11 +734,17 @@ function EnJuego({equipo, palabra, cat, tiempo, penalSaltear, onResultado, onTie
         <button className="btn rojo" onClick={saltear}>SALTEAR{penalSaltear?' (-1)':''} ⏭️</button>
         <button className="btn verde" onClick={adivinaron}>¡ADIVINARON! ✅</button>
       </div>
+
+      {pausado && <div className="pause-overlay" role="dialog" aria-label="Juego en pausa" onClick={()=>setPausado(false)}>
+        <div className="big">❚❚ PAUSA</div>
+        <div className="hint">El cronómetro está detenido.</div>
+        <button className="btn sol" style={{maxWidth:280}} onClick={()=>setPausado(false)}>▸ SEGUIR</button>
+      </div>}
     </div>
   );
 }
 
-function FinRonda({equipos, turno, resultado, onSeguir}){
+function FinRonda({equipos, turno, resultado, onSeguir, onDeshacer}){
   const eq=equipos[turno.eq];
   const ok=resultado.adivino;
   return (
@@ -706,7 +763,10 @@ function FinRonda({equipos, turno, resultado, onSeguir}){
           </div>
         </div>
       </div>
-      <button className="btn sol" onClick={onSeguir}>SIGUIENTE TURNO →</button>
+      <div className="stack">
+        <button className="btn sol" onClick={onSeguir}>SIGUIENTE TURNO →</button>
+        <button className="btn ghost" onClick={onDeshacer}>↶ Ups, me equivoqué (volver a jugar)</button>
+      </div>
     </div>
   );
 }
@@ -830,14 +890,17 @@ function MuerteSubita({empatados, tiempo, nuevaPalabra, onGana}){
   const manifest = {
     name:'Dibujá, Che', short_name:'Dibujá Che',
     description:'Pictionary de pizarra para jugar entre amigos: el celu es las cartas y el tablero.',
-    start_url:'.', display:'standalone', orientation:'portrait',
+    start_url:'./pictionary.html', scope:'./', id:'./pictionary.html', display:'standalone', orientation:'portrait',
     background_color:'#3B7FB0', theme_color:'#3B7FB0',
     icons:[{ src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%234AA3C7'/%3E%3Ctext x='50' y='73' font-size='60' text-anchor='middle'%3E%E2%9C%8F%EF%B8%8F%3C/text%3E%3C/svg%3E",
-      sizes:'any', type:'image/svg+xml', purpose:'any' }]
+      sizes:'any', type:'image/svg+xml', purpose:'any maskable' }]
   };
   const blob=new Blob([JSON.stringify(manifest)],{type:'application/manifest+json'});
   const el=document.getElementById('manifest'); if(el) el.href=URL.createObjectURL(blob);
 })();
+
+/* Service worker: offline real e instalable como app. */
+if ('serviceWorker' in navigator) { window.addEventListener('load', function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); }); }
 
 ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
 </script>
